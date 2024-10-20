@@ -1,0 +1,624 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3428130A2CC1B641006195BB /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 342813092CC1B641006195BB /* Sparkle */; };
+		342813222CC206E1006195BB /* TheBoringWorkerNotifier in Frameworks */ = {isa = PBXBuildFile; productRef = 342813212CC206E1006195BB /* TheBoringWorkerNotifier */; };
+		342813252CC20DA5006195BB /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = 342813242CC20DA5006195BB /* Defaults */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		342812E92CC192CB006195BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 342812CF2CC192CA006195BB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 342812D62CC192CA006195BB;
+			remoteInfo = notchplus;
+		};
+		342812F32CC192CC006195BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 342812CF2CC192CA006195BB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 342812D62CC192CA006195BB;
+			remoteInfo = notchplus;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		342812D72CC192CA006195BB /* notchplus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = notchplus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		342812E82CC192CB006195BB /* notchplusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = notchplusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		342812F22CC192CC006195BB /* notchplusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = notchplusUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		342812D92CC192CA006195BB /* notchplus */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = notchplus;
+			sourceTree = "<group>";
+		};
+		342812EB2CC192CB006195BB /* notchplusTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = notchplusTests;
+			sourceTree = "<group>";
+		};
+		342812F52CC192CC006195BB /* notchplusUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = notchplusUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		342812D42CC192CA006195BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				342813252CC20DA5006195BB /* Defaults in Frameworks */,
+				3428130A2CC1B641006195BB /* Sparkle in Frameworks */,
+				342813222CC206E1006195BB /* TheBoringWorkerNotifier in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		342812E52CC192CB006195BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		342812EF2CC192CC006195BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		342812CE2CC192CA006195BB = {
+			isa = PBXGroup;
+			children = (
+				342812D92CC192CA006195BB /* notchplus */,
+				342812EB2CC192CB006195BB /* notchplusTests */,
+				342812F52CC192CC006195BB /* notchplusUITests */,
+				3428130B2CC1B662006195BB /* Frameworks */,
+				342812D82CC192CA006195BB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		342812D82CC192CA006195BB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				342812D72CC192CA006195BB /* notchplus.app */,
+				342812E82CC192CB006195BB /* notchplusTests.xctest */,
+				342812F22CC192CC006195BB /* notchplusUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3428130B2CC1B662006195BB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		342812D62CC192CA006195BB /* notchplus */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 342812FC2CC192CC006195BB /* Build configuration list for PBXNativeTarget "notchplus" */;
+			buildPhases = (
+				342812D32CC192CA006195BB /* Sources */,
+				342812D42CC192CA006195BB /* Frameworks */,
+				342812D52CC192CA006195BB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				342812D92CC192CA006195BB /* notchplus */,
+			);
+			name = notchplus;
+			packageProductDependencies = (
+				342813092CC1B641006195BB /* Sparkle */,
+				342813212CC206E1006195BB /* TheBoringWorkerNotifier */,
+				342813242CC20DA5006195BB /* Defaults */,
+			);
+			productName = notchplus;
+			productReference = 342812D72CC192CA006195BB /* notchplus.app */;
+			productType = "com.apple.product-type.application";
+		};
+		342812E72CC192CB006195BB /* notchplusTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 342812FF2CC192CC006195BB /* Build configuration list for PBXNativeTarget "notchplusTests" */;
+			buildPhases = (
+				342812E42CC192CB006195BB /* Sources */,
+				342812E52CC192CB006195BB /* Frameworks */,
+				342812E62CC192CB006195BB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				342812EA2CC192CB006195BB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				342812EB2CC192CB006195BB /* notchplusTests */,
+			);
+			name = notchplusTests;
+			packageProductDependencies = (
+			);
+			productName = notchplusTests;
+			productReference = 342812E82CC192CB006195BB /* notchplusTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		342812F12CC192CC006195BB /* notchplusUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 342813022CC192CC006195BB /* Build configuration list for PBXNativeTarget "notchplusUITests" */;
+			buildPhases = (
+				342812EE2CC192CC006195BB /* Sources */,
+				342812EF2CC192CC006195BB /* Frameworks */,
+				342812F02CC192CC006195BB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				342812F42CC192CC006195BB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				342812F52CC192CC006195BB /* notchplusUITests */,
+			);
+			name = notchplusUITests;
+			packageProductDependencies = (
+			);
+			productName = notchplusUITests;
+			productReference = 342812F22CC192CC006195BB /* notchplusUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		342812CF2CC192CA006195BB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					342812D62CC192CA006195BB = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					342812E72CC192CB006195BB = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 342812D62CC192CA006195BB;
+					};
+					342812F12CC192CC006195BB = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 342812D62CC192CA006195BB;
+					};
+				};
+			};
+			buildConfigurationList = 342812D22CC192CA006195BB /* Build configuration list for PBXProject "notchplus" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 342812CE2CC192CA006195BB;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				342813082CC1B458006195BB /* XCRemoteSwiftPackageReference "Sparkle" */,
+				342813202CC206E1006195BB /* XCRemoteSwiftPackageReference "TheBoringWorkerNotifier" */,
+				342813232CC20DA5006195BB /* XCRemoteSwiftPackageReference "Defaults" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 342812D82CC192CA006195BB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				342812D62CC192CA006195BB /* notchplus */,
+				342812E72CC192CB006195BB /* notchplusTests */,
+				342812F12CC192CC006195BB /* notchplusUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		342812D52CC192CA006195BB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		342812E62CC192CB006195BB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		342812F02CC192CC006195BB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		342812D32CC192CA006195BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		342812E42CC192CB006195BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		342812EE2CC192CC006195BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		342812EA2CC192CB006195BB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 342812D62CC192CA006195BB /* notchplus */;
+			targetProxy = 342812E92CC192CB006195BB /* PBXContainerItemProxy */;
+		};
+		342812F42CC192CC006195BB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 342812D62CC192CA006195BB /* notchplus */;
+			targetProxy = 342812F32CC192CC006195BB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		342812FA2CC192CC006195BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		342812FB2CC192CC006195BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		342812FD2CC192CC006195BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = notchplus/notchplus.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Preview Content\"";
+				DEVELOPMENT_TEAM = SQ2JHD7BTB;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.notchplus;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		342812FE2CC192CC006195BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = notchplus/notchplus.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Preview Content\"";
+				DEVELOPMENT_TEAM = SQ2JHD7BTB;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.notchplus;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		342813002CC192CC006195BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SQ2JHD7BTB;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.notchplusTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/notchplus.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/notchplus";
+			};
+			name = Debug;
+		};
+		342813012CC192CC006195BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SQ2JHD7BTB;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.notchplusTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/notchplus.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/notchplus";
+			};
+			name = Release;
+		};
+		342813032CC192CC006195BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SQ2JHD7BTB;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.notchplusUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = notchplus;
+			};
+			name = Debug;
+		};
+		342813042CC192CC006195BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SQ2JHD7BTB;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.notchplusUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = notchplus;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		342812D22CC192CA006195BB /* Build configuration list for PBXProject "notchplus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				342812FA2CC192CC006195BB /* Debug */,
+				342812FB2CC192CC006195BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		342812FC2CC192CC006195BB /* Build configuration list for PBXNativeTarget "notchplus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				342812FD2CC192CC006195BB /* Debug */,
+				342812FE2CC192CC006195BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		342812FF2CC192CC006195BB /* Build configuration list for PBXNativeTarget "notchplusTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				342813002CC192CC006195BB /* Debug */,
+				342813012CC192CC006195BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		342813022CC192CC006195BB /* Build configuration list for PBXNativeTarget "notchplusUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				342813032CC192CC006195BB /* Debug */,
+				342813042CC192CC006195BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		342813082CC1B458006195BB /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.4;
+			};
+		};
+		342813202CC206E1006195BB /* XCRemoteSwiftPackageReference "TheBoringWorkerNotifier" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TheBoredTeam/TheBoringWorkerNotifier.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		342813232CC20DA5006195BB /* XCRemoteSwiftPackageReference "Defaults" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/Defaults";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		342813092CC1B641006195BB /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 342813082CC1B458006195BB /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+		342813212CC206E1006195BB /* TheBoringWorkerNotifier */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 342813202CC206E1006195BB /* XCRemoteSwiftPackageReference "TheBoringWorkerNotifier" */;
+			productName = TheBoringWorkerNotifier;
+		};
+		342813242CC20DA5006195BB /* Defaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 342813232CC20DA5006195BB /* XCRemoteSwiftPackageReference "Defaults" */;
+			productName = Defaults;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 342812CF2CC192CA006195BB /* Project object */;
+}

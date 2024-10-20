@@ -1,0 +1,33 @@
+{
+  "originHash" : "823bd6f89b7cecb3ec88abd4a312fc62b8450b39f767377c4972845d2a2bc534",
+  "pins" : [
+    {
+      "identity" : "defaults",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sindresorhus/Defaults",
+      "state" : {
+        "branch" : "main",
+        "revision" : "a89f799930c92a85aa04b72131849d46c0833ab3"
+      }
+    },
+    {
+      "identity" : "sparkle",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sparkle-project/Sparkle",
+      "state" : {
+        "revision" : "0ef1ee0220239b3776f433314515fd849025673f",
+        "version" : "2.6.4"
+      }
+    },
+    {
+      "identity" : "theboringworkernotifier",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/TheBoredTeam/TheBoringWorkerNotifier.git",
+      "state" : {
+        "revision" : "bc2b292c88035dcfc41fc7e3d8021689e624d137",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}
