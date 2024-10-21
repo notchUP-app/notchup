@@ -1,3 +1,11 @@
+//
+//  NowPlaying.m
+//  notchplus
+//
+//  Created by Eduardo Monteiro on 20/10/24.
+//
+
+
 /**
  * @file NowPlaying.m
  *

@@ -16,3 +16,8 @@ public enum NotchState {
     case open
     case closed
 }
+
+public enum BrowserType {
+    case safari
+    case chromium
+}
