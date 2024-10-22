@@ -13,27 +13,8 @@
 		34B0E0492CC5EA3700320288 /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B0E0482CC5EA3700320288 /* MediaRemote.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		342812E92CC192CB006195BB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 342812CF2CC192CA006195BB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 342812D62CC192CA006195BB;
-			remoteInfo = notchplus;
-		};
-		342812F32CC192CC006195BB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 342812CF2CC192CA006195BB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 342812D62CC192CA006195BB;
-			remoteInfo = notchplus;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		342812D72CC192CA006195BB /* notchplus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = notchplus.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		342812E82CC192CB006195BB /* notchplusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = notchplusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		342812F22CC192CC006195BB /* notchplusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = notchplusUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34B0E0482CC5EA3700320288 /* MediaRemote.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaRemote.framework; path = ../../../../../System/Library/PrivateFrameworks/MediaRemote.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -57,20 +38,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		342812E52CC192CB006195BB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		342812EF2CC192CC006195BB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -87,8 +54,6 @@
 			isa = PBXGroup;
 			children = (
 				342812D72CC192CA006195BB /* notchplus.app */,
-				342812E82CC192CB006195BB /* notchplusTests.xctest */,
-				342812F22CC192CC006195BB /* notchplusUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -129,46 +94,6 @@
 			productReference = 342812D72CC192CA006195BB /* notchplus.app */;
 			productType = "com.apple.product-type.application";
 		};
-		342812E72CC192CB006195BB /* notchplusTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 342812FF2CC192CC006195BB /* Build configuration list for PBXNativeTarget "notchplusTests" */;
-			buildPhases = (
-				342812E42CC192CB006195BB /* Sources */,
-				342812E52CC192CB006195BB /* Frameworks */,
-				342812E62CC192CB006195BB /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				342812EA2CC192CB006195BB /* PBXTargetDependency */,
-			);
-			name = notchplusTests;
-			packageProductDependencies = (
-			);
-			productName = notchplusTests;
-			productReference = 342812E82CC192CB006195BB /* notchplusTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		342812F12CC192CC006195BB /* notchplusUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 342813022CC192CC006195BB /* Build configuration list for PBXNativeTarget "notchplusUITests" */;
-			buildPhases = (
-				342812EE2CC192CC006195BB /* Sources */,
-				342812EF2CC192CC006195BB /* Frameworks */,
-				342812F02CC192CC006195BB /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				342812F42CC192CC006195BB /* PBXTargetDependency */,
-			);
-			name = notchplusUITests;
-			packageProductDependencies = (
-			);
-			productName = notchplusUITests;
-			productReference = 342812F22CC192CC006195BB /* notchplusUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -182,14 +107,6 @@
 					342812D62CC192CA006195BB = {
 						CreatedOnToolsVersion = 16.0;
 						LastSwiftMigration = 1600;
-					};
-					342812E72CC192CB006195BB = {
-						CreatedOnToolsVersion = 16.0;
-						TestTargetID = 342812D62CC192CA006195BB;
-					};
-					342812F12CC192CC006195BB = {
-						CreatedOnToolsVersion = 16.0;
-						TestTargetID = 342812D62CC192CA006195BB;
 					};
 				};
 			};
@@ -213,28 +130,12 @@
 			projectRoot = "";
 			targets = (
 				342812D62CC192CA006195BB /* notchplus */,
-				342812E72CC192CB006195BB /* notchplusTests */,
-				342812F12CC192CC006195BB /* notchplusUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		342812D52CC192CA006195BB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		342812E62CC192CB006195BB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		342812F02CC192CC006195BB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -251,34 +152,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		342812E42CC192CB006195BB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		342812EE2CC192CC006195BB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		342812EA2CC192CB006195BB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 342812D62CC192CA006195BB /* notchplus */;
-			targetProxy = 342812E92CC192CB006195BB /* PBXContainerItemProxy */;
-		};
-		342812F42CC192CC006195BB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 342812D62CC192CA006195BB /* notchplus */;
-			targetProxy = 342812F32CC192CC006195BB /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		342812FA2CC192CC006195BB /* Debug */ = {
@@ -407,6 +281,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = notchplus/notchplus.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
@@ -425,7 +300,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				"OTHER_LDFLAGS[arch=*]" = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.notchplus;
@@ -446,6 +321,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = notchplus/notchplus.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
@@ -464,7 +340,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.notchplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -475,74 +351,6 @@
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
-			};
-			name = Release;
-		};
-		342813002CC192CC006195BB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SQ2JHD7BTB;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.notchplusTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/notchplus.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/notchplus";
-			};
-			name = Debug;
-		};
-		342813012CC192CC006195BB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SQ2JHD7BTB;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.notchplusTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/notchplus.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/notchplus";
-			};
-			name = Release;
-		};
-		342813032CC192CC006195BB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SQ2JHD7BTB;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.notchplusUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = notchplus;
-			};
-			name = Debug;
-		};
-		342813042CC192CC006195BB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SQ2JHD7BTB;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.notchplusUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = notchplus;
 			};
 			name = Release;
 		};
@@ -563,24 +371,6 @@
 			buildConfigurations = (
 				342812FD2CC192CC006195BB /* Debug */,
 				342812FE2CC192CC006195BB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		342812FF2CC192CC006195BB /* Build configuration list for PBXNativeTarget "notchplusTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				342813002CC192CC006195BB /* Debug */,
-				342813012CC192CC006195BB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		342813022CC192CC006195BB /* Build configuration list for PBXNativeTarget "notchplusUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				342813032CC192CC006195BB /* Debug */,
-				342813042CC192CC006195BB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
