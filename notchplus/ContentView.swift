@@ -43,115 +43,115 @@ struct ContentView: View {
                     height: viewModel.notchState == .closed ? Sizes().size.closed.height! + (hoverAnimation ? 8 : 0) + gestureProgress / 3 : nil,
                     alignment: .top
                 )
-                .conditionalModifier(Defaults[.openNotchOnHover]) { view in
-                    view.onHover { hovering in
-                        if hovering {
-                            withAnimation(.bouncy) {
-                                hoverAnimation = true
-                            }
-                            
-                            if (viewModel.notchState == .closed) && Defaults[.enableHaptics] {
-                                haptics.toggle()
-                            }
-                            
-                            if viewModel.sneakPeek.show {
-                                return
-                            }
-                            
-                            startHoverTimer()
-                        } else {
-                            withAnimation(.bouncy) {
-                                hoverAnimation = false
-                            }
-                            
-                            cancelHoverTimer()
-                            
-                            if viewModel.notchState == .open {
-                                viewModel.close()
-                            }
-                        }
-                    }
-                }
-                .conditionalModifier(!Defaults[.openNotchOnHover]) { view in
-                    view
-                        .onHover { hovering in
-                            if hovering {
-                                withAnimation(viewModel.animation) {
-                                    hoverAnimation = true
-                                }
-                            } else {
-                                withAnimation(viewModel.animation) {
-                                    hoverAnimation = false
-                                }
-                            
-                                if viewModel.notchState == .open {
-                                    viewModel.close()
-                                }
-                            }
-                        }
-                        .onTapGesture {
-                            if (viewModel.notchState == .closed) && Defaults[.enableHaptics] {
-                                haptics.toggle()
-                            }
-                            doOpen()
-                        }
-                        .conditionalModifier(Defaults[.enableGestures]) { view in
-                            view.panGesture(direction: .down) { translation, phase in
-                                guard viewModel.notchState == .closed else { return }
-                                
-                                withAnimation(.smooth) {
-                                    gestureProgress = (translation / Defaults[.gestureSensitivity]) * 20
-                                }
-                                
-                                if phase == .ended {
-                                    withAnimation(.smooth) {
-                                        gestureProgress = .zero
-                                    }
-                                }
-                                
-                                if translation > Defaults[.gestureSensitivity] {
-                                    if Defaults[.enableHaptics] {
-                                        haptics.toggle()
-                                    }
-                                    
-                                    withAnimation(.smooth) {
-                                        gestureProgress = .zero
-                                    }
-                                    
-                                    doOpen()
-                                }
-                            }
-                        }
-                    
-                }
-                .conditionalModifier(Defaults[.closeGestureEnabled] && Defaults[.enableGestures]) { view in
-                    view.panGesture(direction: .up) { translation, phase in
-                        if viewModel.notchState == .open {
-                            withAnimation(.smooth) {
-                                gestureProgress = (translation / Defaults[.gestureSensitivity]) * -20
-                            }
-                            
-                            if phase == .ended {
-                                withAnimation(.smooth) {
-                                    gestureProgress = .zero
-                                }
-                            }
-                            
-                            if translation > Defaults[.gestureSensitivity] {
-                                withAnimation(.smooth) {
-                                    gestureProgress = .zero
-                                    hoverAnimation = false
-                                }
-                                
-                                viewModel.close()
-                                
-                                if (viewModel.notchState == .closed) && Defaults[.enableHaptics] {
-                                    haptics.toggle()
-                                }
-                            }
-                        }
-                    }
-                }
+//                .conditionalModifier(Defaults[.openNotchOnHover]) { view in
+//                    view.onHover { hovering in
+//                        if hovering {
+//                            withAnimation(.bouncy) {
+//                                hoverAnimation = true
+//                            }
+//                            
+//                            if (viewModel.notchState == .closed) && Defaults[.enableHaptics] {
+//                                haptics.toggle()
+//                            }
+//                            
+//                            if viewModel.sneakPeek.show {
+//                                return
+//                            }
+//                            
+//                            startHoverTimer()
+//                        } else {
+//                            withAnimation(.bouncy) {
+//                                hoverAnimation = false
+//                            }
+//                            
+//                            cancelHoverTimer()
+//                            
+//                            if viewModel.notchState == .open {
+//                                viewModel.close()
+//                            }
+//                        }
+//                    }
+//                }
+//                .conditionalModifier(!Defaults[.openNotchOnHover]) { view in
+//                    view
+//                        .onHover { hovering in
+//                            if hovering {
+//                                withAnimation(viewModel.animation) {
+//                                    hoverAnimation = true
+//                                }
+//                            } else {
+//                                withAnimation(viewModel.animation) {
+//                                    hoverAnimation = false
+//                                }
+//                            
+//                                if viewModel.notchState == .open {
+//                                    viewModel.close()
+//                                }
+//                            }
+//                        }
+//                        .onTapGesture {
+//                            if (viewModel.notchState == .closed) && Defaults[.enableHaptics] {
+//                                haptics.toggle()
+//                            }
+//                            doOpen()
+//                        }
+//                        .conditionalModifier(Defaults[.enableGestures]) { view in
+//                            view.panGesture(direction: .down) { translation, phase in
+//                                guard viewModel.notchState == .closed else { return }
+//                                
+//                                withAnimation(.smooth) {
+//                                    gestureProgress = (translation / Defaults[.gestureSensitivity]) * 20
+//                                }
+//                                
+//                                if phase == .ended {
+//                                    withAnimation(.smooth) {
+//                                        gestureProgress = .zero
+//                                    }
+//                                }
+//                                
+//                                if translation > Defaults[.gestureSensitivity] {
+//                                    if Defaults[.enableHaptics] {
+//                                        haptics.toggle()
+//                                    }
+//                                    
+//                                    withAnimation(.smooth) {
+//                                        gestureProgress = .zero
+//                                    }
+//                                    
+//                                    doOpen()
+//                                }
+//                            }
+//                        }
+//                    
+//                }
+//                .conditionalModifier(Defaults[.closeGestureEnabled] && Defaults[.enableGestures]) { view in
+//                    view.panGesture(direction: .up) { translation, phase in
+//                        if viewModel.notchState == .open {
+//                            withAnimation(.smooth) {
+//                                gestureProgress = (translation / Defaults[.gestureSensitivity]) * -20
+//                            }
+//                            
+//                            if phase == .ended {
+//                                withAnimation(.smooth) {
+//                                    gestureProgress = .zero
+//                                }
+//                            }
+//                            
+//                            if translation > Defaults[.gestureSensitivity] {
+//                                withAnimation(.smooth) {
+//                                    gestureProgress = .zero
+//                                    hoverAnimation = false
+//                                }
+//                                
+//                                viewModel.close()
+//                                
+//                                if (viewModel.notchState == .closed) && Defaults[.enableHaptics] {
+//                                    haptics.toggle()
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
                 .onAppear(perform: {
                     // the notch view already starts shaped after 0.1s
                     // change to `DispatchQueue.main.async { ... }` to make it start on open
