@@ -196,7 +196,7 @@ struct ContentView: View {
                             
                             Rectangle()
                                 .fill(.black)
-                                .frame(width: Sizes().size.closed.height! + 5)
+                                .frame(width: Sizes().size.closed.width! + 5)
                             
                             HStack {
                                 BatteryView(
@@ -208,8 +208,15 @@ struct ContentView: View {
                             .frame(width: 76, alignment: .trailing)
                         }
                         .frame(height: Sizes().size.closed.height! + (hoverAnimation ? 8 : 0), alignment: .center)
-                    } else if !viewModel.expandingView.show && viewModel.notchState == .closed && (musicManager.isPlaying || musicManager.isPlayerIdle) && viewModel.showMusicLiveActivityOnClosed {
+                    }
+                    else if viewModel.sneakPeek.show && Defaults[.inlineHUD] && (viewModel.sneakPeek.type != .music) && (viewModel.sneakPeek.type != .battery) {
+                        // not implemented
+                    }
+                    else if !viewModel.expandingView.show && viewModel.notchState == .closed && (musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.showMusicLiveActivityOnClosed {
                         MusicLiveActivity()
+                    }
+                    else {
+                        // not implemented
                     }
                 }
             }

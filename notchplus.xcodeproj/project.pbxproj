@@ -43,16 +43,6 @@
 			path = notchplus;
 			sourceTree = "<group>";
 		};
-		342812EB2CC192CB006195BB /* notchplusTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = notchplusTests;
-			sourceTree = "<group>";
-		};
-		342812F52CC192CC006195BB /* notchplusUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = notchplusUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,8 +78,6 @@
 			isa = PBXGroup;
 			children = (
 				342812D92CC192CA006195BB /* notchplus */,
-				342812EB2CC192CB006195BB /* notchplusTests */,
-				342812F52CC192CC006195BB /* notchplusUITests */,
 				3428130B2CC1B662006195BB /* Frameworks */,
 				342812D82CC192CA006195BB /* Products */,
 			);
@@ -154,9 +142,6 @@
 			dependencies = (
 				342812EA2CC192CB006195BB /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				342812EB2CC192CB006195BB /* notchplusTests */,
-			);
 			name = notchplusTests;
 			packageProductDependencies = (
 			);
@@ -176,9 +161,6 @@
 			);
 			dependencies = (
 				342812F42CC192CC006195BB /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				342812F52CC192CC006195BB /* notchplusUITests */,
 			);
 			name = notchplusUITests;
 			packageProductDependencies = (
