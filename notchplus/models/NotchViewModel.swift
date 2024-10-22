@@ -28,6 +28,7 @@ class NotchViewModel: NSObject, ObservableObject {
     
     let animation: Animation?
     let animationLibrary: NotchAnimations = .init()
+    let musicPlayerSizes: MusicPlayerElementSizes = .init()
     
     var notifier: TheBoringWorkerNotifier = .init()
     @Published private(set) var notchState: NotchState = .closed
@@ -103,6 +104,7 @@ class NotchViewModel: NSObject, ObservableObject {
             }
         }
     }
+    
     func toggleSneakPeek(status: Bool, type: SneakContentType, value: CGFloat = 0, icon: String = "") {
         if type != .music {
             close()

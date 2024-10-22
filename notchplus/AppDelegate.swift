@@ -24,7 +24,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             defer: false
         )
         
-        self.window.contentView = NSHostingView(rootView: ContentView().environmentObject(viewModel))
+        self.window.contentView = NSHostingView(
+            rootView: ContentView(onHover: adjustWindowPosition, batteryModel: .init(viewModel: self.viewModel))
+                .environmentObject(viewModel)
+                .environmentObject(MusicManager(viewModel: viewModel)!)
+        )
         
         adjustWindowPosition()
         

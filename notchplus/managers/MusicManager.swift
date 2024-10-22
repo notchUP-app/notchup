@@ -53,7 +53,7 @@ class MusicManager: ObservableObject {
         nowPlaying = NowPlaying()
         
         guard let bundle = CFBundleCreate(kCFAllocatorDefault, NSURL(fileURLWithPath: "/System/Library/PrivateFrameworks/MediaRemote.framework")),
-              let MRMediaRemoteGetNowPlayingInfoPointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteRegisterForNowPlayingNotifications" as CFString),
+              let MRMediaRemoteGetNowPlayingInfoPointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteGetNowPlayingInfo" as CFString),
               let MRMediaRemoteRegisterForNowPlayingNotificationsPointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteRegisterForNowPlayingNotifications" as CFString)
         else {
             print("Failed to load MediaRemote.framework or get function pointers")
@@ -65,6 +65,22 @@ class MusicManager: ObservableObject {
         self.MRMediaRemoteRegisterForNowPlayingNotifications = unsafeBitCast(MRMediaRemoteRegisterForNowPlayingNotificationsPointer, to: (@convention(c) (DispatchQueue) -> Void).self)
         
         
+        setupNowPlayingObserver()
+        fetchNowPlayingInfo()
+        
+        setupDetectorObserver()
+        
+        if nowPlaying.playing {
+            self.fetchNowPlayingInfo()
+        }
+    }
+    
+    private func setupDetectorObserver() {
+        detector.$currentAppInFullScreen
+            .sink { [weak self] _ in
+                self?.fetchNowPlayingInfo(bypass: true, bundle: self?.nowPlaying.appBundleIdentifier ?? nil)
+            }
+            .store(in: &cancellables)
     }
     
     private func observeNotification(name: String, handler: @escaping () -> Void) {
@@ -83,6 +99,7 @@ class MusicManager: ObservableObject {
     
     private func setupNowPlayingObserver() {
         MRMediaRemoteRegisterForNowPlayingNotifications(DispatchQueue.main)
+        print("Listening for media remote notifications")
         
         observeNotification(name: "kMRMediaRemoteNowPlayingInfoDidChangeNotification") { [weak self] in
             self?.fetchNowPlayingInfo(bundle: self?.nowPlaying.appBundleIdentifier ?? nil)
@@ -97,6 +114,7 @@ class MusicManager: ObservableObject {
         }
         
         observeNotification(name: "com.apple.Music.playerInfo") { [weak self] in
+            print("com.apple.Music.playerInfo")
             self?.fetchNowPlayingInfo(bundle: "com.apple.Music")
         }
     }

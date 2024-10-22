@@ -26,6 +26,7 @@ func setNotchSize(screen: String? = nil) -> CGSize {
            let topRightNotchPadding: CGFloat = screen.auxiliaryTopRightArea?.width
         {
             notchWidth = screen.frame.width - topLeftNotchPadding - topRightNotchPadding + 10
+            print("notch width: \(notchWidth)")
         }
         
         // use menubar height if no notch
@@ -35,6 +36,8 @@ func setNotchSize(screen: String? = nil) -> CGSize {
         if screen.safeAreaInsets.top > 0 {
             notchHeight = screen.safeAreaInsets.top
         }
+        
+        print("notch height: \(notchHeight)")
     }
     
     return .init(width: notchWidth, height: notchHeight)
@@ -54,7 +57,22 @@ struct StatesSizes {
 struct Sizes {
     var cornerRadius: StatesSizes = StatesSizes(opened: Area(inset: 24), closed: Area(inset: 10))
     var size: StatesSizes = StatesSizes(
-        opened: Area(width: 580, height: 150),
+        opened: Area(width: 580, height: 175),
         closed: Area(width: closedNotchSize.width, height: closedNotchSize.height)
+    )
+}
+
+struct MusicPlayerElementSizes {
+    var baseSize: Sizes = Sizes()
+    
+    var image: Sizes = Sizes(
+        cornerRadius: StatesSizes(opened: Area(inset: 13), closed: Area(inset: 4)),
+        size: StatesSizes(opened: Area(width: 90, height: 90), closed: Area(width: 20, height: 20))
+    )
+    
+    var player: Sizes = Sizes(
+        size: StatesSizes(
+            opened: Area(width: 440), closed: Area(width: closedNotchSize.width)
+        )
     )
 }
