@@ -18,9 +18,24 @@
 		34B0E0482CC5EA3700320288 /* MediaRemote.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaRemote.framework; path = ../../../../../System/Library/PrivateFrameworks/MediaRemote.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		34CC09802CC8178A0041A3AF /* Exceptions for "notchplus" folder in "notchplus" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				app/notchPlus/notchplus.app,
+				app/notchPlus/notchplus.zip,
+				notchplus.app,
+			);
+			target = 342812D62CC192CA006195BB /* notchplus */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		342812D92CC192CA006195BB /* notchplus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				34CC09802CC8178A0041A3AF /* Exceptions for "notchplus" folder in "notchplus" target */,
+			);
 			path = notchplus;
 			sourceTree = "<group>";
 		};

@@ -17,6 +17,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationDidFinishLaunching(_ notification: Notification) {
+        NSApplication.shared.setActivationPolicy(.accessory)
+        
         self.window = NotchPlusWindow(
             contentRect: NSRect(x: 0, y: 0, width: sizing.size.opened.width! + 20 , height: sizing.size.opened.height! + 30),
             styleMask: [.borderless, .nonactivatingPanel, .utilityWindow, .hudWindow],
