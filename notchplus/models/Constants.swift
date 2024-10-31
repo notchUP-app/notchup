@@ -9,6 +9,9 @@ import Foundation
 import Defaults
 
 extension Defaults.Keys {
+    // GENERAL
+    static let menuBarIcon = Key<Bool>("menuBarIcon", default: true)
+    
     // APPEARENCE
     static let cornerRadiusScaling = Key<Bool>("cornerRadiusScaling", default: true)
     static let enableShadow = Key<Bool>("enableShadow", default: true)
