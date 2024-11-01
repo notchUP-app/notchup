@@ -155,7 +155,7 @@ struct ContentView: View {
                 .onAppear(perform: {
                     // the notch view already starts shaped after 0.1s
                     // change to `DispatchQueue.main.async { ... }` to make it start on open
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         withAnimation(viewModel.animation) {
                             if viewModel.firstLaunch {
                                 doOpen()
@@ -164,6 +164,23 @@ struct ContentView: View {
                     }
                 })
                 .sensoryFeedback(.alignment, trigger: haptics)
+                .contextMenu {
+                    SettingsLink(label: {
+                        Text("Settings")
+                    })
+                    .keyboardShortcut(KeyEquivalent(","), modifiers: .command)
+                
+                    Button("Edit") {
+                        let dynamicNotch = DynamicNotch(content: EditPanelView())
+                        dynamicNotch.toggle()
+                    }
+#if DEBUG
+                    .disabled(false)
+#else
+                    .disabled(true)
+#endif
+                    .keyboardShortcut(KeyEquivalent("E"), modifiers: .command)
+                }
         }
         .frame(maxWidth: Sizes().size.opened.width! + 40, maxHeight: Sizes().size.opened.height! + 20, alignment: .top)
         .shadow(color: (viewModel.notchState == .open && Defaults[.enableShadow] ? .black.opacity(0.6) : .clear), radius: Defaults[.cornerRadiusScaling] ? 10 : 5)
