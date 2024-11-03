@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import TheBoringWorkerNotifier
+import Defaults
 
 struct sneak {
     var show: Bool = false
@@ -33,6 +34,7 @@ class NotchViewModel: NSObject, ObservableObject {
     var notifier: TheBoringWorkerNotifier = .init()
     @Published private(set) var notchState: NotchState = .closed
     @Published var notchMetastability: Bool = true // true if notch is closed
+    @Published var currentView: NotchViews = .home
     
     @AppStorage("firstLaunch") var firstLaunch: Bool = true
     
@@ -138,6 +140,7 @@ class NotchViewModel: NSObject, ObservableObject {
             }
         }
     }
+    
     func toggleExpandingView(status: Bool, type: SneakContentType, value: CGFloat = 0, browser: BrowserType = .chromium) {
         if expandingView.show {
             withAnimation(.smooth) {
@@ -168,6 +171,25 @@ class NotchViewModel: NSObject, ObservableObject {
     func toggleMusicLiveActivityOnClosed(status: Bool) {
         withAnimation(.smooth) {
             self.showMusicLiveActivityOnClosed = status
+        }
+    }
+    
+    @AppStorage("alwaysShowTabs") var alwaysShowTabs: Bool = true {
+        didSet {
+            if !alwaysShowTabs {
+                openLastTabByDefault = false
+                if !Defaults[.openShelfByDefault] {
+                    currentView = .home
+                }
+            }
+        }
+    }
+    
+    @AppStorage("openLastTabByDefault") var openLastTabByDefault: Bool = true {
+        didSet {
+            if openLastTabByDefault {
+                alwaysShowTabs = true
+            }
         }
     }
 }

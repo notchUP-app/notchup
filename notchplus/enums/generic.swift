@@ -21,3 +21,7 @@ public enum BrowserType {
     case safari
     case chromium
 }
+
+public enum NotchViews {
+    case home
+}

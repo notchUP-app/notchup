@@ -203,7 +203,8 @@ struct ContentView: View {
                         })
                         .padding(.top, 40)
                     Spacer()
-                } else {
+                }
+                else {
                     if viewModel.expandingView.type == .battery && viewModel.expandingView.show && viewModel.notchState == .closed {
                         HStack(spacing: 0) {
                             HStack {
@@ -233,10 +234,54 @@ struct ContentView: View {
                         MusicLiveActivity()
                     }
                     else {
-                        // not implemented
+                        NotchHeader()
+                            .frame(height: Sizes().size.closed.height!)
+                            .blur(radius: abs(gestureProgress) > 0.3 ? min(abs(gestureProgress), 8) : 0)
+                    }
+                    
+                    if viewModel.sneakPeek.show && Defaults[.inlineHUD] {
+                        if (viewModel.sneakPeek.type != .music) && (viewModel.sneakPeek.type != .battery) {
+                            SystemEventIndicatorModifier(
+                                eventType: $viewModel.sneakPeek.type,
+                                icon: $viewModel.sneakPeek.icon,
+                                value: $viewModel.sneakPeek.value,
+                                sendEventBack: { _ in }
+                            )
+                            .padding(.bottom, 10)
+                            .padding(.leading, 4)
+                            .padding(.trailing, 8)
+                        } else if viewModel.sneakPeek.type != .battery {
+                            if viewModel.notchState == .closed {
+                                HStack(alignment: .center) {
+                                    Image(systemName: "music.note")
+                                    GeometryReader { geometry in
+                                            Text("MarqueeText")
+                                    }
+                                }
+                                .foregroundStyle(.gray)
+                                .padding(.bottom, 10)
+                            }
+                        }
                     }
                 }
             }
+            .conditionalModifier((viewModel.sneakPeek.show && (viewModel.sneakPeek.type == .music) && viewModel.notchState == .closed) || (viewModel.sneakPeek.show && (viewModel.sneakPeek.type != .music) && (musicManager.isPlaying || !musicManager.isPlayerIdle ))) {
+                view in view.fixedSize()
+            }
+            .zIndex(2)
+            
+            ZStack {
+                if viewModel.notchState == .open {
+                    switch viewModel.currentView {
+                        case .home:
+                            Text("Home")
+                    }
+                }
+            }
+            .zIndex(1)
+            .allowsHitTesting(viewModel.notchState == .open)
+            .blur(radius: abs(gestureProgress) > 0.3 ? min(gestureProgress, 8) : 0)
+            
         }
     }
     
