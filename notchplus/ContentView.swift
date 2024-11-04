@@ -228,7 +228,14 @@ struct ContentView: View {
                         .frame(height: Sizes().size.closed.height! + (hoverAnimation ? 8 : 0), alignment: .center)
                     }
                     else if viewModel.sneakPeek.show && Defaults[.inlineHUD] && (viewModel.sneakPeek.type != .music) && (viewModel.sneakPeek.type != .battery) {
-                        // not implemented
+                        InlineHUD(
+                            type: $viewModel.sneakPeek.type,
+                            value: $viewModel.sneakPeek.value,
+                            icon: $viewModel.sneakPeek.icon,
+                            hoverAnimation: $hoverAnimation,
+                            gestureProgress: $gestureProgress
+                        )
+                        .transition(.opacity)
                     }
                     else if !viewModel.expandingView.show && viewModel.notchState == .closed && (musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.showMusicLiveActivityOnClosed {
                         MusicLiveActivity()
