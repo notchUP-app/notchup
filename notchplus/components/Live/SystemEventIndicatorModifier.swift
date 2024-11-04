@@ -157,6 +157,6 @@ struct DraggableProgressBar: View {
         let dragPosition = gesture.location.x
         let newValue = dragPosition / geometry.size.width
         
-        self.value = max(0, min(1, newValue))
+        self.value = max(0, min(newValue, 1))
     }
 }

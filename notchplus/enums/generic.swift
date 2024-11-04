@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Defaults
 
 public enum Style {
     case notch
@@ -24,4 +25,10 @@ public enum BrowserType {
 
 public enum NotchViews {
     case home
+}
+
+public enum SliderColorEnum: String, CaseIterable, Defaults.Serializable {
+    case white = "White"
+    case albumArt = "Match album art"
+    case accent = "Accent color"
 }

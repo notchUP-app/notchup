@@ -138,6 +138,7 @@
 				342813082CC1B458006195BB /* XCRemoteSwiftPackageReference "Sparkle" */,
 				342813202CC206E1006195BB /* XCRemoteSwiftPackageReference "TheBoringWorkerNotifier" */,
 				342813232CC20DA5006195BB /* XCRemoteSwiftPackageReference "Defaults" */,
+				341F13002CD842DF00606F9D /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 342812D82CC192CA006195BB /* Products */;
@@ -393,6 +394,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		341F13002CD842DF00606F9D /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.4;
+			};
+		};
 		342813082CC1B458006195BB /* XCRemoteSwiftPackageReference "Sparkle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";

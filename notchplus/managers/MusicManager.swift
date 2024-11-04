@@ -19,13 +19,14 @@ class MusicManager: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var debounceToggle: DispatchWorkItem?
     private var viewModel: NotchViewModel
-    private var lastMusicItem: (title: String, artist: String, album: String, artworkData: Data?)?
+    private var lastMusicItem: (title: String, artist: String, album: String, duration: TimeInterval, artworkData: Data?)?
     private var isCurrentlyPlaying: Bool = false
     
     @Published var songTitle: String = ""
     @Published var songArtist: String = ""
     @Published var songAlbum: String = ""
     @Published var songArtwork: NSImage = defaultImage
+    @Published var songDuration: TimeInterval = 0
     @Published var isPlaying: Bool = false
     @Published var avgColor: NSColor = .white
     @Published var isPlayerIdle: Bool = true
@@ -129,13 +130,14 @@ class MusicManager: ObservableObject {
         }
     }
     
-    private func extractMusicInfo(from information: [String: Any]) -> (title: String, artist: String, album: String, artworkData: Data?) {
+    private func extractMusicInfo(from information: [String: Any]) -> (title: String, artist: String, album: String, duration: TimeInterval, artworkData: Data?) {
         let title = information["kMRMediaRemoteNowPlayingInfoTitle"] as? String ?? ""
         let artist = information["kMRMediaRemoteNowPlayingInfoArtist"] as? String ?? ""
         let album = information["kMRMediaRemoteNowPlayingInfoAlbum"] as? String ?? ""
+        let duration = information["kMRMediaRemoteNowPlayingInfoDuration"] as? TimeInterval ?? 0
         let artworkData = information["kMRMediaRemoteNowPlayingInfoArtworkData"] as? Data
         
-        return (title, artist, album, artworkData)
+        return (title, artist, album, duration, artworkData)
     }
     
     private func updateArtwork(_ artworkData: Data?, state: Int?) {
@@ -229,19 +231,23 @@ class MusicManager: ObservableObject {
         }
     }
     
-    private func updateMusicState(newInfo: (title: String, artist: String, album: String, artworkData: Data?), state: Int?) {
-        self.lastMusicItem = newInfo
-        
+    private func updateMusicState(newInfo: (title: String, artist: String, album: String, duration: TimeInterval, artworkData: Data?), state: Int?) {
         print("Media source: ", bundleIdentifier)
         
-        updateArtwork(newInfo.artworkData, state: state)
+        if (newInfo.artworkData != nil && newInfo.artworkData != lastMusicItem?.artworkData) {
+            updateArtwork(newInfo.artworkData, state: state)
+            self.lastMusicItem?.artworkData = newInfo.artworkData
+        }
+
         updatePlaybackState(state)
+        self.lastMusicItem = (title: newInfo.title, artist: newInfo.artist, album: newInfo.album, duration: newInfo.duration, artworkData: lastMusicItem?.artworkData)
         
         if !self.isPlaying { return }
         
         self.songArtist = newInfo.artist
         self.songTitle = newInfo.title
         self.songAlbum = newInfo.album
+        self.songDuration = newInfo.duration
     }
     
     @objc func fetchNowPlayingInfo(bypass: Bool = false, bundle: String? = nil) {
@@ -285,6 +291,10 @@ class MusicManager: ObservableObject {
     func previousTrack() {
         playbackManager.previousTrack()
         fetchNowPlayingInfo(bypass: true)
+    }
+    
+    func seekTrack(to time: TimeInterval) {
+        playbackManager.seekTrack(to: time)
     }
     
     func openAppMusic() {

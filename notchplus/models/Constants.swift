@@ -18,6 +18,8 @@ extension Defaults.Keys {
     static let enableShadow = Key<Bool>("enableShadow", default: true)
     static let settingsIconInNotch = Key<Bool>("settingsIconInNotch", default: false)
     static let accentColor = Key<Color>("accentColor", default: Color.blue)
+    static let lightingEffect = Key<Bool>("lightingEffect", default: true)
+    static let sliderColor = Key<SliderColorEnum>("sliderUseAlbumArtColor", default: SliderColorEnum.white)
     
     // MEDIA PLAYBACK
     static let coloredSpectogram = Key<Bool>("coloredSpectogram", default: true)

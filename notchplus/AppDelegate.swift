@@ -11,6 +11,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let viewModel: NotchViewModel = .init()
     var window: NotchPlusWindow!
     let sizing: Sizes = .init()
+    private var previousScreens: [NSScreen]?
     
     func applicationWillTerminate(_ notification: Notification) {
         NotificationCenter.default.removeObserver(self)
@@ -18,6 +19,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApplication.shared.setActivationPolicy(.accessory)
+        
+        viewModel.setupWorkersNotificationsObservers()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(adjustWindowPosition),
+            name: NSApplication.didChangeScreenParametersNotification,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name.selectedScreenChanged, object: nil, queue: nil) { [ weak self ] _ in
+            self?.adjustWindowPosition()
+        }
         
         self.window = NotchPlusWindow(
             contentRect: NSRect(x: 0, y: 0, width: sizing.size.opened.width! + 20 , height: sizing.size.opened.height! + 30),

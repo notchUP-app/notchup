@@ -10,11 +10,18 @@ import Combine
 import TheBoringWorkerNotifier
 import Defaults
 
-struct sneak {
+struct Sneak {
     var show: Bool = false
     var type: SneakContentType = .music
     var value: CGFloat = 0
     var icon: String = ""
+}
+
+struct SharedSneakPeek: Codable {
+    var show: Bool
+    var type: String
+    var value: String
+    var icon: String
 }
 
 struct ExpandedItem {
@@ -47,6 +54,36 @@ class NotchViewModel: NSObject, ObservableObject {
         self.animation = animationLibrary.animation
         self.notifier = TheBoringWorkerNotifier()
         super.init()
+    }
+    
+    func setupWorkersNotificationsObservers() {
+        notifier.setupObserver(notification: notifier.sneakPeakNotification, handler: sneakPeekEvent)
+        notifier.setupObserver(notification: notifier.micStatusNotification, handler: initialMicStatus)
+    }
+    
+    @AppStorage("currentMicStatus") var currentMicStatus: Bool = false
+    @objc func initialMicStatus(_ notification: Notification) {
+        self.currentMicStatus = notification.userInfo?.first?.value as! Bool
+    }
+    
+    @objc func sneakPeekEvent(_ notification: Notification) {
+        let decoder = JSONDecoder()
+        if let decodedData = try? decoder.decode(SharedSneakPeek.self, from: notification.userInfo?.first?.value as! Data) {
+            let contentType = 
+            decodedData.type == "brightness" ? SneakContentType.brightness
+            : decodedData.type == "volume" ? SneakContentType.volume
+            : decodedData.type == "backlight" ? SneakContentType.backlight
+            : decodedData.type == "mic" ? SneakContentType.mic
+            : SneakContentType.brightness
+            
+            let value = CGFloat((NumberFormatter().number(from: decodedData.value) ?? 0.0).floatValue)
+            let icon = decodedData.icon
+            
+            print("Decoded Data: \(decodedData)")
+            toggleSneakPeek(status: decodedData.show, type: contentType, value: value, icon: icon)
+        } else {
+            print("Failed to decode JSON data")
+        }
     }
     
     @Published var sizes: Sizes = .init()
@@ -85,11 +122,15 @@ class NotchViewModel: NSObject, ObservableObject {
         }
     }
     
-    @AppStorage("selected_screen") var selectedScreen = NSScreen.main?.localizedName ?? "Unknown Screen"
+    @AppStorage("selected_screen") var selectedScreen = NSScreen.main?.localizedName ?? "Unknown Screen" {
+        didSet {
+            NotificationCenter.default.post(name: Notification.Name.selectedScreenChanged, object: nil)
+        }
+    }
     
     // SNEAK METHODS
     private var sneakPeekDispatch: DispatchWorkItem?
-    @Published var sneakPeek: sneak = .init() {
+    @Published var sneakPeek: Sneak = .init() {
         didSet {
             if sneakPeek.show {
                 sneakPeekDispatch?.cancel()
@@ -122,6 +163,10 @@ class NotchViewModel: NSObject, ObservableObject {
                 self.sneakPeek.value = value
                 self.sneakPeek.icon = icon
             }
+        }
+        
+        if (type == .mic) {
+            currentMicStatus = value == 1
         }
     }
     
@@ -164,7 +209,7 @@ class NotchViewModel: NSObject, ObservableObject {
         }
     }
     func toggleHudReplacement() {
-        // implement notifier
+        notifier.postNotification(name: notifier.toggleHudReplacementNotification.name, userInfo: nil)
     }
     
     @Published var showMusicLiveActivityOnClosed: Bool = true
@@ -192,4 +237,6 @@ class NotchViewModel: NSObject, ObservableObject {
             }
         }
     }
+    
+    
 }

@@ -13,7 +13,18 @@ struct NotchHeader: View {
     @EnvironmentObject var batteryModel: BatteryStatusViewModel
     
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
+            
+            HStack {
+                if viewModel.notchState == .open {
+                    EmptyView()
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .opacity(viewModel.notchState == .closed ? 0 : 1)
+            .blur(radius: viewModel.notchState == .closed ? 20 : 0)
+            .animation(.smooth.delay(0.2), value: viewModel.notchSize)
+            .zIndex(2)
             
             if viewModel.notchState == .open {
                 Rectangle()

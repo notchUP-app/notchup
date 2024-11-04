@@ -239,7 +239,7 @@ struct ContentView: View {
                             .blur(radius: abs(gestureProgress) > 0.3 ? min(abs(gestureProgress), 8) : 0)
                     }
                     
-                    if viewModel.sneakPeek.show && Defaults[.inlineHUD] {
+                    if viewModel.sneakPeek.show && !Defaults[.inlineHUD] {
                         if (viewModel.sneakPeek.type != .music) && (viewModel.sneakPeek.type != .battery) {
                             SystemEventIndicatorModifier(
                                 eventType: $viewModel.sneakPeek.type,
@@ -255,7 +255,12 @@ struct ContentView: View {
                                 HStack(alignment: .center) {
                                     Image(systemName: "music.note")
                                     GeometryReader { geometry in
-                                            Text("MarqueeText")
+                                        MarqueeText(
+                                            musicManager.songTitle + " - " + musicManager.songArtist,
+                                            textColor: .gray,
+                                            minDuration: 1,
+                                            frameWidth: geometry.size.width
+                                        )
                                     }
                                 }
                                 .foregroundStyle(.gray)
@@ -274,7 +279,7 @@ struct ContentView: View {
                 if viewModel.notchState == .open {
                     switch viewModel.currentView {
                         case .home:
-                            Text("Home")
+                        NotchHomeView(albumArtNamespace: albumArtNamespace)
                     }
                 }
             }
