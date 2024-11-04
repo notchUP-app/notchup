@@ -33,6 +33,10 @@ class MusicManager: ObservableObject {
     @Published var bundleIdentifier: String = "com.apple.Music"
     @Published var musicToggledManually: Bool = false
     
+    @Published var elapsedTime: TimeInterval = 0
+    @Published var timestampDate: Date = Date()
+    @Published var playbackRate: Double = 0
+    
     @Published var lastUpdated: Date = .init()
     @Published var animations: NotchAnimations = .init()
     @Published var playbackManager = PlaybackManager()
@@ -251,7 +255,7 @@ class MusicManager: ObservableObject {
     }
     
     @objc func fetchNowPlayingInfo(bypass: Bool = false, bundle: String? = nil) {
-        if musicToggledManually && bypass { return }
+        if musicToggledManually && !bypass { return }
         
         updateBundleIdentifier(bundle)
         
@@ -262,6 +266,17 @@ class MusicManager: ObservableObject {
             let state: Int? = info["kMRMediaRemoteNowPlayingInfoPlaybackRate"] as? Int
             
             self.updateMusicState(newInfo: newInfo, state: state)
+            
+            guard let elapsedTime = info["kMRMediaRemoteNowPlayingInfoElapsedTime"] as? TimeInterval,
+                  let timestampDate = info["kMRMediaRemoteNowPlayingInfoTimestamp"] as? Date,
+                  let playbackRate = info["kMRMediaRemoteNowPlayingInfoPlaybackRate"] as? Double
+            else { return }
+                  
+            DispatchQueue.main.async {
+                self.elapsedTime = elapsedTime
+                self.timestampDate = timestampDate
+                self.playbackRate = playbackRate
+            }
         }
     }
     

@@ -108,7 +108,33 @@ struct NotchHomeView: View {
                 .opacity(viewModel.notchState == .closed ? 0 : 1)
                 .blur(radius: viewModel.notchState == .closed ? 20 : 0)
             }
+            .onAppear {
+                viewModel.open()
+                sliderValue = musicManager.elapsedTime
+                startTimer()
+            }
+            .onDisappear {
+                timer?.cancel()
+            }
         }
+    }
+    
+    private func startTimer() {
+        timer = Timer.publish(every: 0.1, on: .main, in: .common)
+            .autoconnect()
+            .sink { [self] _ in
+                self.updateSliderValue()
+            }
+    }
+    
+    private func updateSliderValue() {
+        guard !dragging, musicManager.isPlaying, musicManager.timestampDate > lastDragged else { return }
+        
+        let currentTime = Date()
+        let timeDifference = currentTime.timeIntervalSince(musicManager.timestampDate)
+        
+        let currentEllapsedTime = musicManager.elapsedTime + (timeDifference * musicManager.playbackRate)
+        sliderValue = min(currentEllapsedTime, musicManager.songDuration)
     }
 }
 
