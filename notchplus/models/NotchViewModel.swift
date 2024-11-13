@@ -60,7 +60,7 @@ class NotchViewModel: NSObject, ObservableObject {
         
         super.init()
         // FIRST LAUNCH ANIMATION TAG
-        self.firstLaunch = false
+        self.firstLaunch = true
         
         Publishers.CombineLatest($dropZoneTargeting, $dragDetectorTargetting)
             .map { value1, value2 in
