@@ -10,8 +10,24 @@
 		3428130A2CC1B641006195BB /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 342813092CC1B641006195BB /* Sparkle */; };
 		342813222CC206E1006195BB /* TheBoringWorkerNotifier in Frameworks */ = {isa = PBXBuildFile; productRef = 342813212CC206E1006195BB /* TheBoringWorkerNotifier */; };
 		342813252CC20DA5006195BB /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = 342813242CC20DA5006195BB /* Defaults */; };
-		34B0E0492CC5EA3700320288 /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B0E0482CC5EA3700320288 /* MediaRemote.framework */; };
+		346469D32CDAD74B00977B36 /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B0E0482CC5EA3700320288 /* MediaRemote.framework */; };
+		346469D42CDAD74B00977B36 /* MediaRemote.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 34B0E0482CC5EA3700320288 /* MediaRemote.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3477D5052CD99616008A4E5E /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 3477D5042CD99616008A4E5E /* Collections */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		346469D52CDAD74B00977B36 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				346469D42CDAD74B00977B36 /* MediaRemote.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		342812D72CC192CA006195BB /* notchplus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = notchplus.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,9 +62,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				34B0E0492CC5EA3700320288 /* MediaRemote.framework in Frameworks */,
 				342813252CC20DA5006195BB /* Defaults in Frameworks */,
+				3477D5052CD99616008A4E5E /* Collections in Frameworks */,
 				3428130A2CC1B641006195BB /* Sparkle in Frameworks */,
+				346469D32CDAD74B00977B36 /* MediaRemote.framework in Frameworks */,
 				342813222CC206E1006195BB /* TheBoringWorkerNotifier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -91,6 +108,7 @@
 				342812D32CC192CA006195BB /* Sources */,
 				342812D42CC192CA006195BB /* Frameworks */,
 				342812D52CC192CA006195BB /* Resources */,
+				346469D52CDAD74B00977B36 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -104,6 +122,7 @@
 				342813092CC1B641006195BB /* Sparkle */,
 				342813212CC206E1006195BB /* TheBoringWorkerNotifier */,
 				342813242CC20DA5006195BB /* Defaults */,
+				3477D5042CD99616008A4E5E /* Collections */,
 			);
 			productName = notchplus;
 			productReference = 342812D72CC192CA006195BB /* notchplus.app */;
@@ -138,7 +157,7 @@
 				342813082CC1B458006195BB /* XCRemoteSwiftPackageReference "Sparkle" */,
 				342813202CC206E1006195BB /* XCRemoteSwiftPackageReference "TheBoringWorkerNotifier" */,
 				342813232CC20DA5006195BB /* XCRemoteSwiftPackageReference "Defaults" */,
-				341F13002CD842DF00606F9D /* XCRemoteSwiftPackageReference "swift-collections" */,
+				3477D5032CD99616008A4E5E /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 342812D82CC192CA006195BB /* Products */;
@@ -394,14 +413,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		341F13002CD842DF00606F9D /* XCRemoteSwiftPackageReference "swift-collections" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-collections.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.4;
-			};
-		};
 		342813082CC1B458006195BB /* XCRemoteSwiftPackageReference "Sparkle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
@@ -426,6 +437,14 @@
 				kind = branch;
 			};
 		};
+		3477D5032CD99616008A4E5E /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -443,6 +462,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 342813232CC20DA5006195BB /* XCRemoteSwiftPackageReference "Defaults" */;
 			productName = Defaults;
+		};
+		3477D5042CD99616008A4E5E /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3477D5032CD99616008A4E5E /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

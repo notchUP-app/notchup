@@ -12,11 +12,12 @@ extension Defaults.Keys {
     // GENERAL
     static let menuBarIcon = Key<Bool>("menuBarIcon", default: true)
     static let openShelfByDefault = Key<Bool>("openShelfByDefault", default: false)
+    static let dropBoxByDefault = Key<Bool>("dropBoxByDefault", default: true)
     
     // APPEARENCE
     static let cornerRadiusScaling = Key<Bool>("cornerRadiusScaling", default: true)
     static let enableShadow = Key<Bool>("enableShadow", default: true)
-    static let settingsIconInNotch = Key<Bool>("settingsIconInNotch", default: false)
+    static let settingsIconInNotch = Key<Bool>("settingsIconInNotch", default: true)
     static let accentColor = Key<Color>("accentColor", default: Color.blue)
     static let lightingEffect = Key<Bool>("lightingEffect", default: true)
     static let sliderColor = Key<SliderColorEnum>("sliderUseAlbumArtColor", default: SliderColorEnum.white)

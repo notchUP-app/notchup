@@ -107,6 +107,11 @@ struct NotchHomeView: View {
                 .buttonStyle(PlainButtonStyle())
                 .opacity(viewModel.notchState == .closed ? 0 : 1)
                 .blur(radius: viewModel.notchState == .closed ? 20 : 0)
+                
+                if Defaults[.dropBoxByDefault] {
+                    Spacer()
+                    NotchDropView()
+                }
             }
             .onAppear {
                 viewModel.open()

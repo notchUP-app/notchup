@@ -38,12 +38,16 @@ class NotchViewModel: NSObject, ObservableObject {
     let animationLibrary: NotchAnimations = .init()
     let musicPlayerSizes: MusicPlayerElementSizes = .init()
     
-    var notifier: TheBoringWorkerNotifier = .init()
+    @Published var sizes: Sizes = .init()
+    @Published var notchSize: CGSize = .init(width: Sizes().size.closed.width!, height: Sizes().size.closed.height!)
     @Published private(set) var notchState: NotchState = .closed
     @Published var notchMetastability: Bool = true // true if notch is closed
-    @Published var currentView: NotchViews = .home
+    @Published var spacing: CGFloat = 16
     
+    @Published var currentView: NotchViews = .home
     @AppStorage("firstLaunch") var firstLaunch: Bool = true
+    
+    var notifier: TheBoringWorkerNotifier = .init()
     
     deinit {
         cancellables.forEach { $0.cancel() }
@@ -53,7 +57,9 @@ class NotchViewModel: NSObject, ObservableObject {
     override init() {
         self.animation = animationLibrary.animation
         self.notifier = TheBoringWorkerNotifier()
+        
         super.init()
+        self.firstLaunch = true
     }
     
     func setupWorkersNotificationsObservers() {
@@ -61,15 +67,31 @@ class NotchViewModel: NSObject, ObservableObject {
         notifier.setupObserver(notification: notifier.micStatusNotification, handler: initialMicStatus)
     }
     
-    @AppStorage("currentMicStatus") var currentMicStatus: Bool = false
-    @objc func initialMicStatus(_ notification: Notification) {
-        self.currentMicStatus = notification.userInfo?.first?.value as! Bool
+    // MARK: - SneakPeek
+    private var sneakPeekDispatch: DispatchWorkItem?
+    
+    @Published var sneakPeek: Sneak = .init() {
+        didSet {
+            if sneakPeek.show {
+                sneakPeekDispatch?.cancel()
+                
+                sneakPeekDispatch = DispatchWorkItem { [weak self] in
+                    guard let self = self else { return }
+                    
+                    withAnimation {
+                        self.toggleSneakPeek(status: false, type: SneakContentType.music)
+                    }
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: sneakPeekDispatch!)
+            }
+        }
     }
     
     @objc func sneakPeekEvent(_ notification: Notification) {
         let decoder = JSONDecoder()
         if let decodedData = try? decoder.decode(SharedSneakPeek.self, from: notification.userInfo?.first?.value as! Data) {
-            let contentType = 
+            let contentType =
             decodedData.type == "brightness" ? SneakContentType.brightness
             : decodedData.type == "volume" ? SneakContentType.volume
             : decodedData.type == "backlight" ? SneakContentType.backlight
@@ -83,68 +105,6 @@ class NotchViewModel: NSObject, ObservableObject {
             toggleSneakPeek(status: decodedData.show, type: contentType, value: value, icon: icon)
         } else {
             print("Failed to decode JSON data")
-        }
-    }
-    
-    @Published var sizes: Sizes = .init()
-    @Published var notchSize: CGSize = .init(width: Sizes().size.closed.width!, height: Sizes().size.closed.height!)
-    
-    // ANIMATION METHODS
-    func open() {
-        withAnimation(.bouncy) {
-            self.notchSize = .init(width: Sizes().size.opened.width!, height: Sizes().size.opened.height!)
-            self.notchMetastability = true
-            self.notchState = .open
-        }
-    }
-    
-    func close() {
-        withAnimation(.smooth) {
-            self.notchSize = .init(width: Sizes().size.closed.width!, height: Sizes().size.closed.height!)
-            self.notchMetastability = false
-            self.notchState = .closed
-        }
-    }
-    
-    func closeHello() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.2) {
-            self.firstLaunch = false
-            withAnimation(self.animationLibrary.animation) {
-                self.close()
-            }
-        }
-    }
-    
-    func restartHello() {
-        self.firstLaunch = true
-        withAnimation(self.animationLibrary.animation) {
-            self.open()
-        }
-    }
-    
-    @AppStorage("selected_screen") var selectedScreen = NSScreen.main?.localizedName ?? "Unknown Screen" {
-        didSet {
-            NotificationCenter.default.post(name: Notification.Name.selectedScreenChanged, object: nil)
-        }
-    }
-    
-    // SNEAK METHODS
-    private var sneakPeekDispatch: DispatchWorkItem?
-    @Published var sneakPeek: Sneak = .init() {
-        didSet {
-            if sneakPeek.show {
-                sneakPeekDispatch?.cancel()
-                
-                sneakPeekDispatch = DispatchWorkItem { [weak self] in
-                    guard let self = self else { return }
-                        
-                    withAnimation {
-                        self.toggleSneakPeek(status: false, type: SneakContentType.music)
-                    }
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: sneakPeekDispatch!)
-            }
         }
     }
     
@@ -169,6 +129,8 @@ class NotchViewModel: NSObject, ObservableObject {
             currentMicStatus = value == 1
         }
     }
+    
+    // MARK: - Expanding View
     
     private var expandingViewDispatch: DispatchWorkItem?
     @Published var expandingView: ExpandedItem = .init() {
@@ -203,6 +165,27 @@ class NotchViewModel: NSObject, ObservableObject {
         }
     }
     
+    // MARK: - View Variables
+    
+    @AppStorage("selected_screen") var selectedScreen = NSScreen.main?.localizedName ?? "Unknown Screen" {
+        didSet {
+            NotificationCenter.default.post(name: Notification.Name.selectedScreenChanged, object: nil)
+        }
+    }
+    
+    @AppStorage("currentMicStatus") var currentMicStatus: Bool = false
+    @objc func initialMicStatus(_ notification: Notification) {
+        self.currentMicStatus = notification.userInfo?.first?.value as! Bool
+    }
+    
+    @AppStorage("openLastTabByDefault") var openLastTabByDefault: Bool = true {
+        didSet {
+            if openLastTabByDefault {
+                alwaysShowTabs = true
+            }
+        }
+    }
+    
     @AppStorage("hudReplacement") var hudReplacement: Bool = true {
         didSet {
             toggleHudReplacement()
@@ -210,13 +193,6 @@ class NotchViewModel: NSObject, ObservableObject {
     }
     func toggleHudReplacement() {
         notifier.postNotification(name: notifier.toggleHudReplacementNotification.name, userInfo: nil)
-    }
-    
-    @Published var showMusicLiveActivityOnClosed: Bool = true
-    func toggleMusicLiveActivityOnClosed(status: Bool) {
-        withAnimation(.smooth) {
-            self.showMusicLiveActivityOnClosed = status
-        }
     }
     
     @AppStorage("alwaysShowTabs") var alwaysShowTabs: Bool = true {
@@ -230,13 +206,52 @@ class NotchViewModel: NSObject, ObservableObject {
         }
     }
     
-    @AppStorage("openLastTabByDefault") var openLastTabByDefault: Bool = true {
-        didSet {
-            if openLastTabByDefault {
-                alwaysShowTabs = true
+    @Published var showMusicLiveActivityOnClosed: Bool = true
+    func toggleMusicLiveActivityOnClosed(status: Bool) {
+        withAnimation(.smooth) {
+            self.showMusicLiveActivityOnClosed = status
+        }
+    }
+    
+    // MARK: - Notch State
+    
+    func open() {
+        withAnimation(.bouncy) {
+            self.notchSize = .init(width: Sizes().size.opened.width!, height: Sizes().size.opened.height!)
+            self.notchMetastability = true
+            self.notchState = .open
+        }
+    }
+    
+    func close() {
+        withAnimation(.smooth) {
+            self.notchSize = .init(width: Sizes().size.closed.width!, height: Sizes().size.closed.height!)
+            self.notchMetastability = false
+            self.notchState = .closed
+        }
+    }
+    
+    func closeHello() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+            withAnimation(self.animationLibrary.animation) {
+                self.close()
+                self.firstLaunch = false
             }
         }
     }
     
+    func restartHello() {
+        self.firstLaunch = true
+        withAnimation(self.animationLibrary.animation) {
+            self.open()
+        }
+    }
+    
+    // MARK: - Drag-n-Drop Variables
+    
+    @Published var dragDetectorTargetting: Bool = false
+    @Published var dropZoneTargeting: Bool = false
+    @Published var dropEvent: Bool = false
+    @Published var anyDropZoneTargeting: Bool = false
     
 }

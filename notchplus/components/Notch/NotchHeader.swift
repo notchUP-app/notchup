@@ -11,6 +11,7 @@ import Defaults
 struct NotchHeader: View {
     @EnvironmentObject var viewModel: NotchViewModel
     @EnvironmentObject var batteryModel: BatteryStatusViewModel
+    @State private var settingsIconHover: Bool = false
     
     var body: some View {
         HStack(spacing: 0) {
@@ -42,17 +43,30 @@ struct NotchHeader: View {
             HStack {
                 if viewModel.notchState == .open {
                     if Defaults[.settingsIconInNotch] {
-                        SettingsLink(label: {
+                        Button {
+                            openSettingsApp()
+                        } label: {
                             Capsule()
                                 .fill(.black)
                                 .frame(width: 30, height: 30)
+                                .onHover { hovering in
+                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                        settingsIconHover = hovering
+                                    }
+                                }
                                 .overlay {
                                     Image(systemName: "gear")
                                         .foregroundColor(.white)
                                         .padding()
                                         .imageScale(.medium)
+                                        .onHover { hovering in
+                                            withAnimation(.easeInOut(duration: 0.3)) {
+                                                settingsIconHover = hovering
+                                            }
+                                        }
+                                        .rotationEffect(.degrees(settingsIconHover ? 40 : 0))
                                 }
-                        })
+                        }
                         .buttonStyle(PlainButtonStyle())
                     }
                     
@@ -74,6 +88,14 @@ struct NotchHeader: View {
         }
         .foregroundColor(.gray)
         .environmentObject(viewModel)
+    }
+    
+    private func openSettingsApp() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preferences") {
+            NSWorkspace.shared.open(url)
+        } else {
+            print("An error ocurred while trying to open the settings app.")
+        }
     }
 }
 

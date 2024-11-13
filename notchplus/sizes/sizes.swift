@@ -47,6 +47,7 @@ struct Area {
     var width: CGFloat?
     var height: CGFloat?
     var inset: CGFloat?
+    var insets: NSEdgeInsets?
 }
 
 struct StatesSizes {
@@ -75,4 +76,25 @@ struct MusicPlayerElementSizes {
             opened: Area(width: 440), closed: Area(width: closedNotchSize.width)
         )
     )
+}
+
+var screenSize: Area = setScreenSize()
+
+func setScreenSize(screen: String? = nil) -> Area {
+    var screenSize: CGSize = .zero
+    var safeAreaInsets: NSEdgeInsets? = nil
+    
+//    var mainScreen = NSScreen.main
+//    
+//    if let screen = mainScreen {
+//        screenSize = mainScreen?.frame.size ?? .zero
+//        safeAreaInsets = mainScreen?.safeAreaInsets
+//    }
+    
+    guard let screen = NSScreen.main else { return .init() }
+    
+    screenSize = screen.frame.size
+    safeAreaInsets = screen.safeAreaInsets
+    
+    return .init(width: screenSize.width, height: screenSize.height, insets: safeAreaInsets)
 }

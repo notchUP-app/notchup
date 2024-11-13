@@ -22,7 +22,11 @@ struct ContentView: View {
     @State private var gestureProgress: CGFloat = .zero
     @State private var haptics: Bool = false
     
+    @State private var maxWidth: CGFloat = 269
+    @State private var maxHeight: CGFloat = Sizes().size.opened.height! + 20
+    
     @Namespace var albumArtNamespace
+    @AppStorage("firstLaunch") private var firstLaunch: Bool = false
     
     var body: some View {
         ZStack {
@@ -182,8 +186,19 @@ struct ContentView: View {
                     .keyboardShortcut(KeyEquivalent("E"), modifiers: .command)
                 }
         }
-        .frame(maxWidth: Sizes().size.opened.width! + 40, maxHeight: Sizes().size.opened.height! + 20, alignment: .top)
+        // FIXME: FRAME COVERING THE WHOLE NOTCH OPENED WHEN OPPENING LAUNCH ANIMATION
+//        .frame(
+//            maxWidth: viewModel.notchSize.width + 40,
+//            maxHeight: viewModel.notchSize.height + 20,
+//            alignment: .top
+//        )
+        .frame(
+            maxWidth: Sizes().size.opened.width! + 40,
+            maxHeight: Sizes().size.opened.height! + 20,
+            alignment: .top
+        )
         .shadow(color: (viewModel.notchState == .open && Defaults[.enableShadow] ? .black.opacity(0.6) : .clear), radius: Defaults[.cornerRadiusScaling] ? 10 : 5)
+        .background(dragDetector)
         .environmentObject(viewModel)
         .environmentObject(musicManager)
         .environmentObject(batteryModel)
@@ -200,6 +215,7 @@ struct ContentView: View {
                         .frame(width: 200, height: 80)
                         .onAppear(perform: {
                             viewModel.closeHello()
+                            self.maxWidth = Sizes().size.opened.width! + 40
                         })
                         .padding(.top, 40)
                     Spacer()
@@ -342,6 +358,30 @@ struct ContentView: View {
             height: Sizes().size.closed.height! + (hoverAnimation ? 8 : 0),
             alignment: .center
         )
+    }
+    
+    @ViewBuilder
+    var dragDetector: some View {
+        Color.clear
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .contentShape(Rectangle())
+            .onDrop(of: [.data], isTargeted: $viewModel.dragDetectorTargetting) { _ in true }
+            .onChange(of: viewModel.anyDropZoneTargeting) { _, isTargeted in
+                if isTargeted, viewModel.notchState == .closed {
+                    viewModel.currentView = .home
+                    doOpen()
+                } else if !isTargeted {
+                    print("Drop event: ", viewModel.dropEvent)
+                    if viewModel.dropEvent {
+                        viewModel.dropEvent = false
+                        return
+                    }
+                    
+                    viewModel.dropEvent = false
+                    viewModel.close()
+                }
+            }
+        
     }
     
     private func doOpen() {

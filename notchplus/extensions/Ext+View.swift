@@ -1,5 +1,5 @@
 //
-//  PanGesture.swift
+//  Ext+View.swift
 //  notchplus
 //
 //  Created by Eduardo Monteiro on 21/10/24.
@@ -20,6 +20,14 @@ extension View {
             PanGestureView(direction: direction, action: action)
                 .frame(maxWidth: 0, maxHeight: 0)
         )
+    }
+    
+    @ViewBuilder func conditionalModifier<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
     }
 }
 
@@ -100,5 +108,30 @@ struct PanGestureView: NSViewRepresentable {
             }
         }
         
+    }
+}
+
+extension View where Self: Shape {
+    func glow(
+        fill: some ShapeStyle,
+        lineWidth: Double,
+        blurRadius: Double = 8.0,
+        lineCap: CGLineCap = .round
+    ) -> some View {
+        self
+            .stroke(style: StrokeStyle(lineWidth: lineWidth/2, lineCap: lineCap))
+            .fill(fill)
+            .overlay(
+                self
+                    .stroke(style: StrokeStyle(lineWidth: lineWidth, lineCap: lineCap))
+                    .fill(fill)
+                    .blur(radius: blurRadius)
+            )
+            .overlay(
+                self
+                    .stroke(style: StrokeStyle(lineWidth: lineWidth, lineCap: lineCap))
+                    .fill(fill)
+                    .blur(radius: blurRadius/2)
+            )
     }
 }

@@ -1,5 +1,5 @@
 //
-//  ColorExtensions.swift
+//  Ext+Color.swift
 //  notchplus
 //
 //  Created by Eduardo Monteiro on 03/11/24.

@@ -1,5 +1,5 @@
 //
-//  NSImageExtensions.swift
+//  Ext+NSImage_Base.swift
 //  notchplus
 //
 //  Created by Eduardo Monteiro on 20/10/24.
