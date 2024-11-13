@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct NotchDropView: View {
     @EnvironmentObject var viewModel: NotchViewModel
@@ -51,12 +52,22 @@ struct NotchDropView: View {
                         .multilineTextAlignment(.center)
                 }
             } else {
-                HStack(spacing: viewModel.spacing) {
-                    Text("Hello")
-                    Text("World")
+                GeometryReader { geometry in
+                    ZStack(alignment: .topTrailing) {
+                        ForEach(trayDropModel.items) { item in
+                            DroppedFile(geo: geometry, item: item)
+                        }
+                    }
+                    // TODO: DRAG ALL FILES AT ONCE
+//                    .onDrag {
+//                        let itemProviders = trayDropModel.items.map { item in
+//                            NSItemProvider(contentsOf: item.storageURL) ?? NSItemProvider()
+//                        }
+//                        
+//                        return NSItemProvider(object: itemProviders as! NSArray)
+//                    }
                 }
                 .padding(viewModel.spacing)
-               
             }
         }
     }

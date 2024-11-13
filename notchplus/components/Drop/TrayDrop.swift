@@ -37,7 +37,7 @@ public class TrayDrop: ObservableObject {
         }.compactMap { $0 }
         
         DispatchQueue.main.async {
-            dropItems.forEach { self.items.updateOrInsert($0, at: 0) }
+            dropItems.forEach { self.items.updateOrInsert($0, at: self.items.count) }
             self.isLoading -= 1
         }
         

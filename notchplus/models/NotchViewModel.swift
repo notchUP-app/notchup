@@ -59,7 +59,15 @@ class NotchViewModel: NSObject, ObservableObject {
         self.notifier = TheBoringWorkerNotifier()
         
         super.init()
-        self.firstLaunch = true
+        // FIRST LAUNCH ANIMATION TAG
+        self.firstLaunch = false
+        
+        Publishers.CombineLatest($dropZoneTargeting, $dragDetectorTargetting)
+            .map { value1, value2 in
+                value1 || value2
+            }
+            .assign(to: \.anyDropZoneTargeting, on: self)
+            .store(in: &cancellables)
     }
     
     func setupWorkersNotificationsObservers() {
