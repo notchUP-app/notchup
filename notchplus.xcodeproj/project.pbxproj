@@ -55,6 +55,11 @@
 			path = notchplus;
 			sourceTree = "<group>";
 		};
+		348CE5EC2CE599A3006E562E /* appdmg */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = appdmg;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +81,7 @@
 		342812CE2CC192CA006195BB = {
 			isa = PBXGroup;
 			children = (
+				348CE5EC2CE599A3006E562E /* appdmg */,
 				342812D92CC192CA006195BB /* notchplus */,
 				3428130B2CC1B662006195BB /* Frameworks */,
 				342812D82CC192CA006195BB /* Products */,
@@ -116,6 +122,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				342812D92CC192CA006195BB /* notchplus */,
+				348CE5EC2CE599A3006E562E /* appdmg */,
 			);
 			name = notchplus;
 			packageProductDependencies = (
@@ -322,23 +329,23 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 0.2;
 				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Preview Content\"";
 				DEVELOPMENT_TEAM = SQ2JHD7BTB;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = notchPlus;
+				INFOPLIST_KEY_CFBundleDisplayName = notchUP;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.2;
 				OTHER_LDFLAGS = "$(inherited)";
 				"OTHER_LDFLAGS[arch=*]" = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.notchplus;
+				PRODUCT_BUNDLE_IDENTIFIER = com.notchup;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "notchplus/helpers/notchplus-Bridging-Header.h";
@@ -362,22 +369,22 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 0.2;
 				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Preview Content\"";
 				DEVELOPMENT_TEAM = SQ2JHD7BTB;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = notchPlus;
+				INFOPLIST_KEY_CFBundleDisplayName = notchUP;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.2;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.notchplus;
+				PRODUCT_BUNDLE_IDENTIFIER = com.notchup;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "notchplus/helpers/notchplus-Bridging-Header.h";
