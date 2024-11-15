@@ -226,7 +226,7 @@ class MusicManager: ObservableObject {
             updateIdleState(setIdle: setIdle, state: state)
         }
     }
-
+    
     private func updatePlaybackState(_ state: Int?) {
         if let state = state {
             self.musicIsPaused(state: state == 1, setIdle: true)
@@ -242,7 +242,7 @@ class MusicManager: ObservableObject {
             updateArtwork(newInfo.artworkData, state: state)
             self.lastMusicItem?.artworkData = newInfo.artworkData
         }
-
+        
         updatePlaybackState(state)
         self.lastMusicItem = (title: newInfo.title, artist: newInfo.artist, album: newInfo.album, duration: newInfo.duration, artworkData: lastMusicItem?.artworkData)
         
@@ -271,7 +271,7 @@ class MusicManager: ObservableObject {
                   let timestampDate = info["kMRMediaRemoteNowPlayingInfoTimestamp"] as? Date,
                   let playbackRate = info["kMRMediaRemoteNowPlayingInfoPlaybackRate"] as? Double
             else { return }
-                  
+            
             DispatchQueue.main.async {
                 self.elapsedTime = elapsedTime
                 self.timestampDate = timestampDate
@@ -319,14 +319,17 @@ class MusicManager: ObservableObject {
         }
         
         let workspace = NSWorkspace.shared
-        if workspace.launchApplication(
-            withBundleIdentifier: bundleID,
-            options: [],
-            additionalEventParamDescriptor: nil,
-            launchIdentifier: nil) {
-            print("Launched app with bundle ID: \(bundleID)")
+        if let appUrl = workspace.urlForApplication(withBundleIdentifier: bundleID) {
+            let configuration = NSWorkspace.OpenConfiguration()
+            workspace.openApplication(at: appUrl, configuration: configuration) { app, error in
+                if let error = error {
+                    print("Failed to open app with bundleID: \(bundleID) - \(error)")
+                } else {
+                    print("Opened app with bundleID: \(bundleID)")
+                }
+            }
         } else {
-            print("Failed to launch app with bundle ID: \(bundleID)")
+            print("Failed to get app URL for bundleID: \(bundleID)")
         }
     }
 }
