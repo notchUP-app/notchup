@@ -34,7 +34,7 @@ struct ContentView: View {
                 .padding(.horizontal, viewModel.notchState == .open ? Defaults[.cornerRadiusScaling] ? (viewModel.sizes.cornerRadius.opened.inset! - 5) : (viewModel.sizes.cornerRadius.closed.inset! - 5) : 12)
                 .padding([.horizontal, .bottom], viewModel.notchState == .open ? 12 : 0)
                 .frame(
-                    maxWidth: (((musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.notchState == .closed && viewModel.showMusicLiveActivityOnClosed) || (viewModel.expandingView.show && (viewModel.expandingView.type == .battery)) || Defaults[.inlineHUD]) ? nil : viewModel.notchSize.width + ((hoverAnimation || (viewModel.notchState == .closed)) ? 20 : 0) + gestureProgress,
+                    maxWidth: (((musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.notchState == .closed && viewModel.showMusicLiveActivityOnClosed) || (viewModel.expandingView.show && (viewModel.expandingView.type == .battery)) || Defaults[.inlineHudShow]) ? nil : viewModel.notchSize.width + ((hoverAnimation || (viewModel.notchState == .closed)) ? 20 : 0) + gestureProgress,
                     maxHeight: ((viewModel.sneakPeek.show && viewModel.sneakPeek.type != .music) || (viewModel.sneakPeek.show && viewModel.sneakPeek.type == .music && viewModel.notchState == .closed)) ? nil : viewModel.notchSize.height + (hoverAnimation ? 8 : 0) + gestureProgress / 3,
                     alignment: .top
                 )
@@ -43,7 +43,7 @@ struct ContentView: View {
                     NotchShape(cornerRadius: ((viewModel.notchState == .open) && Defaults[.cornerRadiusScaling]) ? viewModel.sizes.cornerRadius.opened.inset : viewModel.sizes.cornerRadius.closed.inset)
                 }
                 .frame(
-                    width: viewModel.notchState == .closed ? (((musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.showMusicLiveActivityOnClosed) || (viewModel.expandingView.show && (viewModel.expandingView.type == .battery)) || (Defaults[.inlineHUD] && viewModel.sneakPeek.type != .music)) ? nil : Sizes().size.closed.width! + (hoverAnimation ? 20 : 0) + gestureProgress : nil,
+                    width: viewModel.notchState == .closed ? (((musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.showMusicLiveActivityOnClosed) || (viewModel.expandingView.show && (viewModel.expandingView.type == .battery)) || (Defaults[.inlineHudShow] && viewModel.sneakPeek.type != .music)) ? nil : Sizes().size.closed.width! + (hoverAnimation ? 20 : 0) + gestureProgress : nil,
                     height: viewModel.notchState == .closed ? Sizes().size.closed.height! + (hoverAnimation ? 8 : 0) + gestureProgress / 3 : nil,
                     alignment: .top
                 )
@@ -232,7 +232,7 @@ struct ContentView: View {
                         }
                         .frame(height: Sizes().size.closed.height! + (hoverAnimation ? 8 : 0), alignment: .center)
                     }
-                    else if viewModel.sneakPeek.show && Defaults[.inlineHUD] && (viewModel.sneakPeek.type != .music) && (viewModel.sneakPeek.type != .battery) {
+                    else if viewModel.sneakPeek.show && Defaults[.inlineHudShow] && (viewModel.sneakPeek.type != .music) && (viewModel.sneakPeek.type != .battery) {
                         InlineHUD(
                             type: $viewModel.sneakPeek.type,
                             value: $viewModel.sneakPeek.value,
@@ -251,7 +251,7 @@ struct ContentView: View {
                             .blur(radius: abs(gestureProgress) > 0.3 ? min(abs(gestureProgress), 8) : 0)
                     }
                     
-                    if viewModel.sneakPeek.show && !Defaults[.inlineHUD] {
+                    if viewModel.sneakPeek.show && !Defaults[.inlineHudShow] {
                         if (viewModel.sneakPeek.type != .music) && (viewModel.sneakPeek.type != .battery) {
                             SystemEventIndicatorModifier(
                                 eventType: $viewModel.sneakPeek.type,

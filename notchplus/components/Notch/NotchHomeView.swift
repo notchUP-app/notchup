@@ -25,7 +25,7 @@ struct NotchHomeView: View {
         if !viewModel.firstLaunch {
             HStack(alignment: .top, spacing: 10) {
                 ZStack(alignment: .bottomTrailing) {
-                    if Defaults[.lightingEffect] {
+                    if Defaults[.blurredArtwork] {
                         Color.clear
                             .aspectRatio(1, contentMode: .fit)
                             .background(
@@ -108,10 +108,9 @@ struct NotchHomeView: View {
                 .opacity(viewModel.notchState == .closed ? 0 : 1)
                 .blur(radius: viewModel.notchState == .closed ? 20 : 0)
                 
-                if Defaults[.dropBoxByDefault] {
-                    Spacer()
-                    NotchDropView()
-                }
+            
+                Spacer()
+                NotchDropView()
             }
             .onAppear {
                 viewModel.open()

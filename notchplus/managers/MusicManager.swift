@@ -192,14 +192,14 @@ class MusicManager: ObservableObject {
             debounceToggle = DispatchWorkItem { [weak self] in
                 guard let self = self else { return }
                 
-                if self.lastUpdated.timeIntervalSinceNow < -Defaults[.waitInterval] {
+                if self.lastUpdated.timeIntervalSinceNow < -Defaults[.musicPlayerWaitInterval] {
                     withAnimation {
                         self.isPlayerIdle = !self.isPlaying
                     }
                 }
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + Defaults[.waitInterval], execute: debounceToggle!)
+            DispatchQueue.main.asyncAfter(deadline: .now() + Defaults[.musicPlayerWaitInterval], execute: debounceToggle!)
         }
     }
     

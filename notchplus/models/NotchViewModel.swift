@@ -186,14 +186,6 @@ class NotchViewModel: NSObject, ObservableObject {
         self.currentMicStatus = notification.userInfo?.first?.value as! Bool
     }
     
-    @AppStorage("openLastTabByDefault") var openLastTabByDefault: Bool = true {
-        didSet {
-            if openLastTabByDefault {
-                alwaysShowTabs = true
-            }
-        }
-    }
-    
     @AppStorage("hudReplacement") var hudReplacement: Bool = true {
         didSet {
             toggleHudReplacement()
@@ -201,17 +193,6 @@ class NotchViewModel: NSObject, ObservableObject {
     }
     func toggleHudReplacement() {
         notifier.postNotification(name: notifier.toggleHudReplacementNotification.name, userInfo: nil)
-    }
-    
-    @AppStorage("alwaysShowTabs") var alwaysShowTabs: Bool = true {
-        didSet {
-            if !alwaysShowTabs {
-                openLastTabByDefault = false
-                if !Defaults[.openShelfByDefault] {
-                    currentView = .home
-                }
-            }
-        }
     }
     
     @Published var showMusicLiveActivityOnClosed: Bool = true

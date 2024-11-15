@@ -48,7 +48,7 @@ class BatteryStatusViewModel: ObservableObject {
                     print("is charging: \(isCharging)")
                     print("current capacity \(currentCapacity)")
                     
-                    if (Defaults[.chargingInfoAllowed] ){
+                    if (Defaults[.showChargingInfoOnPlug] ){
                         withAnimation {
                             self.batteryLevel = Float((currentCapacity * 100) / maxCapacity)
                         }
