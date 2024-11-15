@@ -38,7 +38,7 @@ class MusicManager: ObservableObject {
     @Published var playbackRate: Double = 0
     
     @Published var lastUpdated: Date = .init()
-    @Published var animations: NotchAnimations = .init()
+    @Published var animations: NotchAnimation = .init()
     @Published var playbackManager = PlaybackManager()
     @ObservedObject var detector: FullScreenMediaDetector
     var nowPlaying: NowPlaying

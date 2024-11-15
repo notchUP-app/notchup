@@ -1,5 +1,5 @@
 //
-//  animations.swift
+//  Animation.swift
 //  notchplus
 //
 //  Created by Eduardo Monteiro on 17/10/24.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-public class NotchAnimations {
+public class NotchAnimation {
     @Published var notchStyle: Style = .notch
     
     init() {

@@ -11,7 +11,7 @@ struct BatteryViewModel: View {
     @State var batteryLevel: Float
     @State var isCharging: Bool
     var batteryWidth: CGFloat = 30
-    var animationStyle: NotchAnimations = NotchAnimations()
+    var animationStyle: NotchAnimation = NotchAnimation()
     
     var icon: String {
         return "battery.0"

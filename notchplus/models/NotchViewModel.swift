@@ -35,7 +35,7 @@ class NotchViewModel: NSObject, ObservableObject {
     var cancellables: Set<AnyCancellable> = []
     
     let animation: Animation?
-    let animationLibrary: NotchAnimations = .init()
+    let animationLibrary: NotchAnimation = .init()
     let musicPlayerSizes: MusicPlayerElementSizes = .init()
     
     @Published var sizes: Sizes = .init()

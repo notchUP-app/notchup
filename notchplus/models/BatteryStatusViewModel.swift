@@ -18,7 +18,7 @@ class BatteryStatusViewModel: ObservableObject {
     
     private var powerSourceChangedCallback: IOPowerSourceCallbackType?
     private var runLoopSource: Unmanaged<CFRunLoopSource>?
-    var animations: NotchAnimations = NotchAnimations()
+    var animations: NotchAnimation = NotchAnimation()
     
     deinit {
         if let runLoopSource = runLoopSource {
