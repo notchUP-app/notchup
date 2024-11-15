@@ -15,7 +15,6 @@ struct NotchHeader: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            
             HStack {
                 if viewModel.notchState == .open {
                     EmptyView()
@@ -24,7 +23,7 @@ struct NotchHeader: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .opacity(viewModel.notchState == .closed ? 0 : 1)
             .blur(radius: viewModel.notchState == .closed ? 20 : 0)
-            .animation(.smooth.delay(0.2), value: viewModel.notchSize)
+            .animation(.smooth.delay(0.2), value: viewModel.notchState)
             .zIndex(2)
             
             if viewModel.notchState == .open {
@@ -39,15 +38,18 @@ struct NotchHeader: View {
                     .zIndex(1)
             }
             
-            
             HStack {
                 if viewModel.notchState == .open {
                     if Defaults[.settingsIconInNotch] {
                         Button {
-                            openSettingsApp()
+                            if let url = URL(string: "x-apple.systempreferences:com.apple.preferences") {
+                                NSWorkspace.shared.open(url)
+                            } else {
+                                print("An error ocurred while trying to open the settings app.")
+                            }
                         } label: {
                             Capsule()
-                                .fill(.black)
+                                .fill(.clear)
                                 .frame(width: 30, height: 30)
                                 .onHover { hovering in
                                     withAnimation(.easeInOut(duration: 0.3)) {
@@ -69,7 +71,7 @@ struct NotchHeader: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                     }
-                    
+
                     if Defaults[.showBattery] {
                         BatteryView(
                             batteryLevel: batteryModel.batteryLevel,
@@ -89,19 +91,4 @@ struct NotchHeader: View {
         .foregroundColor(.gray)
         .environmentObject(viewModel)
     }
-    
-    private func openSettingsApp() {
-        if let url = URL(string: "x-apple.systempreferences:com.apple.preferences") {
-            NSWorkspace.shared.open(url)
-        } else {
-            print("An error ocurred while trying to open the settings app.")
-        }
-    }
 }
-
-#Preview {
-    NotchHeader()
-        .environmentObject(NotchViewModel())
-        .environmentObject(BatteryStatusViewModel(viewModel: NotchViewModel()))
-}
-

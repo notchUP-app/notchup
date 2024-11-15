@@ -1,5 +1,5 @@
 //
-//  NotchWindow.swift
+//  NotchUpWindow.swift
 //  notchplus
 //
 //  Created by Eduardo Monteiro on 18/10/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class NotchPlusWindow: NSPanel {
+class NotchUpWindow: NSPanel {
     override init(contentRect: NSRect, styleMask: NSWindow.StyleMask, backing: NSWindow.BackingStoreType, defer flag: Bool ) {
         super.init(contentRect: contentRect, styleMask: styleMask, backing: backing, defer: flag)
         

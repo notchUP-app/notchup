@@ -1,5 +1,5 @@
 //
-//  BatteryStatusViewModel.swift
+//  BatteryViewModel.swift
 //  notchplus
 //
 //  Created by Eduardo Monteiro on 21/10/24.
@@ -34,43 +34,6 @@ class BatteryStatusViewModel: ObservableObject {
         startMonitoring()
     }
     
-    private func updateBatteryStatus() {
-        print("collecting battery status")
-        
-        if let snapshot = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
-           let sources = IOPSCopyPowerSourcesList(snapshot)?.takeRetainedValue() as? [CFTypeRef] {
-            for source in sources {
-                if let info = IOPSGetPowerSourceDescription(snapshot, source)?.takeUnretainedValue() as? [String: AnyObject],
-                   let currentCapacity = info[kIOPSCurrentCapacityKey] as? Int,
-                   let maxCapacity = info[kIOPSMaxCapacityKey] as? Int,
-                   let isCharging = info["Is Charging"] as? Bool {
-                    
-                    print("is charging: \(isCharging)")
-                    print("current capacity \(currentCapacity)")
-                    
-                    if (Defaults[.showChargingInfoOnPlug] ){
-                        withAnimation {
-                            self.batteryLevel = Float((currentCapacity * 100) / maxCapacity)
-                        }
-                        
-                        if (isCharging && !self.isPluggedIn) {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + (viewModel.firstLaunch ? 6 : 0)) {
-                                self.viewModel.toggleExpandingView(status: true, type: .battery)
-                                self.showChargingInfo = true
-                                self.isPluggedIn = true
-                            }
-                        }
-                        
-                        withAnimation {
-                            self.isPluggedIn = isCharging
-                        }
-                        
-                    }
-                }
-            }
-        }
-    }
-    
     private func startMonitoring() {
         let context = UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
         
@@ -90,4 +53,34 @@ class BatteryStatusViewModel: ObservableObject {
         }
     }
     
+    private func updateBatteryStatus() {
+        if let snapshot = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
+           let sources = IOPSCopyPowerSourcesList(snapshot)?.takeRetainedValue() as? [CFTypeRef] {
+            for source in sources {
+                if let info = IOPSGetPowerSourceDescription(snapshot, source)?.takeUnretainedValue() as? [String: AnyObject],
+                   let currentCapacity = info[kIOPSCurrentCapacityKey] as? Int,
+                   let maxCapacity = info[kIOPSMaxCapacityKey] as? Int,
+                   let isCharging = info["Is Charging"] as? Bool {
+                    
+                    if (Defaults[.showChargingInfoOnPlug] ){
+                        withAnimation {
+                            self.batteryLevel = Float((currentCapacity * 100) / maxCapacity)
+                        }
+                        
+                        if (isCharging && !self.isPluggedIn) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + (viewModel.firstLaunch ? 6 : 0)) {
+                                self.viewModel.toggleExpandingView(status: true, type: .battery)
+                                self.showChargingInfo = true
+                                self.isPluggedIn = true
+                            }
+                        }
+                        
+                        withAnimation {
+                            self.isPluggedIn = isCharging
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
