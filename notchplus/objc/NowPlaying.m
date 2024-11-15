@@ -1,15 +1,8 @@
-//
-//  NowPlaying.m
-//  notchplus
-//
-//  Created by Eduardo Monteiro on 20/10/24.
-//
-
-
 /**
  * @file NowPlaying.m
  *
  * @copyright 2018-2019 Bill Zissimopoulos
+ * @updated 2024 by Eduardo Monteiro
  */
 /*
  * This file is part of EnergyBar.
@@ -20,6 +13,7 @@
  */
 
 #import "NowPlaying.h"
+#include <Foundation/Foundation.h>
 
 typedef void (^MRMediaRemoteGetNowPlayingInfoBlock)(NSDictionary *info);
 typedef void (^MRMediaRemoteGetNowPlayingClientBlock)(id clientObj);
@@ -125,12 +119,12 @@ extern NSString *kMRMediaRemoteNowPlayingInfoTitle;
             
             if (nil != appBundleIdentifier)
             {
-                NSString *path = [[NSWorkspace sharedWorkspace]
-                                  absolutePathForAppBundleWithIdentifier:appBundleIdentifier];
-                if (nil != path)
+                NSURL *appURL = [[NSWorkspace sharedWorkspace]
+                                  URLForApplicationWithBundleIdentifier:appBundleIdentifier];
+                if (nil != appURL)
                 {
-                    appName = [[NSFileManager defaultManager] displayNameAtPath:path];
-                    appIcon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+                    appName = [[NSFileManager defaultManager] displayNameAtPath:appURL.path];
+                    appIcon = [[NSWorkspace sharedWorkspace] iconForFile:appURL.path];
                 }
             }
         }
