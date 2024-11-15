@@ -414,12 +414,11 @@ struct ContentView: View {
 
 #Preview {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    var musicManager: MusicManager = .init(viewModel: appDelegate.viewModel)!
     
     ContentView(
         onHover: appDelegate.adjustWindowPosition,
         batteryModel: .init(viewModel: appDelegate.viewModel)
     )
         .environmentObject(appDelegate.viewModel)
-        .environmentObject(musicManager)
+        .environmentObject(MusicManager(viewModel: appDelegate.viewModel)!)
 }
