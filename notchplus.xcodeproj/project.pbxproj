@@ -13,6 +13,7 @@
 		346469D32CDAD74B00977B36 /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B0E0482CC5EA3700320288 /* MediaRemote.framework */; };
 		346469D42CDAD74B00977B36 /* MediaRemote.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 34B0E0482CC5EA3700320288 /* MediaRemote.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3477D5052CD99616008A4E5E /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 3477D5042CD99616008A4E5E /* Collections */; };
+		34E478D22CE5AA1E00D53CA9 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 34E478D12CE5AA1E00D53CA9 /* LaunchAtLogin */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -67,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34E478D22CE5AA1E00D53CA9 /* LaunchAtLogin in Frameworks */,
 				342813252CC20DA5006195BB /* Defaults in Frameworks */,
 				3477D5052CD99616008A4E5E /* Collections in Frameworks */,
 				3428130A2CC1B641006195BB /* Sparkle in Frameworks */,
@@ -130,6 +132,7 @@
 				342813212CC206E1006195BB /* TheBoringWorkerNotifier */,
 				342813242CC20DA5006195BB /* Defaults */,
 				3477D5042CD99616008A4E5E /* Collections */,
+				34E478D12CE5AA1E00D53CA9 /* LaunchAtLogin */,
 			);
 			productName = notchplus;
 			productReference = 342812D72CC192CA006195BB /* notchplus.app */;
@@ -165,6 +168,7 @@
 				342813202CC206E1006195BB /* XCRemoteSwiftPackageReference "TheBoringWorkerNotifier" */,
 				342813232CC20DA5006195BB /* XCRemoteSwiftPackageReference "Defaults" */,
 				3477D5032CD99616008A4E5E /* XCRemoteSwiftPackageReference "swift-collections" */,
+				34E478D02CE5AA1E00D53CA9 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 342812D82CC192CA006195BB /* Products */;
@@ -454,6 +458,14 @@
 				minimumVersion = 1.1.4;
 			};
 		};
+		34E478D02CE5AA1E00D53CA9 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin-Modern.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -476,6 +488,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3477D5032CD99616008A4E5E /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = Collections;
+		};
+		34E478D12CE5AA1E00D53CA9 /* LaunchAtLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 34E478D02CE5AA1E00D53CA9 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */;
+			productName = LaunchAtLogin;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
