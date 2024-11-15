@@ -243,7 +243,10 @@ struct ContentView: View {
                         .transition(.opacity)
                     }
                     else if !viewModel.expandingView.show && viewModel.notchState == .closed && (musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.showMusicLiveActivityOnClosed {
-                        MusicLiveActivity()
+                        MusicLiveActivity(
+                            hoverAnimation: $hoverAnimation,
+                            gestureProgress: $gestureProgress
+                        )
                     }
                     else {
                         NotchHeader()
@@ -301,53 +304,7 @@ struct ContentView: View {
             
         }
     }
-    
-    @ViewBuilder
-    func MusicLiveActivity() -> some View {
-        HStack {
-            HStack {
-                Color.clear
-                    .aspectRatio(1, contentMode: .fit)
-                    .background(
-                        Image(nsImage: musicManager.songArtwork)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    )
-                    .clipped()
-                    .clipShape(RoundedRectangle(cornerRadius: viewModel.musicPlayerSizes.image.cornerRadius.closed.inset!))
-                    .matchedGeometryEffect(id: "albumArtwork", in: albumArtNamespace)
-                    .frame(width: Sizes().size.closed.height! - 12, height: Sizes().size.closed.height! - 12)
-            }
-            .frame(
-                width: Sizes().size.closed.height! - (hoverAnimation ? 0 : 12) + gestureProgress / 2,
-                height: Sizes().size.closed.height! - (hoverAnimation ? 0 : 12)
-            )
-            
-            Rectangle()
-                .fill(.black)
-                .frame(width: viewModel.sizes.size.closed.width! - 20)
-            
-            HStack {
-                Rectangle()
-                    .fill(Defaults[.coloredSpectogram] ? Color(nsColor: musicManager.avgColor).gradient : Color.gray.gradient)
-                    .mask {
-                        AudioSpectrumView(isPlaying: $musicManager.isPlaying)
-                            .frame(width: 16, height: 12)
-                    }
-                    
-            }
-            .frame(
-                width: Sizes().size.closed.height! - (hoverAnimation ? 0 : 12) + gestureProgress / 2,
-                height: Sizes().size.closed.height! - (hoverAnimation ? 0 : 12),
-                alignment: .center
-            )
-            
-        }
-        .frame(
-            height: Sizes().size.closed.height! + (hoverAnimation ? 8 : 0),
-            alignment: .center
-        )
-    }
+
     
     @ViewBuilder
     var dragDetector: some View {

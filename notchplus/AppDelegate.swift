@@ -82,8 +82,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     self.createAndShowMainWindow()
                     self.animationWindow?.orderOut(nil)
                     self.animationWindow = nil
-                    
-//                    self.createAndShowMainWindow()
                 }
             }
         )
