@@ -11,21 +11,21 @@ import Defaults
 struct MusicLiveActivity: View {
     @EnvironmentObject var viewModel: NotchViewModel
     @EnvironmentObject var musicManager: MusicManager
-    @Namespace var albumArtNamespace
     
     @Binding var hoverAnimation: Bool
     @Binding var gestureProgress: CGFloat
+    let albumArtNamespace: Namespace.ID
     
     var body: some View {
         HStack {
             HStack {
                 Color.clear
                     .aspectRatio(1, contentMode: .fit)
-                    .background(
+                    .background {
                         Image(nsImage: musicManager.songArtwork)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                    )
+                    }
                     .clipped()
                     .clipShape(RoundedRectangle(cornerRadius: viewModel.musicPlayerSizes.image.cornerRadius.closed.inset!))
                     .matchedGeometryEffect(id: "albumArtwork", in: albumArtNamespace)
