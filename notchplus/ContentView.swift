@@ -173,17 +173,6 @@ struct ContentView: View {
                         Text("Settings")
                     })
                     .keyboardShortcut(KeyEquivalent(","), modifiers: .command)
-                
-                    Button("Edit") {
-                        let dynamicNotch = DynamicNotch(content: EditPanelView())
-                        dynamicNotch.toggle()
-                    }
-#if DEBUG
-                    .disabled(false)
-#else
-                    .disabled(true)
-#endif
-                    .keyboardShortcut(KeyEquivalent("E"), modifiers: .command)
                 }
         }
         // FIXME: FRAME COVERING THE WHOLE NOTCH OPENED WHEN OPPENING LAUNCH ANIMATION
