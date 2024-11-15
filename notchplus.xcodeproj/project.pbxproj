@@ -39,8 +39,6 @@
 		34CC09802CC8178A0041A3AF /* Exceptions for "notchplus" folder in "notchplus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				app/notchPlus/notchplus.app,
-				app/notchPlus/notchplus.zip,
 				notchplus.app,
 			);
 			target = 342812D62CC192CA006195BB /* notchplus */;
