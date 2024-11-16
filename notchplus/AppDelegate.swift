@@ -9,7 +9,7 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     let viewModel: NotchViewModel = .init()
-    var window: NotchPlusWindow!
+    var window: NotchUpWindow!
     var animationWindow: NSWindow?
     let sizing: Sizes = .init()
     private var previousScreens: [NSScreen]?
@@ -82,8 +82,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     self.createAndShowMainWindow()
                     self.animationWindow?.orderOut(nil)
                     self.animationWindow = nil
-                    
-//                    self.createAndShowMainWindow()
                 }
             }
         )
@@ -92,7 +90,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     private func createAndShowMainWindow() {
-        self.window = NotchPlusWindow(
+        self.window = NotchUpWindow(
             contentRect: NSRect(x: 0, y: 0, width: sizing.size.opened.width! + 20 , height: sizing.size.opened.height! + 30),
             styleMask: [.borderless, .nonactivatingPanel, .utilityWindow, .hudWindow],
             backing: .buffered,

@@ -40,16 +40,6 @@ struct RightLaunchAnimationShape: Shape {
         path.addLine(to: CGPoint(x: (width! / 2) + (Sizes().size.closed.width! / 2), y: 1))
         
         // NOTCH RIGHT OUTER CURVE
-        //        path.addQuadCurve(
-        //            to: CGPoint(
-        //                x: (width! / 2) + (Sizes().size.closed.width! / 2),
-        //                y: 1
-        //            ),
-        //            control: CGPoint(
-        //                x: ((width! / 2) + (Sizes().size.closed.width! / 2) + topCornerRadius),
-        //                y: 1
-        //            )
-        //        )
         path.addQuadCurve(
             to: CGPoint(
                 x: (width! / 2) + (Sizes().size.closed.width! / 2) - topCornerRadius,
@@ -167,73 +157,37 @@ struct LeftLaunchAnimationShape: Shape {
     }
 }
 
-// MARK: Line animations
-struct FollowingLine<Content: Shape, Fill: ShapeStyle>: View, Animatable {
-    var progress: Double
-    var delay: Double = 1.0
-    var fill: Fill
-    var lineWith: CGFloat = 4.0
-    var blurRadius: CGFloat = 8.0
-    
-    @ViewBuilder var shape: Content
-    
-    var animatableData: Double {
-        get { progress }
-        set { progress = newValue }
-    }
-    
-    var body: some View {
-        shape
-            .trim(
-                from: {
-                    if progress > 1 - delay {
-                        2 * progress - 1
-                    } else if progress > delay {
-                        progress - delay
-                    } else {
-                        .zero
-                    }
-                    
-                }(),
-                to: progress
-            )
-            .glow(fill: fill, lineWidth: lineWith, blurRadius: blurRadius)
-    }
-}
-
 struct LaunchAnimation: View {
     @State private var progress: Double = 0.0
-    private var lineWIdth: CGFloat = 5.0
+    @State private var lineWidth: CGFloat = 5.0
     @State private var blurRadius: CGFloat = 12.0
     @State private var animationDuration: Double = 6.0
     
     var body: some View {
         ZStack {
-            FollowingLine(
+            LineFollow(
                 progress: progress,
                 fill: .hello,
-                lineWith: lineWIdth,
+                lineWidth: lineWidth,
                 blurRadius: blurRadius,
                 shape: { RightLaunchAnimationShape() }
             ).onAppear {
                 withAnimation(
                     .easeInOut(duration: animationDuration)
-//                    .repeatForever(autoreverses: true)
                 ) {
                     progress = 1.0
                 }
             }
             
-            FollowingLine(
+            LineFollow(
                 progress: progress,
                 fill: .hello,
-                lineWith: lineWIdth,
+                lineWidth: lineWidth,
                 blurRadius: blurRadius,
                 shape: { LeftLaunchAnimationShape() }
             ).onAppear {
                 withAnimation(
                     .easeInOut(duration: animationDuration)
-//                    .repeatForever(autoreverses: true)
                 ) {
                     progress = 1.0
                 }
