@@ -25,7 +25,6 @@ public class TrayDrop: ObservableObject {
     func load(_ providers: [NSItemProvider]) {
         Task {
             assert(!Thread.isMainThread)
-            print("Loading items")
             await MainActor.run { isLoading += 1 }
             
             guard let urls = await providers.interfaceConvert() else {
@@ -33,8 +32,6 @@ public class TrayDrop: ObservableObject {
                 print("Failed to load items")
                 return
             }
-            
-            print(urls)
             
             let dropItems = urls.map { url in
                 try? DropItem(url: url)

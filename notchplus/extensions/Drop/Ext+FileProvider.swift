@@ -26,24 +26,6 @@ extension NSItemProvider {
     }
     
     func convertToFilePath() async throws -> URL? {
-        //        var url: URL?
-        //        let sem = DispatchSemaphore(value: 0)
-        //        _ = loadObject(ofClass: URL.self) { item, _ in
-        //            url = try? self.duplicateToStorage(item)
-        //            sem.signal()
-        //        }
-        //        sem.wait()
-        //        if url == nil {
-        //            loadInPlaceFileRepresentation(
-        //                forTypeIdentifier: UTType.data.identifier
-        //            ) { input, _, _ in
-        //                defer { sem.signal() }
-        //                url = try? self.duplicateToStorage(input)
-        //            }
-        //            sem.wait()
-        //        }
-        //        return url
-        
         if let url = try? await loadURL() {
             return try duplicateToStorage(url)
         } else if let fileRepresentation = try? await loadInPlaceFileRepresentation() {
@@ -80,19 +62,6 @@ extension NSItemProvider {
 }
 
 extension [NSItemProvider] {
-//    func interfaceConvert() -> [URL]? {
-//        let urls = compactMap { provider -> URL? in
-//            provider.convertToFilePath()
-//        }
-//        guard urls.count == count else {
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                NSAlert.popError(NSLocalizedString("One or more files failed to load", comment: ""))
-//            }
-//            return nil
-//        }
-//        return urls
-//    }
-    
     func interfaceConvert() async -> [URL]? {
         var urls: [URL] = []
         var failed = false

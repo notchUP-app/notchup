@@ -26,7 +26,6 @@ struct NotchDropView: View {
         .animation(viewModel.animation, value: trayDropModel.isLoading)
         .onDrop(of: [UTType.fileURL.identifier, UTType.data.identifier], isTargeted: $viewModel.dropZoneTargeting) { providers in
             viewModel.dropEvent = true
-            print("Dropped providers: \(providers)")
             Task {
                 await trayDropModel.load(providers)
             }
