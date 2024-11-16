@@ -24,10 +24,11 @@ struct NotchDropView: View {
         .aspectRatio(1, contentMode: .fit)
         .animation(viewModel.animation, value: trayDropModel.items)
         .animation(viewModel.animation, value: trayDropModel.isLoading)
-        .onDrop(of: [.data], isTargeted: $viewModel.dropZoneTargeting) { providers in
+        .onDrop(of: [UTType.fileURL.identifier, UTType.data.identifier], isTargeted: $viewModel.dropZoneTargeting) { providers in
             viewModel.dropEvent = true
-            DispatchQueue.global().async {
-                trayDropModel.load(providers)
+            print("Dropped providers: \(providers)")
+            Task {
+                await trayDropModel.load(providers)
             }
             
             return true
