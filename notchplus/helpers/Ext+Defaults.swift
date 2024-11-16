@@ -11,6 +11,7 @@ import Defaults
 extension Defaults.Keys {
     // GENERAL
     static let menuBarIcon = Key<Bool>("menuBarIcon", default: true)
+    static let dropBoxByDefault = Key<Bool>("dropBoxByDefault", default: true)
     
     // APPEARENCE
     static let cornerRadiusScaling = Key<Bool>("cornerRadiusScaling", default: true)
