@@ -6,12 +6,12 @@
 //
 
 import SwiftUI
-import Combine
 import AppKit
+import Combine
 import Defaults
 
 let defaultImage: NSImage = .init(
-    systemSymbolName: "heart.fill",
+    systemSymbolName: "music.note",
     accessibilityDescription: "Album artwork"
 )!
 
@@ -22,27 +22,32 @@ class MusicManager: ObservableObject {
     private var lastMusicItem: (title: String, artist: String, album: String, duration: TimeInterval, artworkData: Data?)?
     private var isCurrentlyPlaying: Bool = false
     
+    // MARK: Song variables
     @Published var songTitle: String = ""
     @Published var songArtist: String = ""
     @Published var songAlbum: String = ""
     @Published var songArtwork: NSImage = defaultImage
     @Published var songDuration: TimeInterval = 0
+    
+    @Published var elapsedTime: TimeInterval = 0
+    @Published var timestampDate: Date = Date()
+    @Published var playbackRate: Double = 0
+    
+    // MARK: PLAYER VARIBALES
     @Published var isPlaying: Bool = false
     @Published var avgColor: NSColor = .white
     @Published var isPlayerIdle: Bool = true
     @Published var bundleIdentifier: String = "com.apple.Music"
     @Published var musicToggledManually: Bool = false
     
-    @Published var elapsedTime: TimeInterval = 0
-    @Published var timestampDate: Date = Date()
-    @Published var playbackRate: Double = 0
-    
+    // MARK: STATES
     @Published var lastUpdated: Date = .init()
-    @Published var animations: NotchAnimations = .init()
+    @Published var animations: NotchAnimation = .init()
     @Published var playbackManager = PlaybackManager()
     @ObservedObject var detector: FullScreenMediaDetector
     var nowPlaying: NowPlaying
     
+    // MARK: FRAMEWORK
     private let mediaRemoteBundle: CFBundle
     private let MRMediaRemoteGetNowPlayingInfo: @convention(c) (DispatchQueue, @escaping ([String: Any]) -> Void) ->  Void
     private let MRMediaRemoteRegisterForNowPlayingNotifications: @convention(c) (DispatchQueue) -> Void
@@ -80,6 +85,7 @@ class MusicManager: ObservableObject {
         }
     }
     
+    // MARK: OBSERVERS
     private func setupDetectorObserver() {
         detector.$currentAppInFullScreen
             .sink { [weak self] _ in
@@ -124,6 +130,8 @@ class MusicManager: ObservableObject {
         }
     }
     
+    // MARK: UPDATE SONG DATA FUNCTIONS
+    
     @objc func updateApp() {
         self.bundleIdentifier = nowPlaying.appBundleIdentifier ?? "com.apple.Music"
     }
@@ -134,30 +142,10 @@ class MusicManager: ObservableObject {
         }
     }
     
-    private func extractMusicInfo(from information: [String: Any]) -> (title: String, artist: String, album: String, duration: TimeInterval, artworkData: Data?) {
-        let title = information["kMRMediaRemoteNowPlayingInfoTitle"] as? String ?? ""
-        let artist = information["kMRMediaRemoteNowPlayingInfoArtist"] as? String ?? ""
-        let album = information["kMRMediaRemoteNowPlayingInfoAlbum"] as? String ?? ""
-        let duration = information["kMRMediaRemoteNowPlayingInfoDuration"] as? TimeInterval ?? 0
-        let artworkData = information["kMRMediaRemoteNowPlayingInfoArtworkData"] as? Data
-        
-        return (title, artist, album, duration, artworkData)
-    }
-    
     private func updateArtwork(_ artworkData: Data?, state: Int?) {
         if let artworkData = artworkData ?? (state == 1 ? AppIcons().getIcon(bundleId: bundleIdentifier)?.tiffRepresentation : nil),
            let artworkImage = NSImage(data: artworkData) {
             self.updateAlbumArt(newArtwork: artworkImage)
-        }
-    }
-    
-    func calculateAverageColor() {
-        songArtwork.averageColor { [weak self] color in
-            DispatchQueue.main.async {
-                withAnimation(.smooth) {
-                    self?.avgColor = color ?? .white
-                }
-            }
         }
     }
     
@@ -169,6 +157,8 @@ class MusicManager: ObservableObject {
             }
         }
     }
+    
+    // MARK: UPDATE INTERNAL STATE FUNCTIONS
     
     private func updateFullScreenMediaDetection() {
         DispatchQueue.main.async {
@@ -192,14 +182,62 @@ class MusicManager: ObservableObject {
             debounceToggle = DispatchWorkItem { [weak self] in
                 guard let self = self else { return }
                 
-                if self.lastUpdated.timeIntervalSinceNow < -Defaults[.waitInterval] {
+                if self.lastUpdated.timeIntervalSinceNow < -Defaults[.musicPlayerWaitInterval] {
                     withAnimation {
                         self.isPlayerIdle = !self.isPlaying
                     }
                 }
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + Defaults[.waitInterval], execute: debounceToggle!)
+            DispatchQueue.main.asyncAfter(deadline: .now() + Defaults[.musicPlayerWaitInterval], execute: debounceToggle!)
+        }
+    }
+    
+    private func updatePlaybackState(_ state: Int?) {
+        if let state = state {
+            self.musicIsPaused(state: state == 1, setIdle: true)
+        } else if self.isPlaying {
+            self.musicIsPaused(state: false, setIdle: true)
+        }
+    }
+    
+    private func updateMusicState(newInfo: (title: String, artist: String, album: String, duration: TimeInterval, artworkData: Data?), state: Int?) {
+        print("Media source: ", bundleIdentifier)
+        
+        if (newInfo.artworkData != nil && newInfo.artworkData != lastMusicItem?.artworkData) {
+            updateArtwork(newInfo.artworkData, state: state)
+            self.lastMusicItem?.artworkData = newInfo.artworkData
+        }
+        
+        updatePlaybackState(state)
+        self.lastMusicItem = (title: newInfo.title, artist: newInfo.artist, album: newInfo.album, duration: newInfo.duration, artworkData: lastMusicItem?.artworkData)
+        
+        if !self.isPlaying { return }
+        
+        self.songArtist = newInfo.artist
+        self.songTitle = newInfo.title
+        self.songAlbum = newInfo.album
+        self.songDuration = newInfo.duration
+    }
+    
+    // MARK: HELPER FUNCTIONS
+    private func extractMusicInfo(from information: [String: Any]) -> (title: String, artist: String, album: String, duration: TimeInterval, artworkData: Data?) {
+        let title = information["kMRMediaRemoteNowPlayingInfoTitle"] as? String ?? ""
+        let artist = information["kMRMediaRemoteNowPlayingInfoArtist"] as? String ?? ""
+        let album = information["kMRMediaRemoteNowPlayingInfoAlbum"] as? String ?? ""
+        let duration = information["kMRMediaRemoteNowPlayingInfoDuration"] as? TimeInterval ?? 0
+        let artworkData = information["kMRMediaRemoteNowPlayingInfoArtworkData"] as? Data
+        
+        return (title, artist, album, duration, artworkData)
+    }
+    
+    func calculateAverageColor() {
+        songArtwork.averageColor { [weak self] color in
+            DispatchQueue.main.async {
+                withAnimation(.smooth) {
+                    self?.avgColor = color ?? .white
+                }
+            }
         }
     }
     
@@ -226,33 +264,6 @@ class MusicManager: ObservableObject {
             updateIdleState(setIdle: setIdle, state: state)
         }
     }
-
-    private func updatePlaybackState(_ state: Int?) {
-        if let state = state {
-            self.musicIsPaused(state: state == 1, setIdle: true)
-        } else if self.isPlaying {
-            self.musicIsPaused(state: false, setIdle: true)
-        }
-    }
-    
-    private func updateMusicState(newInfo: (title: String, artist: String, album: String, duration: TimeInterval, artworkData: Data?), state: Int?) {
-        print("Media source: ", bundleIdentifier)
-        
-        if (newInfo.artworkData != nil && newInfo.artworkData != lastMusicItem?.artworkData) {
-            updateArtwork(newInfo.artworkData, state: state)
-            self.lastMusicItem?.artworkData = newInfo.artworkData
-        }
-
-        updatePlaybackState(state)
-        self.lastMusicItem = (title: newInfo.title, artist: newInfo.artist, album: newInfo.album, duration: newInfo.duration, artworkData: lastMusicItem?.artworkData)
-        
-        if !self.isPlaying { return }
-        
-        self.songArtist = newInfo.artist
-        self.songTitle = newInfo.title
-        self.songAlbum = newInfo.album
-        self.songDuration = newInfo.duration
-    }
     
     @objc func fetchNowPlayingInfo(bypass: Bool = false, bundle: String? = nil) {
         if musicToggledManually && !bypass { return }
@@ -271,7 +282,7 @@ class MusicManager: ObservableObject {
                   let timestampDate = info["kMRMediaRemoteNowPlayingInfoTimestamp"] as? Date,
                   let playbackRate = info["kMRMediaRemoteNowPlayingInfoPlaybackRate"] as? Double
             else { return }
-                  
+            
             DispatchQueue.main.async {
                 self.elapsedTime = elapsedTime
                 self.timestampDate = timestampDate
@@ -280,6 +291,7 @@ class MusicManager: ObservableObject {
         }
     }
     
+    // MARK: PLAYER CONTROLS
     func togglePlayPause() {
         self.musicToggledManually = true
         
@@ -319,14 +331,17 @@ class MusicManager: ObservableObject {
         }
         
         let workspace = NSWorkspace.shared
-        if workspace.launchApplication(
-            withBundleIdentifier: bundleID,
-            options: [],
-            additionalEventParamDescriptor: nil,
-            launchIdentifier: nil) {
-            print("Launched app with bundle ID: \(bundleID)")
+        if let appUrl = workspace.urlForApplication(withBundleIdentifier: bundleID) {
+            let configuration = NSWorkspace.OpenConfiguration()
+            workspace.openApplication(at: appUrl, configuration: configuration) { app, error in
+                if let error = error {
+                    print("Failed to open app with bundleID: \(bundleID) - \(error)")
+                } else {
+                    print("Opened app with bundleID: \(bundleID)")
+                }
+            }
         } else {
-            print("Failed to launch app with bundle ID: \(bundleID)")
+            print("Failed to get app URL for bundleID: \(bundleID)")
         }
     }
 }

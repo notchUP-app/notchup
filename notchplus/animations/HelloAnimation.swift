@@ -38,52 +38,11 @@ struct HelloShape: Shape {
     }
 }
 
-
-struct FollowingSnake<Content: Shape, Fill: ShapeStyle>: View, Animatable {
-    
-    var progress: Double
-    var delay: Double = 1.0
-    var fill: Fill
-    var lineWidth = 4.0
-    var blurRadius = 8.0
-    
-    @ViewBuilder var shape: Content
-    
-    var animatableData: Double {
-        get { progress }
-        set { progress = newValue }
-    }
-    
-    var body: some View {
-        shape
-            .trim(
-                from: {
-                    if progress > 1 - delay {
-                        2 * progress - 1.0
-                    } else if progress > delay {
-                        progress - delay
-                    } else {
-                        .zero
-                    }
-                    
-                    // for text to not disapper
-                    //                 progress - delay
-                }(),
-                to: progress
-            )
-            .glow(
-                fill: fill,
-                lineWidth: lineWidth,
-                blurRadius: blurRadius
-            )
-    }
-}
-
 struct HelloAnimation: View {
     @State private var progress: Double = 0.0
     
     var body: some View {
-        FollowingSnake(
+        LineFollow(
             progress: progress,
             fill: .hello,
             lineWidth: 8,
@@ -92,7 +51,6 @@ struct HelloAnimation: View {
         ).onAppear {
             withAnimation(
                 .easeInOut(duration: 4.0)
-                //                .repeatForever(autoreverses: false)
             ) {
                 progress = 1.0
             }

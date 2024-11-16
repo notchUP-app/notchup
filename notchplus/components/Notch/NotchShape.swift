@@ -76,9 +76,3 @@ struct NotchShape: Shape {
         return path
     }
 }
-
-#Preview {
-    NotchShape()
-        .frame(width: 200, height: 80)
-        .padding(10)
-}
