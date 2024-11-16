@@ -23,27 +23,29 @@ public class TrayDrop: ObservableObject {
     }
     
     func load(_ providers: [NSItemProvider]) {
-        assert(!Thread.isMainThread)
-        DispatchQueue.main.asyncAndWait { isLoading += 1 }
-        
-        guard let urls = providers.interfaceConvert() else {
-            DispatchQueue.main.asyncAndWait { isLoading -= 1 }
-            print("Failed to load items")
-            return
+        Task {
+            assert(!Thread.isMainThread)
+            await MainActor.run { isLoading += 1 }
+            
+            guard let urls = await providers.interfaceConvert() else {
+                DispatchQueue.main.asyncAndWait { isLoading -= 1 }
+                print("Failed to load items")
+                return
+            }
+            
+            let dropItems = urls.map { url in
+                try? DropItem(url: url)
+            }.compactMap { $0 }
+            
+            await MainActor.run {
+                dropItems.forEach { self.items.updateOrInsert($0, at: self.items.count) }
+                self.isLoading -= 1
+            }
+            
+            #if DEBUG
+            print("Loaded \(dropItems.count) items")
+            #endif
         }
-        
-        let dropItems = urls.map { url in
-            try? DropItem(url: url)
-        }.compactMap { $0 }
-        
-        DispatchQueue.main.async {
-            dropItems.forEach { self.items.updateOrInsert($0, at: self.items.count) }
-            self.isLoading -= 1
-        }
-        
-        #if DEBUG
-        print("Loaded \(dropItems.count) items")
-        #endif
     }
     
     func cleanExpiredFiles() {
