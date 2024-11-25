@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>notchplus</title>
+        <item>
+            <title>0.3</title>
+            <pubDate>Mon, 25 Nov 2024 15:34:47 -0300</pubDate>
+            <sparkle:version>0.3</sparkle:version>
+            <sparkle:shortVersionString>0.3</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://notchup-app.github.io/notchup/notchplus.dmg" length="26227774" type="application/octet-stream" sparkle:edSignature="xQp5y7mhEb0ce3Ak2WALy9wP3okG6kDJOGOSIiZtU2ZXdKSmUCvpW8BSnV0/6SlFrEQhC+IKe9an6MeuD2o1Dw=="/>
+        </item>
+    </channel>
+</rss>

@@ -6,10 +6,18 @@
 //
 
 import SwiftUI
+import Sparkle
 
 struct SettingsView: View {
     
     @EnvironmentObject var viewModel: NotchViewModel
+    @ObservedObject var checkForUpdatesViewModel: CheckForUpdatesViewModel
+    private let updater: SPUUpdater
+    
+    init(updater: SPUUpdater) {
+        self.updater = updater
+        self.checkForUpdatesViewModel = CheckForUpdatesViewModel(updater: updater)
+    }
     
     var body: some View {
         List {
@@ -45,13 +53,21 @@ struct SettingsView: View {
                     .frame(maxWidth: .infinity)
                     .cornerRadius(10)
             }
+            
+            Button(action: {
+                self.updater.checkForUpdates()
+            }) {
+                Text("Check for updates")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .cornerRadius(10)
+            }
+            .disabled(!checkForUpdatesViewModel.canCheckForUpdates)
+            
         }
         .frame(width: 200, height: 200)
         .environmentObject(viewModel)
     }
-}
-
-#Preview {
-    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    SettingsView().environmentObject(appDelegate.viewModel)
 }

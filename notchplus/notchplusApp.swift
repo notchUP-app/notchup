@@ -16,15 +16,15 @@ struct notchplusApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     let updaterController: SPUStandardUpdaterController
     
-    @Default(.menuBarIcon) var showMenuBarIcon
-    
     init() {
         updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
     }
     
+    @Default(.menuBarIcon) var showMenuBarIcon
     var body: some Scene {
         Settings {
-            SettingsView().environmentObject(appDelegate.viewModel)
+            SettingsView(updater: updaterController.updater)
+                .environmentObject(appDelegate.viewModel)
         }
         
         MenuBarExtra("notchplus", systemImage: "sparkle", isInserted: $showMenuBarIcon) {
@@ -40,9 +40,14 @@ struct notchplusApp: App {
                 NSApp.terminate(nil)
             }
             .keyboardShortcut(KeyEquivalent("Q"), modifiers: .command)
+            
+            Divider()
+            
+            Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
+                
         }
         
-        
     }
+    
 }
 
