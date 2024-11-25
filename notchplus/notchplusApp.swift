@@ -35,7 +35,6 @@ struct notchplusApp: App {
             
             Divider()
             
-            Button("Restart") {}
             Button("Quit", role: .destructive) {
                 NSApp.terminate(nil)
             }
