@@ -8,7 +8,7 @@
             <sparkle:version>0.3</sparkle:version>
             <sparkle:shortVersionString>0.3</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://notchup-app.github.io/notchup/notchplus.dmg" length="26227774" type="application/octet-stream" sparkle:edSignature="xQp5y7mhEb0ce3Ak2WALy9wP3okG6kDJOGOSIiZtU2ZXdKSmUCvpW8BSnV0/6SlFrEQhC+IKe9an6MeuD2o1Dw=="/>
+            <enclosure url="https://github.com/notchUP-app/notchup/releases/download/beta/notchplus.dmg" length="26227774" type="application/octet-stream" sparkle:edSignature="xQp5y7mhEb0ce3Ak2WALy9wP3okG6kDJOGOSIiZtU2ZXdKSmUCvpW8BSnV0/6SlFrEQhC+IKe9an6MeuD2o1Dw=="/>
         </item>
     </channel>
 </rss>
