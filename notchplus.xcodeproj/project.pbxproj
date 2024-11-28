@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		3422AD9E2CF5005400A2034C /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3422AD9D2CF5005400A2034C /* MediaRemote.framework */; };
 		3422AD9F2CF5005400A2034C /* MediaRemote.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3422AD9D2CF5005400A2034C /* MediaRemote.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3422ADA42CF5082F00A2034C /* appcast.xml in Resources */ = {isa = PBXBuildFile; fileRef = 3422ADA32CF5082F00A2034C /* appcast.xml */; };
 		3428130A2CC1B641006195BB /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 342813092CC1B641006195BB /* Sparkle */; };
 		342813222CC206E1006195BB /* TheBoringWorkerNotifier in Frameworks */ = {isa = PBXBuildFile; productRef = 342813212CC206E1006195BB /* TheBoringWorkerNotifier */; };
 		342813252CC20DA5006195BB /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = 342813242CC20DA5006195BB /* Defaults */; };
+		3445455E2CF83098009722AC /* appcast.xml in Resources */ = {isa = PBXBuildFile; fileRef = 3445455D2CF83090009722AC /* appcast.xml */; };
 		3477D5052CD99616008A4E5E /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 3477D5042CD99616008A4E5E /* Collections */; };
 		34E478D22CE5AA1E00D53CA9 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 34E478D12CE5AA1E00D53CA9 /* LaunchAtLogin */; };
 /* End PBXBuildFile section */
@@ -33,8 +33,8 @@
 
 /* Begin PBXFileReference section */
 		3422AD9D2CF5005400A2034C /* MediaRemote.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaRemote.framework; path = ../../../../../../System/Library/PrivateFrameworks/MediaRemote.framework; sourceTree = "<group>"; };
-		3422ADA32CF5082F00A2034C /* appcast.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = appcast.xml; sourceTree = "<group>"; };
 		342812D72CC192CA006195BB /* notchplus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = notchplus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3445455D2CF83090009722AC /* appcast.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = appcast.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -79,7 +79,7 @@
 		342812CE2CC192CA006195BB = {
 			isa = PBXGroup;
 			children = (
-				3422ADA32CF5082F00A2034C /* appcast.xml */,
+				3445455D2CF83090009722AC /* appcast.xml */,
 				342812D92CC192CA006195BB /* notchplus */,
 				3428130B2CC1B662006195BB /* Frameworks */,
 				342812D82CC192CA006195BB /* Products */,
@@ -180,7 +180,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3422ADA42CF5082F00A2034C /* appcast.xml in Resources */,
+				3445455E2CF83098009722AC /* appcast.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

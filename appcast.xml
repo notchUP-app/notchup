@@ -9,11 +9,9 @@
             <sparkle:shortVersionString>0.4</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
             <enclosure
-                url="https://github.com/notchUP-app/notchup/releases/download/latest/notchplus.dmg"
-                length="6578258"
-                type="application/octet-stream"
-                sparkle:dsaSignature="MCwCFEgdYcNph9zHvtJ+sQP5CbXoa38DAhR9MWdg0gMIYn4zmkjZSO7xdf5Hcw=="
-            />
+            url="https://github.com/notchUP-app/notchup/releases/download/latest/notchplus.dmg"
+            length="6603369" type="application/octet-stream"
+            sparkle:edSignature="cOm1S9V6Nxa51/W01BrEepyA/+tCMr2ewm4x2Cp/l/1YuRVWK7HjtLRRqSVVtZSUu4qGQ+IwCziT4Zs7a4c5AA=="/>
         </item>
     </channel>
 </rss>
