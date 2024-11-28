@@ -10,5 +10,7 @@
 	<string>https://notchup-app.github.io/notchup/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>UceJ5P1wYteEFzZG3i8cr64MU01Cvk88WWRFd+Eqx5M=</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>/Users/edu/Documents/Codes/notchplus_project/sign/dsa_priv.pem</string>
 </dict>
 </plist>
