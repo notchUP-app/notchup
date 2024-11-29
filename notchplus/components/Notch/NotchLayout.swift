@@ -17,7 +17,7 @@ struct NotchLayout: View {
     @Binding var gestureProgress: CGFloat
     
     @Namespace var albumArtNamespace
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
