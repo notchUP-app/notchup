@@ -54,6 +54,8 @@ class NotchViewModel: NSObject, ObservableObject {
         cancellables.removeAll()
     }
     
+    var dragObserver: DragObserver?
+    
     override init() {
         self.animation = animationLibrary.animation
         self.notifier = TheBoringWorkerNotifier()
@@ -61,6 +63,8 @@ class NotchViewModel: NSObject, ObservableObject {
         super.init()
         // FIRST LAUNCH ANIMATION TAG
         self.firstLaunch = true
+        self.dragObserver = DragObserver(viewModel: self)
+        self.dragObserver?.startMonitoring()
         
         Publishers.CombineLatest($dropZoneTargeting, $dragDetectorTargetting)
             .map { value1, value2 in
