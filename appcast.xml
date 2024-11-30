@@ -3,15 +3,12 @@
     <channel>
         <title>notchplus</title>
         <item>
-            <title>0.4</title>
-            <pubDate>Mon, 25 Nov 2024 16:30:59 -0300</pubDate>
-            <sparkle:version>0.4</sparkle:version>
-            <sparkle:shortVersionString>0.4</sparkle:shortVersionString>
+            <title>0.4.1</title>
+            <pubDate>Fri, 29 Nov 2024 23:02:37 -0300</pubDate>
+            <sparkle:version>0.4.1</sparkle:version>
+            <sparkle:shortVersionString>0.4.1</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <enclosure
-            url="https://github.com/notchUP-app/notchup/releases/download/latest/notchplus.dmg"
-            length="6603369" type="application/octet-stream"
-            sparkle:edSignature="cOm1S9V6Nxa51/W01BrEepyA/+tCMr2ewm4x2Cp/l/1YuRVWK7HjtLRRqSVVtZSUu4qGQ+IwCziT4Zs7a4c5AA=="/>
+            <enclosure url="https://github.com/notchUP-app/notchup/releases/download/open-on-drag/notchplus.dmg" length="6570147" type="application/octet-stream" sparkle:edSignature="3Ns2fVMqaLRMnKw9RHePz26aDrwywyMMiE1eL/AcQvB/LrknNQrE9GTcTs2QE2zebF12FwpuFEYGyT43fMZqCA=="/>
         </item>
     </channel>
 </rss>
