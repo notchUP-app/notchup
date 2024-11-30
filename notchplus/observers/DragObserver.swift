@@ -32,7 +32,6 @@ class DragObserver {
         }
         
         NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { [weak self] event in
-            print("Drag ended.")
             self?.viewModel.close()
             self?.resetPasteboardChangeCount(pasteboard)
         }
@@ -63,9 +62,7 @@ class DragObserver {
     
     private func isFileDrag(_ pasteboard: NSPasteboard) -> Bool {
         if let types = pasteboard.types, types.contains(.fileURL) {
-            let urlFilteringOptions = [NSPasteboard.ReadingOptionKey.urlReadingContentsConformToTypes: NSImage.imageTypes]
-            
-            if let urls = pasteboard.readObjects(forClasses: [NSURL.self], options: urlFilteringOptions) as? [URL], urls.count > 0 {
+            if let urls = pasteboard.readObjects(forClasses: [NSURL.self], options: nil) as? [URL], urls.count > 0 {
                 for url in urls {
                     if url.isFileURL {
                         return true
