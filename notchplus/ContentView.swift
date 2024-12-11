@@ -233,7 +233,10 @@ struct ContentView: View {
                     }
                     
                     viewModel.dropEvent = false
-                    viewModel.close()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        print("Closing")
+                        viewModel.close()
+                    }
                 }
             }
         
