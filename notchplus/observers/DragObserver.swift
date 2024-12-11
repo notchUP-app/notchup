@@ -32,8 +32,10 @@ class DragObserver {
         }
         
         NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { [weak self] event in
-            self?.viewModel.close()
-            self?.resetPasteboardChangeCount(pasteboard)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                self?.viewModel.close()
+                self?.resetPasteboardChangeCount(pasteboard)
+            }
         }
     }
     
@@ -44,13 +46,9 @@ class DragObserver {
                 let movement = currentPosition.y - lastPosition.y
                 
                 if movement > upwardMovementThreshold {
-                    if isFileDrag(pasteboard) {
-                        self.viewModel.open()
-                    }
+                    self.viewModel.open()
                 } else if movement < downwardMovementThreshold {
-                    if isFileDrag(pasteboard) {
-                        self.viewModel.close()
-                    }
+                    self.viewModel.close()
                 }
                 
                 lastMousePosition = currentPosition
@@ -58,20 +56,6 @@ class DragObserver {
                 lastMousePosition = event.locationInWindow
             }
         }
-    }
-    
-    private func isFileDrag(_ pasteboard: NSPasteboard) -> Bool {
-        if let types = pasteboard.types, types.contains(.fileURL) {
-            if let urls = pasteboard.readObjects(forClasses: [NSURL.self], options: nil) as? [URL], urls.count > 0 {
-                for url in urls {
-                    if url.isFileURL {
-                        return true
-                    }
-                }
-            }
-        }
-        
-        return false
     }
     
     private func resetPasteboardChangeCount(_ pasteboard: NSPasteboard) {
