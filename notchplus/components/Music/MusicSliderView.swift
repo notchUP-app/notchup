@@ -43,8 +43,19 @@ struct MusicSliderView: View {
     }
     
     func timeString(from seconds: Double) -> String {
-        let minutes = Int(seconds / 60)
-        let seconds = Int(seconds) % 60
-        return String(format: "%d:%02d", minutes, seconds)
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .positional
+        formatter.zeroFormattingBehavior = .pad
+        
+        if seconds.isNaN {
+            return "0:00"
+        } else if seconds >= 3600 {
+            formatter.allowedUnits = [.hour, .minute, .second]
+            return formatter.string(from: seconds) ?? "0:00"
+        
+        } else {
+            formatter.allowedUnits = [.minute, .second]
+            return formatter.string(from: seconds) ?? "0:00"
+        }
     }
 }
