@@ -329,7 +329,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0.4.1;
+				CURRENT_PROJECT_VERSION = 0.4.2;
 				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Preview Content\"";
 				DEVELOPMENT_TEAM = SQ2JHD7BTB;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -344,7 +344,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.4.2;
 				OTHER_LDFLAGS = "$(inherited)";
 				"OTHER_LDFLAGS[arch=*]" = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.notchplus;
@@ -372,7 +372,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0.4.1;
+				CURRENT_PROJECT_VERSION = 0.4.2;
 				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Preview Content\"";
 				DEVELOPMENT_TEAM = SQ2JHD7BTB;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -387,7 +387,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.4.2;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.notchplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
