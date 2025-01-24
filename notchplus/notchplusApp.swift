@@ -23,7 +23,7 @@ struct notchplusApp: App {
     @Default(.menuBarIcon) var showMenuBarIcon
     var body: some Scene {
         Settings {
-            SettingsView(updater: updaterController.updater)
+            SettingsWindow()
                 .environmentObject(appDelegate.viewModel)
         }
         
