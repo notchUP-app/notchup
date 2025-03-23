@@ -32,3 +32,8 @@ public enum SliderColorEnum: String, CaseIterable, Defaults.Serializable {
     case albumArt = "Match album art"
     case accent = "Accent color"
 }
+
+enum NotchSettingsAction: String, CaseIterable, Defaults.Serializable {
+    case app = "App Settings"
+    case system = "System Settings"
+}
