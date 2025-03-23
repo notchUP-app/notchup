@@ -23,8 +23,9 @@ struct notchplusApp: App {
     @Default(.menuBarIcon) var showMenuBarIcon
     var body: some Scene {
         Settings {
-            SettingsView(updater: updaterController.updater)
+            SettingsWindow()
                 .environmentObject(appDelegate.viewModel)
+                .frame(width: 500, height: 580)
         }
         
         MenuBarExtra("notchplus", systemImage: "sparkle", isInserted: $showMenuBarIcon) {
@@ -49,4 +50,3 @@ struct notchplusApp: App {
     }
     
 }
-

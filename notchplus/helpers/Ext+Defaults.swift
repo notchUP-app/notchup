@@ -9,41 +9,51 @@ import SwiftUI
 import Defaults
 
 extension Defaults.Keys {
-    // GENERAL
+    // MARK: GENERAL
     static let menuBarIcon = Key<Bool>("menuBarIcon", default: true)
     static let dropBoxByDefault = Key<Bool>("dropBoxByDefault", default: true)
     
-    // APPEARENCE
-    static let cornerRadiusScaling = Key<Bool>("cornerRadiusScaling", default: true)
-    static let enableShadow = Key<Bool>("enableShadow", default: true)
-    static let settingsIconInNotch = Key<Bool>("settingsIconInNotch", default: true)
+    // MARK: APPEARENCE
+    static let matchSystemAccent = Key<Bool>("matchSystemAccent", default: true)
     static let accentColor = Key<Color>("accentColor", default: Color.blue)
+    static let cornerRadiusScaling = Key<Bool>("cornerRadiusScaling", default: true)
+    
+    static let enableShadow = Key<Bool>("enableShadow", default: true) // Remove
+    
+    // Media
+    static let coloredSpectogram = Key<Bool>("coloredSpectogram", default: true)
     static let blurredArtwork = Key<Bool>("blurredArtwork", default: true)
     static let sliderColor = Key<SliderColorEnum>("sliderUseAlbumArtColor", default: SliderColorEnum.white)
     
-    // MEDIA PLAYBACK
-    static let coloredSpectogram = Key<Bool>("coloredSpectogram", default: true)
+    // Header
+    static let showBattery = Key<Bool>("showBattery", default: true)
+    static let settingsIconInNotch = Key<Bool>("settingsIconInNotch", default: true)
+    static let settingsButtonAction = Key<NotchSettingsAction>("settingsIconAction", default: .app)
+    
+    // MARK: LIVE ACTIVITIES
+    static let enableLiveActivities = Key<Bool>("enableLiveActivities", default: false)
+    
+    static let showChargingInfoOnPlug = Key<Bool>("showChargingInfoOnPlug", default: true)
+    
+    // Media
     static let enableFullScreenMediaDetection = Key<Bool>("enableFullScreenMediaDetection", default: true)
     static let enableSneekPeek = Key<Bool>("enableSneekPeek", default: false)
     static let musicPlayerWaitInterval = Key<Double>("musicPlayerWaitInterval", default: 3)
     
-    // HUD
+    
+    // MARK: HUD
     static let inlineHudShow = Key<Bool>("inlineHudShow", default: false)
     static let enableGradient = Key<Bool>("enableGradient", default: false)
     static let systemEventIndicatorUseAccent = Key<Bool>("systemEventIndicatorUseAccent", default: false)
     static let systemEventIndicatorShadow = Key<Bool>("systemEventIndicatorShadow", default: false)
     
-    // HAPTICS
+    // MARK: HAPTICS
     static let minimumHoverDuration = Key<TimeInterval>("minimumHoverDuration", default: 0.3)
     static let openNotchOnHover = Key<Bool>("openNotchOnHover", default: true)
     static let enableHaptics = Key<Bool>("enableHaptics", default: true)
     
-    // GESTURES
+    // MARK: GESTURES
     static let enableGestures = Key<Bool>("enableGestures", default: true)
     static let closeGestureEnabled = Key<Bool>("closeGestureEnabled", default: true)
     static let gestureSensitivity = Key<CGFloat>("gestureSensitivity", default: 200.0)
-    
-    // BATTERY
-    static let showChargingInfoOnPlug = Key<Bool>("showChargingInfoOnPlug", default: true)
-    static let showBattery = Key<Bool>("showBattery", default: true)
 }

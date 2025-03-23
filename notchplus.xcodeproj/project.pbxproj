@@ -42,7 +42,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				notchplus.app,
 			);
 			target = 342812D62CC192CA006195BB /* notchplus */;
 		};
