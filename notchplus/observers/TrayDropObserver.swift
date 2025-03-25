@@ -29,7 +29,7 @@ public class TrayDrop: ObservableObject {
             
             guard let urls = await providers.interfaceConvert() else {
                 DispatchQueue.main.asyncAndWait { isLoading -= 1 }
-                print("Failed to load items")
+                Logger.log("Failed to load items", type: .error)
                 return
             }
             
@@ -43,7 +43,7 @@ public class TrayDrop: ObservableObject {
             }
             
             #if DEBUG
-            print("Loaded \(dropItems.count) items")
+            Logger.log("Loaded \(dropItems.count) items", type: .debug)
             #endif
         }
     }

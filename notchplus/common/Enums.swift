@@ -37,3 +37,16 @@ enum NotchSettingsAction: String, CaseIterable, Defaults.Serializable {
     case app = "App Settings"
     case system = "System Settings"
 }
+
+enum LogType: String {
+    case success = "✅"
+    case error = "❌"
+    case warning = "⚠️"
+    case info = "ℹ️"
+    case debug = "🔍"
+    case lifecycle = "🔄"
+    case ui = "🎨"
+    case memory = "💾"
+    case network = "🌐"
+    case media = "🎵"
+}
