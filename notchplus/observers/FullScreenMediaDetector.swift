@@ -19,8 +19,8 @@ class FullScreenMediaDetector: ObservableObject {
     var nowPlaying: NowPlaying = .init()
     
     private func logFullScreenApp(_ app: NSRunningApplication) {
-        NSLog("Current app in full screen: \(currentAppInFullScreen)")
-        NSLog("App name: \(app.localizedName ?? "Unknown")")
+        Logger.log("Current app in full screen: \(currentAppInFullScreen)", type: .debug)
+        Logger.log("Current app name: \(app.localizedName ?? "Unknown")", type: .debug)
     }
     
     func isAppFullScreen(_ app: NSRunningApplication) -> Bool {

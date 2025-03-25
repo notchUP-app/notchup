@@ -66,7 +66,7 @@ class MusicManager: ObservableObject {
               let MRMediaRemoteGetNowPlayingInfoPointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteGetNowPlayingInfo" as CFString),
               let MRMediaRemoteRegisterForNowPlayingNotificationsPointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteRegisterForNowPlayingNotifications" as CFString)
         else {
-            print("Failed to load MediaRemote.framework or get function pointers")
+            Logger.log("Failed to load MediaRemote.framework or get function pointers", type: .error)
             return nil
         }
         
@@ -110,7 +110,7 @@ class MusicManager: ObservableObject {
     
     private func setupNowPlayingObserver() {
         MRMediaRemoteRegisterForNowPlayingNotifications(DispatchQueue.main)
-        print("Listening for media remote notifications")
+        Logger.log("Listening for media remote notifications", type: .info)
         
         observeNotification(name: "kMRMediaRemoteNowPlayingInfoDidChangeNotification") { [weak self] in
             self?.fetchNowPlayingInfo(bundle: self?.nowPlaying.appBundleIdentifier ?? nil)
@@ -202,7 +202,7 @@ class MusicManager: ObservableObject {
     }
     
     private func updateMusicState(newInfo: (title: String, artist: String, album: String, duration: TimeInterval, artworkData: Data?), state: Int?) {
-        print("Media source: ", bundleIdentifier)
+        Logger.log("Media source: \(bundleIdentifier)", type: .media)
         
         if (newInfo.artworkData != nil && newInfo.artworkData != lastMusicItem?.artworkData) {
             updateArtwork(newInfo.artworkData, state: state)
@@ -326,7 +326,7 @@ class MusicManager: ObservableObject {
     
     func openAppMusic() {
         guard let bundleID = nowPlaying.appBundleIdentifier else {
-            print("Error: appBundleIdentifier not found")
+            Logger.log("Error: appBundleIdentifier not found", type: .error)
             return
         }
         
@@ -335,13 +335,13 @@ class MusicManager: ObservableObject {
             let configuration = NSWorkspace.OpenConfiguration()
             workspace.openApplication(at: appUrl, configuration: configuration) { app, error in
                 if let error = error {
-                    print("Failed to open app with bundleID: \(bundleID) - \(error)")
+                    Logger.log("Failed to open app with bundleID: \(bundleID) - \(error)", type: .error)
                 } else {
-                    print("Opened app with bundleID: \(bundleID)")
+                    Logger.log("Opened app with bundleID: \(bundleID)", type: .info)
                 }
             }
         } else {
-            print("Failed to get app URL for bundleID: \(bundleID)")
+            Logger.log("Failed to get app URL for bundleID: \(bundleID)", type: .error)
         }
     }
 }

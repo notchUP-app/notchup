@@ -45,7 +45,7 @@ struct NotchHeader: View {
                             if let url = URL(string: "x-apple.systempreferences:com.apple.preferences") {
                                 NSWorkspace.shared.open(url)
                             } else {
-                                print("An error ocurred while trying to open the settings app.")
+                                Logger.log("An error ocurred while trying to open the settings app.", type: .error)
                             }
                         } label: {
                             Capsule()

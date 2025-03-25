@@ -45,8 +45,6 @@ func setNotchSize(screen: String? = nil) -> CGSize {
         if screen.safeAreaInsets.top > 0 {
             notchHeight = screen.safeAreaInsets.top
         }
-        
-        print("notch height: \(notchHeight)")
     }
     
     return .init(width: notchWidth, height: notchHeight)

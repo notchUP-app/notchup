@@ -29,6 +29,10 @@ extension View {
             self
         }
     }
+    
+    func trackLifecycle(identifier: String) -> some View {
+        self.modifier(ViewLifecycleTracker(identifier: identifier))
+    }
 }
 
 struct PanGestureView: NSViewRepresentable {
@@ -133,5 +137,21 @@ extension View where Self: Shape {
                     .fill(fill)
                     .blur(radius: blurRadius/2)
             )
+    }
+}
+
+struct ViewLifecycleTracker: ViewModifier {
+    let identifier: String
+    
+    func body(content: Content) -> some View {
+        content
+            .onAppear {
+                Logger.log("\(identifier) appeared", type: .lifecycle)
+                Logger.trackMemoryUsage()
+            }
+            .onDisappear {
+                Logger.log("\(identifier) disappeared", type: .lifecycle)
+                Logger.trackMemoryUsage()
+            }
     }
 }

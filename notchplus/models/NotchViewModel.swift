@@ -113,10 +113,10 @@ class NotchViewModel: NSObject, ObservableObject {
             let value = CGFloat((NumberFormatter().number(from: decodedData.value) ?? 0.0).floatValue)
             let icon = decodedData.icon
             
-            print("Decoded Data: \(decodedData)")
+            Logger.log("Decoded Data: \(decodedData)", type: .debug)
             toggleSneakPeek(status: decodedData.show, type: contentType, value: value, icon: icon)
         } else {
-            print("Failed to decode JSON data")
+            Logger.log("Failed to decode JSON data", type: .error)
         }
     }
     
