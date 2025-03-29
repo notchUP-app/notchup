@@ -13,7 +13,7 @@ struct ContentView: View {
 
     @EnvironmentObject var viewModel: NotchViewModel
     @EnvironmentObject var musicManager: MusicManager
-    @ObservedObject var coordinator = NotchViewCoordinator.shared
+    let coordinator: NotchViewCoordinator
 
     @StateObject var batteryModel: BatteryStatusViewModel
 
@@ -27,6 +27,12 @@ struct ContentView: View {
     @State private var maxHeight: CGFloat = Sizes().size.opened.height! + 20
 
     @AppStorage("firstLaunch") private var firstLaunch: Bool = false
+    
+    init (onHover: @escaping () -> Void, batteryModel: BatteryStatusViewModel, coordinator: NotchViewCoordinator = .shared) {
+        self.onHover = onHover
+        self._batteryModel = StateObject(wrappedValue: batteryModel)
+        self.coordinator = coordinator
+    }
 
     var body: some View {
         ZStack {
@@ -238,6 +244,8 @@ struct ContentView: View {
         viewModel.open()
         cancelHoverTimer()
     }
+    
+    // MARK: - Hover Handling
 
     private func checkHoverDuration() {
         guard let startTime = hoverStartTime else { return }
@@ -248,7 +256,6 @@ struct ContentView: View {
             doOpen()
         }
     }
-
     private func cancelHoverTimer() {
         hoverTimer?.invalidate()
         hoverTimer = nil
@@ -258,7 +265,6 @@ struct ContentView: View {
             hoverAnimation = false
         }
     }
-
     private func startHoverTimer() {
         hoverStartTime = Date()
         hoverTimer?.invalidate()
@@ -271,6 +277,8 @@ struct ContentView: View {
             checkHoverDuration()
         }
     }
+    
+    // MARK: - Size Calculations
     
     private func calculateMaxWidth() -> CGFloat? {
         if (musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.notchState == .closed && viewModel.showMusicLiveActivityOnClosed {
@@ -287,7 +295,6 @@ struct ContentView: View {
         
         return viewModel.notchSize.width + ((hoverAnimation || viewModel.notchState == .closed) ? 20 : 0) + gestureProgress
     }
-    
     private func calculateMaxHeight() -> CGFloat? {
 //        if (viewModel.sneakPeek.show && viewModel.sneakPeek.type != .music) || (viewModel.sneakPeek.show && viewModel.sneakPeek.type == .music && viewModel.notchState == .closed) {
 //            return nil
@@ -295,7 +302,6 @@ struct ContentView: View {
         
         return viewModel.notchSize.height + (hoverAnimation ? 8 : 0) + gestureProgress / 3
     }
-    
     private func calculateWidth() -> CGFloat? {
         if viewModel.notchState == .closed {
             if (
@@ -310,7 +316,6 @@ struct ContentView: View {
         
         return nil
     }
-    
     private func calculateHeight() -> CGFloat? {
         if (viewModel.notchState == .closed) {
             return Sizes().size.closed.height! + (hoverAnimation ? 8 : 0) + gestureProgress / 3
