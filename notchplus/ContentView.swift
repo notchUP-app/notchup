@@ -13,6 +13,7 @@ struct ContentView: View {
 
     @EnvironmentObject var viewModel: NotchViewModel
     @EnvironmentObject var musicManager: MusicManager
+    @ObservedObject var coordinator = NotchViewCoordinator.shared
 
     @StateObject var batteryModel: BatteryStatusViewModel
 
@@ -46,19 +47,8 @@ struct ContentView: View {
                 viewModel.notchState == .open ? 12 : 0
             )
             .frame(
-                maxWidth: (((musicManager.isPlaying || !musicManager.isPlayerIdle)
-                    && viewModel.notchState == .closed && viewModel.showMusicLiveActivityOnClosed)
-                    || (viewModel.expandingView.show && (viewModel.expandingView.type == .battery))
-                    || Defaults[.inlineHudShow])
-                    ? nil
-                    : viewModel.notchSize.width
-                        + ((hoverAnimation || (viewModel.notchState == .closed)) ? 20 : 0)
-                        + gestureProgress,
-                maxHeight: ((viewModel.sneakPeek.show && viewModel.sneakPeek.type != .music)
-                    || (viewModel.sneakPeek.show && viewModel.sneakPeek.type == .music
-                        && viewModel.notchState == .closed))
-                    ? nil
-                    : viewModel.notchSize.height + (hoverAnimation ? 8 : 0) + gestureProgress / 3,
+                maxWidth: calculateMaxWidth(),
+                maxHeight: calculateMaxHeight(),
                 alignment: .top
             )
             .background(.black)
@@ -70,18 +60,8 @@ struct ContentView: View {
                         : viewModel.sizes.cornerRadius.closed.inset)
             }
             .frame(
-                width: viewModel.notchState == .closed
-                    ? (((musicManager.isPlaying || !musicManager.isPlayerIdle)
-                        && viewModel.showMusicLiveActivityOnClosed)
-                        || (viewModel.expandingView.show
-                            && (viewModel.expandingView.type == .battery))
-                        || (Defaults[.inlineHudShow] && viewModel.sneakPeek.type != .music))
-                        ? nil
-                        : Sizes().size.closed.width! + (hoverAnimation ? 20 : 0) + gestureProgress
-                    : nil,
-                height: viewModel.notchState == .closed
-                    ? Sizes().size.closed.height! + (hoverAnimation ? 8 : 0) + gestureProgress / 3
-                    : nil,
+                width: calculateWidth(),
+                height: calculateHeight(),
                 alignment: .top
             )
             .conditionalModifier(Defaults[.openNotchOnHover]) { view in
@@ -93,10 +73,6 @@ struct ContentView: View {
 
                         if (viewModel.notchState == .closed) && Defaults[.enableHaptics] {
                             haptics.toggle()
-                        }
-
-                        if viewModel.sneakPeek.show {
-                            return
                         }
 
                         startHoverTimer()
@@ -239,7 +215,7 @@ struct ContentView: View {
             .onDrop(of: [.data], isTargeted: $viewModel.dragDetectorTargetting) { _ in true }
             .onChange(of: viewModel.anyDropZoneTargeting) { _, isTargeted in
                 if isTargeted, viewModel.notchState == .closed {
-                    viewModel.currentView = .home
+                    coordinator.currentView = .home
                     doOpen()
                 } else if !isTargeted {
                     Logger.log("Drop event: \(viewModel.dropEvent)", type: .debug)
@@ -294,6 +270,53 @@ struct ContentView: View {
         hoverTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
             checkHoverDuration()
         }
+    }
+    
+    private func calculateMaxWidth() -> CGFloat? {
+        if (musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.notchState == .closed && viewModel.showMusicLiveActivityOnClosed {
+            return nil
+        }
+        
+        if viewModel.expandingView.show && viewModel.expandingView.type == .battery {
+            return nil
+        }
+        
+        if Defaults[.inlineHudShow] {
+            return nil
+        }
+        
+        return viewModel.notchSize.width + ((hoverAnimation || viewModel.notchState == .closed) ? 20 : 0) + gestureProgress
+    }
+    
+    private func calculateMaxHeight() -> CGFloat? {
+//        if (viewModel.sneakPeek.show && viewModel.sneakPeek.type != .music) || (viewModel.sneakPeek.show && viewModel.sneakPeek.type == .music && viewModel.notchState == .closed) {
+//            return nil
+//        }
+        
+        return viewModel.notchSize.height + (hoverAnimation ? 8 : 0) + gestureProgress / 3
+    }
+    
+    private func calculateWidth() -> CGFloat? {
+        if viewModel.notchState == .closed {
+            if (
+                (musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.showMusicLiveActivityOnClosed
+                || (viewModel.expandingView.show && viewModel.expandingView.type == .battery)
+                ) {
+                return nil
+            }
+            
+            return Sizes().size.closed.width! + (hoverAnimation ? 20 : 0) + gestureProgress
+        }
+        
+        return nil
+    }
+    
+    private func calculateHeight() -> CGFloat? {
+        if (viewModel.notchState == .closed) {
+            return Sizes().size.closed.height! + (hoverAnimation ? 8 : 0) + gestureProgress / 3
+        }
+        
+        return nil
     }
 }
 

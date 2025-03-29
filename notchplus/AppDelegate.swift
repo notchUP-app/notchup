@@ -8,7 +8,10 @@
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+    @ObservedObject var coordinator = NotchViewCoordinator.shared
+    
     let viewModel: NotchViewModel = .init()
+    
     var window: NotchUpWindow!
     var animationWindow: NSWindow?
     let sizing: Sizes = .init()
@@ -20,8 +23,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApplication.shared.setActivationPolicy(.accessory)
-
-        viewModel.setupWorkersNotificationsObservers()
 
         NotificationCenter.default.addObserver(
             self,
@@ -44,12 +45,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func adjustWindowPosition() {
         guard let window = window else { return }
 
-        if !NSScreen.screens.contains(where: { $0.localizedName == viewModel.selectedScreen }) {
-            viewModel.selectedScreen = NSScreen.main?.localizedName ?? "Unknown Screen"
+        if !NSScreen.screens.contains(where: { $0.localizedName == coordinator.selectedScreen }) {
+            viewModel.coordinator.selectedScreen = NSScreen.main?.localizedName ?? "Unknown Screen"
         }
 
         let selectedScreen = NSScreen.screens.first(where: {
-            $0.localizedName == viewModel.selectedScreen
+            $0.localizedName == coordinator.selectedScreen
         })
         closedNotchSize = setNotchSize(screen: selectedScreen?.localizedName)
 
