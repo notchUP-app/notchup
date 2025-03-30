@@ -17,8 +17,22 @@ struct NotchLayout: View {
     @Binding var gestureProgress: CGFloat
     
     @Namespace var albumArtNamespace
+    
+    var shouldShowBatteryExpandedView: Bool {
+        viewModel.expandingView.show && viewModel.notchState == .closed && viewModel.expandingView.type == .battery
+    }
+    var shouldShowMusicLiveExpandedView: Bool {
+        !viewModel.expandingView.show && viewModel.notchState == .closed && (musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.showMusicLiveActivityOnClosed
+    }
 
     var body: some View {
+        ZStack {
+            Layout()
+        }
+    }
+    
+    @ViewBuilder
+    private func Layout() -> some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
                 if viewModel.firstLaunch {
@@ -32,7 +46,7 @@ struct NotchLayout: View {
                     Spacer()
                 }
                 else {
-                    if viewModel.expandingView.type == .battery && viewModel.expandingView.show && viewModel.notchState == .closed {
+                    if shouldShowBatteryExpandedView {
                         HStack(spacing: 0) {
                             HStack {
                                 Text("Charging")
@@ -54,7 +68,7 @@ struct NotchLayout: View {
                         }
                         .frame(height: Sizes().size.closed.height! + (hoverAnimation ? 8 : 0), alignment: .center)
                     }
-                    else if !viewModel.expandingView.show && viewModel.notchState == .closed && (musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.showMusicLiveActivityOnClosed {
+                    else if shouldShowMusicLiveExpandedView {
                         MusicLiveActivity(
                             hoverAnimation: $hoverAnimation,
                             gestureProgress: $gestureProgress,
@@ -68,9 +82,6 @@ struct NotchLayout: View {
                     }
                 }
             }
-//            .conditionalModifier((viewModel.sneakPeek.show && (viewModel.sneakPeek.type == .music) && viewModel.notchState == .closed) || (viewModel.sneakPeek.show && (viewModel.sneakPeek.type != .music) && (musicManager.isPlaying || !musicManager.isPlayerIdle ))) {
-//                view in view.fixedSize()
-//            }
             .zIndex(2)
             
             ZStack {
