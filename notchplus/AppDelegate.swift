@@ -10,7 +10,7 @@ import SwiftUI
 class AppDelegate: NSObject, NSApplicationDelegate {
     @ObservedObject var coordinator = NotchViewCoordinator.shared
     
-    let viewModel: NotchViewModel = .init()
+    var viewModel: NotchViewModel = NotchViewModel.shared
     
     var window: NotchUpWindow!
     var animationWindow: NSWindow?
@@ -103,10 +103,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             backing: .buffered,
             defer: false
         )
+        
+        
 
         self.window?.contentView = NSHostingView(
             rootView: ContentView(
-                onHover: adjustWindowPosition, batteryModel: .init(viewModel: self.viewModel)
+                onHover: adjustWindowPosition,
+                coordinator: NotchViewCoordinator.shared,
+                viewModel: viewModel,
+                batteryModel: .init(viewModel: self.viewModel)
             )
             .environmentObject(viewModel)
             .environmentObject(MusicManager(viewModel: viewModel)!)

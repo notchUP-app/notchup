@@ -10,30 +10,36 @@ import SwiftUI
 
 struct ContentView: View {
     let onHover: () -> Void
-
-    @EnvironmentObject var viewModel: NotchViewModel
+    
+    @ObservedObject var coordinator: NotchViewCoordinator
+    @ObservedObject var viewModel: NotchViewModel
+    @ObservedObject var batteryModel: BatteryStatusViewModel
+    
     @EnvironmentObject var musicManager: MusicManager
-    let coordinator: NotchViewCoordinator
-
-    @StateObject var batteryModel: BatteryStatusViewModel
-
+    
     @State private var hoverStartTime: Date?
     @State private var hoverTimer: Timer?
     @State private var hoverAnimation: Bool = false
     @State private var gestureProgress: CGFloat = .zero
     @State private var haptics: Bool = false
-
+    
     @State private var maxWidth: CGFloat = 269
     @State private var maxHeight: CGFloat = Sizes().size.opened.height! + 20
-
+    
     @AppStorage("firstLaunch") private var firstLaunch: Bool = false
     
-    init (onHover: @escaping () -> Void, batteryModel: BatteryStatusViewModel, coordinator: NotchViewCoordinator = .shared) {
+    init (
+        onHover: @escaping () -> Void,
+        coordinator: NotchViewCoordinator = .shared,
+        viewModel: NotchViewModel,
+        batteryModel: BatteryStatusViewModel
+    ) {
         self.onHover = onHover
-        self._batteryModel = StateObject(wrappedValue: batteryModel)
         self.coordinator = coordinator
+        self.viewModel = viewModel
+        self.batteryModel = batteryModel
     }
-
+    
     var body: some View {
         ZStack {
             NotchLayout(
@@ -43,10 +49,10 @@ struct ContentView: View {
             .padding(
                 .horizontal,
                 viewModel.notchState == .open
-                    ? Defaults[.cornerRadiusScaling]
-                        ? (viewModel.sizes.cornerRadius.opened.inset! - 5)
-                        : (viewModel.sizes.cornerRadius.closed.inset! - 5)
-                    : 12
+                ? Defaults[.cornerRadiusScaling]
+                ? (viewModel.sizes.cornerRadius.opened.inset! - 5)
+                : (viewModel.sizes.cornerRadius.closed.inset! - 5)
+                : 12
             )
             .padding(
                 [.horizontal, .bottom],
@@ -61,9 +67,9 @@ struct ContentView: View {
             .mask {
                 NotchShape(
                     cornerRadius: ((viewModel.notchState == .open)
-                        && Defaults[.cornerRadiusScaling])
-                        ? viewModel.sizes.cornerRadius.opened.inset
-                        : viewModel.sizes.cornerRadius.closed.inset)
+                                   && Defaults[.cornerRadiusScaling])
+                    ? viewModel.sizes.cornerRadius.opened.inset
+                    : viewModel.sizes.cornerRadius.closed.inset)
             }
             .frame(
                 width: calculateWidth(),
@@ -76,19 +82,19 @@ struct ContentView: View {
                         withAnimation(.bouncy) {
                             hoverAnimation = true
                         }
-
+                        
                         if (viewModel.notchState == .closed) && Defaults[.enableHaptics] {
                             haptics.toggle()
                         }
-
+                        
                         startHoverTimer()
                     } else {
                         withAnimation(.bouncy) {
                             hoverAnimation = false
                         }
-
+                        
                         cancelHoverTimer()
-
+                        
                         if viewModel.notchState == .open {
                             viewModel.close()
                         }
@@ -106,7 +112,7 @@ struct ContentView: View {
                             withAnimation(viewModel.animation) {
                                 hoverAnimation = false
                             }
-
+                            
                             if viewModel.notchState == .open {
                                 viewModel.close()
                             }
@@ -121,31 +127,31 @@ struct ContentView: View {
                     .conditionalModifier(Defaults[.enableGestures]) { view in
                         view.panGesture(direction: .down) { translation, phase in
                             guard viewModel.notchState == .closed else { return }
-
+                            
                             withAnimation(.smooth) {
                                 gestureProgress = (translation / Defaults[.gestureSensitivity]) * 20
                             }
-
+                            
                             if phase == .ended {
                                 withAnimation(.smooth) {
                                     gestureProgress = .zero
                                 }
                             }
-
+                            
                             if translation > Defaults[.gestureSensitivity] {
                                 if Defaults[.enableHaptics] {
                                     haptics.toggle()
                                 }
-
+                                
                                 withAnimation(.smooth) {
                                     gestureProgress = .zero
                                 }
-
+                                
                                 doOpen()
                             }
                         }
                     }
-
+                
             }
             .conditionalModifier(Defaults[.closeGestureEnabled] && Defaults[.enableGestures]) {
                 view in
@@ -154,21 +160,21 @@ struct ContentView: View {
                         withAnimation(.smooth) {
                             gestureProgress = (translation / Defaults[.gestureSensitivity]) * -20
                         }
-
+                        
                         if phase == .ended {
                             withAnimation(.smooth) {
                                 gestureProgress = .zero
                             }
                         }
-
+                        
                         if translation > Defaults[.gestureSensitivity] {
                             withAnimation(.smooth) {
                                 gestureProgress = .zero
                                 hoverAnimation = false
                             }
-
+                            
                             viewModel.close()
-
+                            
                             if (viewModel.notchState == .closed) && Defaults[.enableHaptics] {
                                 haptics.toggle()
                             }
@@ -203,7 +209,7 @@ struct ContentView: View {
         )
         .shadow(
             color: (viewModel.notchState == .open && Defaults[.enableShadow]
-                ? .black.opacity(0.6) : .clear),
+                    ? .black.opacity(0.6) : .clear),
             radius: Defaults[.cornerRadiusScaling] ? 10 : 5
         )
         .background(dragDetector)
@@ -212,7 +218,7 @@ struct ContentView: View {
         .environmentObject(batteryModel)
         .trackLifecycle(identifier: "ContentView")
     }
-
+    
     @ViewBuilder
     var dragDetector: some View {
         Color.clear
@@ -229,7 +235,7 @@ struct ContentView: View {
                         viewModel.dropEvent = false
                         return
                     }
-
+                    
                     viewModel.dropEvent = false
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         Logger.log("Closing", type: .debug)
@@ -237,21 +243,21 @@ struct ContentView: View {
                     }
                 }
             }
-
+        
     }
-
+    
     private func doOpen() {
         viewModel.open()
         cancelHoverTimer()
     }
     
     // MARK: - Hover Handling
-
+    
     private func checkHoverDuration() {
         guard let startTime = hoverStartTime else { return }
-
+        
         let hoverDuraton = Date().timeIntervalSince(startTime)
-
+        
         if hoverDuraton >= Defaults[.minimumHoverDuration] {
             doOpen()
         }
@@ -260,7 +266,7 @@ struct ContentView: View {
         hoverTimer?.invalidate()
         hoverTimer = nil
         hoverStartTime = nil
-
+        
         withAnimation(viewModel.animation) {
             hoverAnimation = false
         }
@@ -268,11 +274,11 @@ struct ContentView: View {
     private func startHoverTimer() {
         hoverStartTime = Date()
         hoverTimer?.invalidate()
-
+        
         withAnimation(viewModel.animation) {
             hoverAnimation = true
         }
-
+        
         hoverTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
             checkHoverDuration()
         }
@@ -296,9 +302,9 @@ struct ContentView: View {
         return viewModel.notchSize.width + ((hoverAnimation || viewModel.notchState == .closed) ? 20 : 0) + gestureProgress
     }
     private func calculateMaxHeight() -> CGFloat? {
-//        if (viewModel.sneakPeek.show && viewModel.sneakPeek.type != .music) || (viewModel.sneakPeek.show && viewModel.sneakPeek.type == .music && viewModel.notchState == .closed) {
-//            return nil
-//        }
+        //        if (viewModel.sneakPeek.show && viewModel.sneakPeek.type != .music) || (viewModel.sneakPeek.show && viewModel.sneakPeek.type == .music && viewModel.notchState == .closed) {
+        //            return nil
+        //        }
         
         return viewModel.notchSize.height + (hoverAnimation ? 8 : 0) + gestureProgress / 3
     }
@@ -307,7 +313,7 @@ struct ContentView: View {
             if (
                 (musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.showMusicLiveActivityOnClosed
                 || (viewModel.expandingView.show && viewModel.expandingView.type == .battery)
-                ) {
+            ) {
                 return nil
             }
             
@@ -327,9 +333,11 @@ struct ContentView: View {
 
 #Preview {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-
+    
     ContentView(
         onHover: appDelegate.adjustWindowPosition,
+        coordinator: NotchViewCoordinator.shared,
+        viewModel: appDelegate.viewModel,
         batteryModel: .init(viewModel: appDelegate.viewModel)
     )
     .environmentObject(appDelegate.viewModel)

@@ -10,6 +10,10 @@ import Combine
 import TheBoringWorkerNotifier
 import Defaults
 
+extension NotchViewModel {
+    static var shared = NotchViewModel()
+}
+
 class NotchViewModel: NSObject, ObservableObject {
     @ObservedObject var coordinator = NotchViewCoordinator.shared
     
