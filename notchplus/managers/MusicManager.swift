@@ -52,9 +52,17 @@ class MusicManager: ObservableObject {
     private let MRMediaRemoteGetNowPlayingInfo: @convention(c) (DispatchQueue, @escaping ([String: Any]) -> Void) ->  Void
     private let MRMediaRemoteRegisterForNowPlayingNotifications: @convention(c) (DispatchQueue) -> Void
     
+    // MARK: CACHED DATA
+    private let albumArtCache = NSCache<NSString, NSImage>()
+    
     deinit {
+        NotificationCenter.default.removeObserver(self)
+        
         debounceToggle?.cancel()
+        cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
+        
+        albumArtCache.removeAllObjects()
     }
     
     init?(viewModel: NotchViewModel) {
@@ -142,16 +150,37 @@ class MusicManager: ObservableObject {
         }
     }
     
-    private func updateArtwork(_ artworkData: Data?, state: Int?) {
-        if let artworkData = artworkData ?? (state == 1 ? AppIcons().getIcon(bundleId: bundleIdentifier)?.tiffRepresentation : nil),
-           let artworkImage = NSImage(data: artworkData) {
-            self.updateAlbumArt(newArtwork: artworkImage)
+    private func updateArtwork(_ artworkData: Data?, state: Int?, forceUpdate: Bool = false) {
+        if let artworkData = artworkData ?? (state == 1 ? AppIcons().getIcon(bundleId: bundleIdentifier)?.tiffRepresentation : nil) {
+            self.lastMusicItem?.artworkData = artworkData
+            
+            let identifier = "\(songTitle)-\(songArtist)-\(songAlbum)"
+            
+            if let originalImage = NSImage(data: artworkData) {
+                self.updateAlbumArt(newArtwork: originalImage)
+                
+                albumArtCache.setObject(originalImage, forKey: "original-\(identifier)" as NSString)
+                
+                let commonSizes = [CGSize(width: 300, height: 300), CGSize(width: 100, height: 100)]
+                for size in commonSizes {
+                    let resizedImage = resizeImage(originalImage, to: size)
+                    let sizeKey = "\(identifier)-\(Int(size.width))-\(Int(size.height))" as NSString
+                    albumArtCache.setObject(resizedImage, forKey: sizeKey)
+                }
+                
+                if forceUpdate {
+                    NotificationCenter.default.post(name: .musicArtworkChanged, object: nil)
+                }
+            }
         }
     }
     
     func updateAlbumArt(newArtwork: NSImage) {
         withAnimation(.smooth) {
             self.songArtwork = newArtwork
+            
+            albumArtCache.setObject(newArtwork, forKey: "original-\(songTitle)-\(songArtist)" as NSString)
+            
             if Defaults[.coloredSpectogram] {
                 calculateAverageColor()
             }
@@ -198,20 +227,66 @@ class MusicManager: ObservableObject {
     private func updateMusicState(newInfo: (title: String, artist: String, album: String, duration: TimeInterval, artworkData: Data?), state: Int?) {
         Logger.log("Media source: \(bundleIdentifier)", type: .media)
         
-        if (newInfo.artworkData != nil && newInfo.artworkData != lastMusicItem?.artworkData) {
-            updateArtwork(newInfo.artworkData, state: state)
-            self.lastMusicItem?.artworkData = newInfo.artworkData
+        let songChanged = newInfo.title != songTitle || newInfo.artist != songArtist || newInfo.album != songAlbum
+        
+        if songChanged {
+            updateArtwork(newInfo.artworkData, state: state, forceUpdate: true)
         }
         
-        updatePlaybackState(state)
+        withAnimation(.smooth) {
+            self.songArtist = newInfo.artist
+            self.songTitle = newInfo.title
+            self.songAlbum = newInfo.album
+            self.songDuration = newInfo.duration
+        }
+        
+        if let artworkData = newInfo.artworkData {
+            if let image = NSImage(data: artworkData) {
+                withAnimation(.smooth) {
+                    self.songArtwork = image
+                }
+                
+                DispatchQueue.global(qos: .userInitiated).async {
+                    let identifier = "\(newInfo.title)-\(newInfo.artist)-\(newInfo.album)"
+                    self.albumArtCache.setObject(image, forKey: "original-\(identifier)" as NSString)
+                    
+                    let commonSizes = [CGSize(width: 300, height: 300), CGSize(width: 100, height: 100)]
+                    for size in commonSizes {
+                        let resizedImage = self.resizeImage(image, to: size)
+                        let sizeKey = "\(identifier)-\(Int(size.width))-\(Int(size.height))" as NSString
+                        self.albumArtCache.setObject(resizedImage, forKey: sizeKey)
+                    }
+                    
+                    if Defaults[.coloredSpectogram] {
+                        image.averageColor { color in
+                            DispatchQueue.main.async {
+                                withAnimation(.smooth) {
+                                    self.avgColor = color ?? .clear
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else if state == 1 {
+            if let icon = AppIcons().getIcon(bundleId: bundleIdentifier)?.tiffRepresentation,
+               let iconImage = NSImage(data: icon) {
+                withAnimation(.smooth) {
+                    self.songArtwork = iconImage
+                }
+            }
+        }
+        
+//        updatePlaybackState(state)
         self.lastMusicItem = (title: newInfo.title, artist: newInfo.artist, album: newInfo.album, duration: newInfo.duration, artworkData: lastMusicItem?.artworkData)
+        
+        if let state = state {
+            musicIsPaused(state: state == 1, bypass: true)
+        }
         
         if !self.isPlaying { return }
         
-        self.songArtist = newInfo.artist
-        self.songTitle = newInfo.title
-        self.songAlbum = newInfo.album
-        self.songDuration = newInfo.duration
+        NotificationCenter.default.post(name: .musicInfoChanged, object: nil)
     }
     
     // MARK: HELPER FUNCTIONS
@@ -278,6 +353,20 @@ class MusicManager: ObservableObject {
         }
     }
     
+    private func resizeImage(_ image: NSImage, to size: CGSize) -> NSImage {
+        let resizedImage = NSImage(size: size)
+        resizedImage.lockFocus()
+        
+        NSGraphicsContext.current?.imageInterpolation = .high
+        image.draw(in: NSRect(origin: .zero, size: size),
+                   from: NSRect(origin: .zero, size: image.size),
+                   operation: .copy,
+                   fraction: 1)
+        
+        resizedImage.unlockFocus()
+        return resizedImage
+    }
+    
     // MARK: PLAYER CONTROLS
     func togglePlayPause() {
         self.musicToggledManually = true
@@ -330,5 +419,29 @@ class MusicManager: ObservableObject {
         } else {
             Logger.log("Failed to get app URL for bundleID: \(bundleID)", type: .error)
         }
+    }
+    
+    // MARK: CACHE FUNCTIONS
+    func getAlbumArt(for identifier: String, size: CGSize) -> NSImage? {
+        let cacheKey = "\(identifier)-\(Int(size.width))-\(Int(size.height))" as NSString
+        
+        if let cachedImage = albumArtCache.object(forKey: cacheKey) {
+            Logger.log("Using cached album art for \(identifier)", type: .media)
+            return cachedImage
+        }
+        
+        guard let artworkData = lastMusicItem?.artworkData else {
+            return defaultImage
+        }
+        
+        guard let originalImage = NSImage(data: artworkData) else {
+            return defaultImage
+        }
+        
+        let resizedImage = resizeImage(originalImage, to: size)
+        
+        albumArtCache.setObject(resizedImage, forKey: cacheKey)
+        
+        return resizedImage
     }
 }

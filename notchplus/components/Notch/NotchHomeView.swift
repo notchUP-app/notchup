@@ -28,11 +28,11 @@ struct NotchHomeView: View {
                     if Defaults[.blurredArtwork] {
                         Color.clear
                             .aspectRatio(1, contentMode: .fit)
-                            .background(
+                            .background {
                                 Image(nsImage: musicManager.songArtwork)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                            )
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                            }
                             .clipped()
                             .clipShape(RoundedRectangle(cornerRadius: Defaults[.cornerRadiusScaling] ? viewModel.musicPlayerSizes.image.cornerRadius.opened.inset! : viewModel.musicPlayerSizes.image.cornerRadius.closed.inset!))
                             .scaleEffect(x: 1.3, y: 2.8)
@@ -49,8 +49,8 @@ struct NotchHomeView: View {
                                 .aspectRatio(1, contentMode: .fit)
                                 .background(
                                     Image(nsImage: musicManager.songArtwork)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
                                 )
                                 .clipped()
                                 .clipShape(RoundedRectangle(cornerRadius: Defaults[.cornerRadiusScaling] ? viewModel.musicPlayerSizes.image.cornerRadius.opened.inset! : viewModel.musicPlayerSizes.image.cornerRadius.closed.inset!))

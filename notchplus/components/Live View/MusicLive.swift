@@ -16,6 +16,8 @@ struct MusicLiveActivity: View {
     @Binding var gestureProgress: CGFloat
     let albumArtNamespace: Namespace.ID
     
+    @State private var artworkUpdateCounter: Int = 0
+    
     var body: some View {
         HStack {
             HStack {
@@ -23,8 +25,8 @@ struct MusicLiveActivity: View {
                     .aspectRatio(1, contentMode: .fit)
                     .background {
                         Image(nsImage: musicManager.songArtwork)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
                     }
                     .clipped()
                     .clipShape(RoundedRectangle(cornerRadius: viewModel.musicPlayerSizes.image.cornerRadius.closed.inset!))
@@ -60,5 +62,9 @@ struct MusicLiveActivity: View {
             height: Sizes().size.closed.height! + (hoverAnimation ? 8 : 0),
             alignment: .center
         )
+        .onReceive(NotificationCenter.default.publisher(for: .musicInfoChanged)) { _ in
+            artworkUpdateCounter += 1
+        }
+        .id("musicLive-\(musicManager.songTitle)-\(musicManager.songArtist)-\(artworkUpdateCounter)")
     }
 }
