@@ -7,6 +7,7 @@
 
 import Foundation
 import Defaults
+import SwiftUI
 
 public enum Style {
     case notch
@@ -49,4 +50,10 @@ enum LogType: String {
     case memory = "💾"
     case network = "🌐"
     case media = "🎵"
+}
+
+public enum CoverSize {
+    static let small = CGSize(width: 50, height: 50)
+    static let medium = CGSize(width: 100, height: 100)
+    static let large = CGSize(width: 300, height: 300)
 }

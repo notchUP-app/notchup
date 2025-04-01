@@ -12,6 +12,7 @@ import LaunchAtLogin
 struct GeneralView: View {
     @EnvironmentObject var viewModel: NotchViewModel
     @State var screens: [String] = NSScreen.screens.map { $0.localizedName }
+    @ObservedObject var coordinator = NotchViewCoordinator.shared
     
     var body: some View {
         VStack {
@@ -27,7 +28,7 @@ struct GeneralView: View {
                 }
                 
                 Section {
-                    Picker("Main display", selection: $viewModel.selectedScreen) {
+                    Picker("Main display", selection: $coordinator.mainScreenName) {
                         ForEach(screens, id: \.self) { screen in
                             Text(screen)
                         }

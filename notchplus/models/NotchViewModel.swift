@@ -10,29 +10,17 @@ import Combine
 import TheBoringWorkerNotifier
 import Defaults
 
-struct Sneak {
-    var show: Bool = false
-    var type: SneakContentType = .music
-    var value: CGFloat = 0
-    var icon: String = ""
-}
-
-struct SharedSneakPeek: Codable {
-    var show: Bool
-    var type: String
-    var value: String
-    var icon: String
-}
-
-struct ExpandedItem {
-    var show: Bool = false
-    var type: SneakContentType = .music
-    var value: CGFloat = 0
-    var browser: BrowserType = .chromium
+extension NotchViewModel {
+    static var shared = NotchViewModel()
 }
 
 class NotchViewModel: NSObject, ObservableObject {
+    @ObservedObject var coordinator = NotchViewCoordinator.shared
+    
     var cancellables: Set<AnyCancellable> = []
+    var notifier: TheBoringWorkerNotifier = .init()
+    var dragObserver: DragObserver?
+    var screen: String?
     
     let animation: Animation?
     let animationLibrary: NotchAnimation = .init()
@@ -42,26 +30,23 @@ class NotchViewModel: NSObject, ObservableObject {
     @Published var notchSize: CGSize = .init(width: Sizes().size.closed.width!, height: Sizes().size.closed.height!)
     @Published private(set) var notchState: NotchState = .closed
     @Published var notchMetastability: Bool = true // true if notch is closed
+    
     @Published var spacing: CGFloat = 16
-    
-    @Published var currentView: NotchViews = .home
     @AppStorage("firstLaunch") var firstLaunch: Bool = true
-    
-    var notifier: TheBoringWorkerNotifier = .init()
     
     deinit {
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
     }
     
-    var dragObserver: DragObserver?
-    
-    override init() {
+    init(screen: String? = nil) {
         self.animation = animationLibrary.animation
-        self.notifier = TheBoringWorkerNotifier()
         
         super.init()
-        // FIRST LAUNCH ANIMATION TAG
+        
+        self.notifier = coordinator.notifier
+        self.screen = screen
+        
         self.firstLaunch = true
         self.dragObserver = DragObserver(viewModel: self)
         self.dragObserver?.startMonitoring()
@@ -72,74 +57,6 @@ class NotchViewModel: NSObject, ObservableObject {
             }
             .assign(to: \.anyDropZoneTargeting, on: self)
             .store(in: &cancellables)
-    }
-    
-    func setupWorkersNotificationsObservers() {
-        notifier.setupObserver(notification: notifier.sneakPeakNotification, handler: sneakPeekEvent)
-        notifier.setupObserver(notification: notifier.micStatusNotification, handler: initialMicStatus)
-    }
-    
-    // MARK: - SneakPeek
-    private var sneakPeekDispatch: DispatchWorkItem?
-    
-    @Published var sneakPeek: Sneak = .init() {
-        didSet {
-            if sneakPeek.show {
-                sneakPeekDispatch?.cancel()
-                
-                sneakPeekDispatch = DispatchWorkItem { [weak self] in
-                    guard let self = self else { return }
-                    
-                    withAnimation {
-                        self.toggleSneakPeek(status: false, type: SneakContentType.music)
-                    }
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: sneakPeekDispatch!)
-            }
-        }
-    }
-    
-    @objc func sneakPeekEvent(_ notification: Notification) {
-        let decoder = JSONDecoder()
-        if let decodedData = try? decoder.decode(SharedSneakPeek.self, from: notification.userInfo?.first?.value as! Data) {
-            let contentType =
-            decodedData.type == "brightness" ? SneakContentType.brightness
-            : decodedData.type == "volume" ? SneakContentType.volume
-            : decodedData.type == "backlight" ? SneakContentType.backlight
-            : decodedData.type == "mic" ? SneakContentType.mic
-            : SneakContentType.brightness
-            
-            let value = CGFloat((NumberFormatter().number(from: decodedData.value) ?? 0.0).floatValue)
-            let icon = decodedData.icon
-            
-            Logger.log("Decoded Data: \(decodedData)", type: .debug)
-            toggleSneakPeek(status: decodedData.show, type: contentType, value: value, icon: icon)
-        } else {
-            Logger.log("Failed to decode JSON data", type: .error)
-        }
-    }
-    
-    func toggleSneakPeek(status: Bool, type: SneakContentType, value: CGFloat = 0, icon: String = "") {
-        if type != .music {
-            close()
-            if !hudReplacement {
-                return
-            }
-        }
-        
-        DispatchQueue.main.async {
-            withAnimation(.smooth) {
-                self.sneakPeek.show = status
-                self.sneakPeek.type = type
-                self.sneakPeek.value = value
-                self.sneakPeek.icon = icon
-            }
-        }
-        
-        if (type == .mic) {
-            currentMicStatus = value == 1
-        }
     }
     
     // MARK: - Expanding View
@@ -178,26 +95,6 @@ class NotchViewModel: NSObject, ObservableObject {
     }
     
     // MARK: - View Variables
-    
-    @AppStorage("selected_screen") var selectedScreen = NSScreen.main?.localizedName ?? "Unknown Screen" {
-        didSet {
-            NotificationCenter.default.post(name: Notification.Name.selectedScreenChanged, object: nil)
-        }
-    }
-    
-    @AppStorage("currentMicStatus") var currentMicStatus: Bool = false
-    @objc func initialMicStatus(_ notification: Notification) {
-        self.currentMicStatus = notification.userInfo?.first?.value as! Bool
-    }
-    
-    @AppStorage("hudReplacement") var hudReplacement: Bool = true {
-        didSet {
-            toggleHudReplacement()
-        }
-    }
-    func toggleHudReplacement() {
-        notifier.postNotification(name: notifier.toggleHudReplacementNotification.name, userInfo: nil)
-    }
     
     @Published var showMusicLiveActivityOnClosed: Bool = true
     func toggleMusicLiveActivityOnClosed(status: Bool) {

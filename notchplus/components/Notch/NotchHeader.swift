@@ -11,6 +11,8 @@ import Defaults
 struct NotchHeader: View {
     @EnvironmentObject var viewModel: NotchViewModel
     @EnvironmentObject var batteryModel: BatteryStatusViewModel
+    @ObservedObject var coordinator = NotchViewCoordinator.shared
+    
     @State private var settingsIconHover: Bool = false
     
     var body: some View {
@@ -29,7 +31,7 @@ struct NotchHeader: View {
             if viewModel.notchState == .open {
                 Rectangle()
                     .fill(NSScreen.screens
-                        .first(where: {$0.localizedName == viewModel.selectedScreen})?
+                        .first(where: {$0.localizedName == coordinator.mainScreenName})?
                         .safeAreaInsets.top ?? 0 > 0 ? .black : .clear
                     )
                     .frame(width: Sizes().size.closed.width! - 5)

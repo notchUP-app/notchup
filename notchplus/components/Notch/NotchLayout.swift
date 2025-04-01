@@ -16,9 +16,23 @@ struct NotchLayout: View {
     @Binding var hoverAnimation: Bool
     @Binding var gestureProgress: CGFloat
     
-    @Namespace var albumArtNamespace
+    @Namespace var albumArtNamespace: Namespace.ID
+    
+    var shouldShowBatteryExpandedView: Bool {
+        viewModel.expandingView.show && viewModel.notchState == .closed && viewModel.expandingView.type == .battery
+    }
+    var shouldShowMusicLiveExpandedView: Bool {
+        !viewModel.expandingView.show && viewModel.notchState == .closed && (musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.showMusicLiveActivityOnClosed
+    }
 
     var body: some View {
+        ZStack {
+            Layout()
+        }
+    }
+    
+    @ViewBuilder
+    private func Layout() -> some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
                 if viewModel.firstLaunch {
@@ -32,7 +46,7 @@ struct NotchLayout: View {
                     Spacer()
                 }
                 else {
-                    if viewModel.expandingView.type == .battery && viewModel.expandingView.show && viewModel.notchState == .closed {
+                    if shouldShowBatteryExpandedView {
                         HStack(spacing: 0) {
                             HStack {
                                 Text("Charging")
@@ -54,17 +68,7 @@ struct NotchLayout: View {
                         }
                         .frame(height: Sizes().size.closed.height! + (hoverAnimation ? 8 : 0), alignment: .center)
                     }
-                    else if viewModel.sneakPeek.show && Defaults[.inlineHudShow] && (viewModel.sneakPeek.type != .music) && (viewModel.sneakPeek.type != .battery) {
-                        InlineHUD(
-                            type: $viewModel.sneakPeek.type,
-                            value: $viewModel.sneakPeek.value,
-                            icon: $viewModel.sneakPeek.icon,
-                            hoverAnimation: $hoverAnimation,
-                            gestureProgress: $gestureProgress
-                        )
-                        .transition(.opacity)
-                    }
-                    else if !viewModel.expandingView.show && viewModel.notchState == .closed && (musicManager.isPlaying || !musicManager.isPlayerIdle) && viewModel.showMusicLiveActivityOnClosed {
+                    else if shouldShowMusicLiveExpandedView {
                         MusicLiveActivity(
                             hoverAnimation: $hoverAnimation,
                             gestureProgress: $gestureProgress,
@@ -76,46 +80,13 @@ struct NotchLayout: View {
                             .frame(height: Sizes().size.closed.height!)
                             .blur(radius: abs(gestureProgress) > 0.3 ? min(abs(gestureProgress), 8) : 0)
                     }
-                    
-                    if viewModel.sneakPeek.show && !Defaults[.inlineHudShow] {
-                        if (viewModel.sneakPeek.type != .music) && (viewModel.sneakPeek.type != .battery) {
-                            SystemEventIndicatorModifier(
-                                eventType: $viewModel.sneakPeek.type,
-                                icon: $viewModel.sneakPeek.icon,
-                                value: $viewModel.sneakPeek.value,
-                                sendEventBack: { _ in }
-                            )
-                            .padding(.bottom, 10)
-                            .padding(.leading, 4)
-                            .padding(.trailing, 8)
-                        } else if viewModel.sneakPeek.type != .battery {
-                            if viewModel.notchState == .closed {
-                                HStack(alignment: .center) {
-                                    Image(systemName: "music.note")
-                                    GeometryReader { geometry in
-                                        MarqueeText(
-                                            musicManager.songTitle + " - " + musicManager.songArtist,
-                                            textColor: .gray,
-                                            minDuration: 1,
-                                            frameWidth: geometry.size.width
-                                        )
-                                    }
-                                }
-                                .foregroundStyle(.gray)
-                                .padding(.bottom, 10)
-                            }
-                        }
-                    }
                 }
-            }
-            .conditionalModifier((viewModel.sneakPeek.show && (viewModel.sneakPeek.type == .music) && viewModel.notchState == .closed) || (viewModel.sneakPeek.show && (viewModel.sneakPeek.type != .music) && (musicManager.isPlaying || !musicManager.isPlayerIdle ))) {
-                view in view.fixedSize()
             }
             .zIndex(2)
             
             ZStack {
                 if viewModel.notchState == .open {
-                    switch viewModel.currentView {
+                    switch viewModel.coordinator.currentView {
                     case .home:
                         NotchHomeView(albumArtNamespace: albumArtNamespace)
                     }
@@ -124,7 +95,6 @@ struct NotchLayout: View {
             .zIndex(1)
             .allowsHitTesting(viewModel.notchState == .open)
             .blur(radius: abs(gestureProgress) > 0.3 ? min(gestureProgress, 8) : 0)
-            
         }
     }
 }
