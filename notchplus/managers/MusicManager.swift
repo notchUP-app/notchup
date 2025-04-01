@@ -159,17 +159,13 @@ class MusicManager: ObservableObject {
             if let originalImage = NSImage(data: artworkData) {
                 self.updateAlbumArt(newArtwork: originalImage)
                 
-                albumArtCache.setObject(originalImage, forKey: "original-\(identifier)" as NSString)
-                
                 let commonSizes = [CGSize(width: 300, height: 300), CGSize(width: 100, height: 100)]
                 for size in commonSizes {
                     let resizedImage = resizeImage(originalImage, to: size)
                     let sizeKey = "\(identifier)-\(Int(size.width))-\(Int(size.height))" as NSString
+                    
+                    Logger.log("Storing resized artwork for \(sizeKey)", type: .media)
                     albumArtCache.setObject(resizedImage, forKey: sizeKey)
-                }
-                
-                if forceUpdate {
-                    NotificationCenter.default.post(name: .musicArtworkChanged, object: nil)
                 }
             }
         }
@@ -179,12 +175,26 @@ class MusicManager: ObservableObject {
         withAnimation(.smooth) {
             self.songArtwork = newArtwork
             
-            albumArtCache.setObject(newArtwork, forKey: "original-\(songTitle)-\(songArtist)" as NSString)
+            albumArtCache.setObject(newArtwork, forKey: "original-\(songTitle)-\(songArtist)-\(songAlbum)" as NSString)
             
             if Defaults[.coloredSpectogram] {
                 calculateAverageColor()
             }
         }
+    }
+    
+    func getAlbumArtwork(_ identifier: String, size: CGSize = CoverSize.small) -> NSImage? {
+        let cacheKey = "\(identifier)-\(Int(size.width))-\(Int(size.height))" as NSString
+        
+        Logger.log("Getting album art for \(identifier) with size \(size)", type: .media)
+        
+        if let cachedImage = albumArtCache.object(forKey: cacheKey) {
+            Logger.log("Using cached album art for \(identifier)", type: .media)
+            return cachedImage
+        }
+        
+        Logger.log("Using default image", type: .media)
+        return defaultImage
     }
     
     // MARK: UPDATE INTERNAL STATE FUNCTIONS
@@ -226,63 +236,24 @@ class MusicManager: ObservableObject {
     
     private func updateMusicState(newInfo: (title: String, artist: String, album: String, duration: TimeInterval, artworkData: Data?), state: Int?) {
         Logger.log("Media source: \(bundleIdentifier)", type: .media)
+        Logger.log("Album Art Cache: \(albumArtCache.attributeKeys)", type: .media)
         
         let songChanged = newInfo.title != songTitle || newInfo.artist != songArtist || newInfo.album != songAlbum
         
-        if songChanged {
-            updateArtwork(newInfo.artworkData, state: state, forceUpdate: true)
-        }
-        
+        updateArtwork(newInfo.artworkData, state: state, forceUpdate: true)
+                
         withAnimation(.smooth) {
             self.songArtist = newInfo.artist
             self.songTitle = newInfo.title
             self.songAlbum = newInfo.album
             self.songDuration = newInfo.duration
         }
-        
-        if let artworkData = newInfo.artworkData {
-            if let image = NSImage(data: artworkData) {
-                withAnimation(.smooth) {
-                    self.songArtwork = image
-                }
-                
-                DispatchQueue.global(qos: .userInitiated).async {
-                    let identifier = "\(newInfo.title)-\(newInfo.artist)-\(newInfo.album)"
-                    self.albumArtCache.setObject(image, forKey: "original-\(identifier)" as NSString)
-                    
-                    let commonSizes = [CGSize(width: 300, height: 300), CGSize(width: 100, height: 100)]
-                    for size in commonSizes {
-                        let resizedImage = self.resizeImage(image, to: size)
-                        let sizeKey = "\(identifier)-\(Int(size.width))-\(Int(size.height))" as NSString
-                        self.albumArtCache.setObject(resizedImage, forKey: sizeKey)
-                    }
-                    
-                    if Defaults[.coloredSpectogram] {
-                        image.averageColor { color in
-                            DispatchQueue.main.async {
-                                withAnimation(.smooth) {
-                                    self.avgColor = color ?? .clear
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } else if state == 1 {
-            if let icon = AppIcons().getIcon(bundleId: bundleIdentifier)?.tiffRepresentation,
-               let iconImage = NSImage(data: icon) {
-                withAnimation(.smooth) {
-                    self.songArtwork = iconImage
-                }
-            }
+    
+        if songChanged {
+            self.lastMusicItem = (title: newInfo.title, artist: newInfo.artist, album: newInfo.album, duration: newInfo.duration, artworkData: lastMusicItem?.artworkData)
         }
         
-//        updatePlaybackState(state)
-        self.lastMusicItem = (title: newInfo.title, artist: newInfo.artist, album: newInfo.album, duration: newInfo.duration, artworkData: lastMusicItem?.artworkData)
-        
-        if let state = state {
-            musicIsPaused(state: state == 1, bypass: true)
-        }
+        updatePlaybackState(state)
         
         if !self.isPlaying { return }
         

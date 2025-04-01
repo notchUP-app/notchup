@@ -24,7 +24,12 @@ struct MusicLiveActivity: View {
                 Color.clear
                     .aspectRatio(1, contentMode: .fit)
                     .background {
-                        Image(nsImage: musicManager.songArtwork)
+                        Image(nsImage:
+                                musicManager.getAlbumArt(
+                                    for: "\(musicManager.songTitle)-\(musicManager.songArtist)-\(musicManager.songAlbum)",
+                                    size: CoverSize.small
+                                ) ?? defaultImage
+                        )
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                     }

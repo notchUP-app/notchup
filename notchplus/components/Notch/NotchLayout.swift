@@ -16,7 +16,7 @@ struct NotchLayout: View {
     @Binding var hoverAnimation: Bool
     @Binding var gestureProgress: CGFloat
     
-    @Namespace var albumArtNamespace
+    @Namespace var albumArtNamespace: Namespace.ID
     
     var shouldShowBatteryExpandedView: Bool {
         viewModel.expandingView.show && viewModel.notchState == .closed && viewModel.expandingView.type == .battery
