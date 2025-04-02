@@ -1,11 +1,10 @@
 //
 //  CGSSpace.swift
-//  boringNotch
+//  notchplus
 //
-//  Created by Alexander Greco on 2024-10-27.
+//  Created by Eduardo Monteiro on 01/04/25.
 //
 
-/// Small Spaces API wrapper.
 public final class CGSSpace {
     private let identifier: CGSSpaceID
     private let createdByInit: Bool

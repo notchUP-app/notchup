@@ -14,6 +14,8 @@ struct GeneralView: View {
     @State var screens: [String] = NSScreen.screens.map { $0.localizedName }
     @ObservedObject var coordinator = NotchViewCoordinator.shared
     
+    @Default(.showOnAllDisplays) var showOnAllDisplays
+    
     var body: some View {
         VStack {
             Form {
@@ -28,15 +30,20 @@ struct GeneralView: View {
                 }
                 
                 Section {
-                    Picker("Main display", selection: $coordinator.mainScreenName) {
-                        ForEach(screens, id: \.self) { screen in
-                            Text(screen)
+                    Defaults.Toggle("Show on all dislpays", key: .showOnAllDisplays)
+                        .toggleStyle(SwitchToggleStyle(tint: Defaults[.accentColor]))
+                    
+                    if !showOnAllDisplays {
+                        Picker("Main display", selection: $coordinator.mainScreenName) {
+                            ForEach(screens, id: \.self) { screen in
+                                Text(screen)
+                            }
                         }
+                        .onChange(of: NSScreen.screens) { old, new in
+                            screens = new.compactMap({ $0.localizedName })
+                        }
+                        .pickerStyle(.menu)
                     }
-                    .onChange(of: NSScreen.screens) { old, new in
-                        screens = new.compactMap({ $0.localizedName })
-                    }
-                    .pickerStyle(.menu)
                 } header: {
                     Text("Display")
                         .fontWeight(.semibold)
