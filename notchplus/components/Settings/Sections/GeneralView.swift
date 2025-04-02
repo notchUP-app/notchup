@@ -32,6 +32,9 @@ struct GeneralView: View {
                 Section {
                     Defaults.Toggle("Show on all dislpays", key: .showOnAllDisplays)
                         .toggleStyle(SwitchToggleStyle(tint: Defaults[.accentColor]))
+                        .onChange(of: showOnAllDisplays) {
+                            NotificationCenter.default.post(name: Notification.Name.showOnAllDisplaysChanged, object: nil)
+                        }
                     
                     if !showOnAllDisplays {
                         Picker("Main display", selection: $coordinator.mainScreenName) {
