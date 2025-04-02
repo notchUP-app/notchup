@@ -187,7 +187,7 @@ struct ContentView: View {
                 // change to `DispatchQueue.main.async { ... }` to make it start on open
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     withAnimation(viewModel.animation) {
-                        if viewModel.firstLaunch {
+                        if coordinator.firstLaunch {
                             doOpen()
                         }
                     }
