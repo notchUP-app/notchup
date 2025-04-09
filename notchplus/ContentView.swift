@@ -9,7 +9,7 @@ import Defaults
 import SwiftUI
 
 struct ContentView: View {
-    let onHover: () -> Void
+    let onHover: (Bool) -> Void
     
     @ObservedObject var coordinator: NotchViewCoordinator
     @ObservedObject var viewModel: NotchViewModel
@@ -29,7 +29,7 @@ struct ContentView: View {
     @AppStorage("firstLaunch") private var firstLaunch: Bool = false
     
     init (
-        onHover: @escaping () -> Void,
+        onHover: @escaping (Bool) -> Void,
         coordinator: NotchViewCoordinator = .shared,
         viewModel: NotchViewModel,
         batteryModel: BatteryStatusViewModel
@@ -187,7 +187,7 @@ struct ContentView: View {
                 // change to `DispatchQueue.main.async { ... }` to make it start on open
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     withAnimation(viewModel.animation) {
-                        if viewModel.firstLaunch {
+                        if coordinator.firstLaunch {
                             doOpen()
                         }
                     }

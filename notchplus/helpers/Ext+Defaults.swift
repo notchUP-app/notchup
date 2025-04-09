@@ -12,6 +12,7 @@ extension Defaults.Keys {
     // MARK: GENERAL
     static let menuBarIcon = Key<Bool>("menuBarIcon", default: true)
     static let dropBoxByDefault = Key<Bool>("dropBoxByDefault", default: true)
+    static let showOnAllDisplays = Key<Bool>("showOnAllDisplays", default: true)
     
     // MARK: APPEARENCE
     static let matchSystemAccent = Key<Bool>("matchSystemAccent", default: true)

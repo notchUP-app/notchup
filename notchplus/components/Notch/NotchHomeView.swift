@@ -13,6 +13,7 @@ struct NotchHomeView: View {
     @EnvironmentObject var viewModel: NotchViewModel
     @EnvironmentObject var batteryModel: BatteryStatusViewModel
     @EnvironmentObject var musicManager: MusicManager
+    @ObservedObject var coordinator = NotchViewCoordinator.shared
     
     @State private var sliderValue: Double = 0.0
     @State private var dragging: Bool = false
@@ -22,7 +23,7 @@ struct NotchHomeView: View {
     let albumArtNamespace: Namespace.ID
     
     var body: some View {
-        if !viewModel.firstLaunch {
+        if !coordinator.firstLaunch {
             HStack(alignment: .top, spacing: 10) {
                 ZStack(alignment: .bottomTrailing) {
                     if Defaults[.blurredArtwork] {
@@ -125,7 +126,9 @@ struct NotchHomeView: View {
 
             }
             .onAppear {
-                viewModel.open()
+                if coordinator.firstLaunch {
+                    viewModel.open()
+                }
                 sliderValue = musicManager.elapsedTime
                 startTimer()
             }

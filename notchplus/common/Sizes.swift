@@ -51,6 +51,8 @@ func setNotchSize(screen: String? = nil) -> CGSize {
 }
 
 struct Sizes {
+    static let shared = Sizes()
+    
     var cornerRadius: NotchSizeState = NotchSizeState(opened: Area(inset: 24), closed: Area(inset: 10))
     var size: NotchSizeState = NotchSizeState(
         opened: Area(width: 580, height: 175),
