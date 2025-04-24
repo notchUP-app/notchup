@@ -7,50 +7,45 @@
 
 import SwiftUI
 import CoreAudio
+import Cocoa
+import Accessibility
+import MacroVisionKit
+import Defaults
 
 class FullScreenMediaDetector: ObservableObject {
+    static let shared = FullScreenMediaDetector()
+    let detector: MacroVisionKit
+    let musicManager = MusicManager.shared
     
     @Published var currentAppInFullScreen: Bool = false {
         didSet {
             self.objectWillChange.send()
         }
     }
-    
     var nowPlaying: NowPlaying = .init()
     
-    private func logFullScreenApp(_ app: NSRunningApplication) {
-        Logger.log("Current app in full screen: \(currentAppInFullScreen)", type: .debug)
-        Logger.log("Current app name: \(app.localizedName ?? "Unknown")", type: .debug)
-    }
     
     func isAppFullScreen(_ app: NSRunningApplication) -> Bool {
-        guard let windows = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]] else { return false }
-        
-        let appWindows = windows.filter { ($0[kCGWindowBounds as String] as? Int32) == app.processIdentifier }
-        
-        return appWindows.contains { window in
-            guard let bounds = window[kCGWindowBounds as String] as? [String: CGFloat],
-                  let isOnScreen = window[kCGWindowIsOnscreen as String] as? Bool,
-                  isOnScreen else {
-                return false
+        let fullscreenApps = detector.detectFullscreenApps(debug: false)
+        return fullscreenApps.contains {
+            guard $0.bundleIdentifier != "com.apple.finder" else { return false }
+            let isSame = $0.bundleIdentifier == app.bundleIdentifier
+            if isSame {
+                Logger.log("Fullscreen: \(String(describing: $0.debugDescription))", type: .debug)
             }
-            
-            let windowFrame = CGRect(x: bounds["X"] ?? 0, y: bounds["Y"] ?? 0, width: bounds["width"] ?? 0, height: bounds["height"] ?? 0)
-            
-            return NSScreen.screens.contains { screen in
-                let isFullScreen = windowFrame.equalTo(screen.frame)
-                let isSafariFullScreen = windowFrame.size.width == screen.frame.size.width
-                
-                return isFullScreen || app.localizedName == "Safari" && isSafariFullScreen
-            }
+            return isSame
         }
     }
     
     func checkFullScreenStatus() {
         DispatchQueue.main.async {
             if let frontMostApp = NSWorkspace.shared.frontmostApplication {
-                self.currentAppInFullScreen = self.isAppFullScreen(frontMostApp) && frontMostApp.bundleIdentifier == self.nowPlaying.appBundleIdentifier
-                self.logFullScreenApp(frontMostApp)
+                let sameAppAsNowPlaying = !Defaults[.hideOnFullscreen] ? frontMostApp.bundleIdentifier == self.musicManager.bundleIdentifier : true
+                
+                Logger.log(Defaults[.hideOnFullscreen] ? "Fullscreen media detection is active." : "", type: .debug)
+                Logger.log("Now playing app: \(String(describing: self.musicManager.bundleIdentifier))", type: .debug)
+                
+                self.currentAppInFullScreen = self.isAppFullScreen(frontMostApp) && sameAppAsNowPlaying
             }
         }
     }
@@ -68,7 +63,10 @@ class FullScreenMediaDetector: ObservableObject {
         let notificaton: [(Notification.Name, Selector)] = [
             (NSWorkspace.activeSpaceDidChangeNotification, #selector(activeSpaceDidChange(_:))),
             (NSApplication.didChangeScreenParametersNotification, #selector(applicationDidChangeScreenMode(_:))),
-            (NSWorkspace.didActivateApplicationNotification, #selector(applicationDidChangeScreenMode(_:)))
+            (NSWorkspace.didActivateApplicationNotification, #selector(applicationDidChangeScreenMode(_:))),
+            (NSWorkspace.didDeactivateApplicationNotification, #selector(applicationDidChangeScreenMode(_:))),
+            (NSApplication.didBecomeActiveNotification, #selector(applicationDidChangeScreenMode(_:))),
+            (NSApplication.didResignActiveNotification, #selector(applicationDidChangeScreenMode(_:)))
         ]
         
         for (name, selector) in notificaton {
@@ -77,6 +75,8 @@ class FullScreenMediaDetector: ObservableObject {
     }
     
     init() {
+        self.detector = MacroVisionKit.shared
+        detector.configuration.includeSystemApps = true
         setupNotificationObservers()
     }
     

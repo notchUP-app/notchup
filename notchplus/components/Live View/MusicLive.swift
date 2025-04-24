@@ -10,7 +10,7 @@ import Defaults
 
 struct MusicLiveActivity: View {
     @EnvironmentObject var viewModel: NotchViewModel
-    @EnvironmentObject var musicManager: MusicManager
+    @ObservedObject var musicManager = MusicManager.shared
     
     @Binding var hoverAnimation: Bool
     @Binding var gestureProgress: CGFloat
@@ -24,17 +24,16 @@ struct MusicLiveActivity: View {
                 Color.clear
                     .aspectRatio(1, contentMode: .fit)
                     .background {
-                        Image(nsImage:
-                                musicManager.getAlbumArt(
-                                    for: "\(musicManager.songTitle)-\(musicManager.songArtist)-\(musicManager.songAlbum)",
-                                    size: CoverSize.small
-                                ) ?? defaultImage
-                        )
+                        Image(nsImage: musicManager.songArtwork)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                     }
                     .clipped()
-                    .clipShape(RoundedRectangle(cornerRadius: viewModel.musicPlayerSizes.image.cornerRadius.closed.inset!))
+                    .clipShape(
+                        RoundedRectangle(
+                            cornerRadius: MusicPlayerImageSizes.cornerRadiusInset.closed
+                        )
+                    )
                     .matchedGeometryEffect(id: "albumArtwork", in: albumArtNamespace)
                     .frame(width: Sizes().size.closed.height! - 12, height: Sizes().size.closed.height! - 12)
             }

@@ -1,13 +1,13 @@
 {
-  "originHash" : "374b1f9e934226b883a428dd40fa0f64099ea1c6ed2ff12bedf1e2dd4ff0eda3",
+  "originHash" : "f2bb89317e211881bf84ed085e34ff63e8be0eead24171f9c7efa4a15623a44c",
   "pins" : [
     {
       "identity" : "defaults",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sindresorhus/Defaults",
       "state" : {
-        "branch" : "main",
-        "revision" : "a89f799930c92a85aa04b72131849d46c0833ab3"
+        "revision" : "00c82eff4550c87cf9c547d7e5493a6a97837061",
+        "version" : "9.0.3"
       }
     },
     {
@@ -20,12 +20,21 @@
       }
     },
     {
+      "identity" : "macrovisionkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/TheBoredTeam/MacroVisionKit",
+      "state" : {
+        "revision" : "b1b036d1b71438c2cf9dd5a32831d49b65a75202",
+        "version" : "0.0.0"
+      }
+    },
+    {
       "identity" : "sparkle",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle",
       "state" : {
-        "revision" : "0ef1ee0220239b3776f433314515fd849025673f",
-        "version" : "2.6.4"
+        "revision" : "0ca3004e98712ea2b39dd881d28448630cce1c99",
+        "version" : "2.7.0"
       }
     },
     {
@@ -38,12 +47,21 @@
       }
     },
     {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax",
+      "state" : {
+        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
+        "version" : "601.0.1"
+      }
+    },
+    {
       "identity" : "theboringworkernotifier",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/TheBoredTeam/TheBoringWorkerNotifier.git",
       "state" : {
-        "revision" : "bc2b292c88035dcfc41fc7e3d8021689e624d137",
-        "version" : "1.0.0"
+        "branch" : "main",
+        "revision" : "bc2b292c88035dcfc41fc7e3d8021689e624d137"
       }
     }
   ],

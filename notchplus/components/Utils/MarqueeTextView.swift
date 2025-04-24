@@ -23,7 +23,7 @@ struct MeasureSizeModifier: ViewModifier {
 }
 
 struct MarqueeText: View {
-    var text: String
+    @Binding var text: String
     let font: Font
     let nsFont: NSFont.TextStyle
     let textColor: Color
@@ -35,8 +35,8 @@ struct MarqueeText: View {
     @State var textSize: CGSize = .zero
     @State var offset: CGFloat = 0
     
-    init(_ text: String, font: Font = .body, nsFont: NSFont.TextStyle = .body, textColor: Color = .primary, backgroundColor: Color = .clear, minDuration: Double = 3.0, frameWidth: CGFloat = 200) {
-        self.text = text
+    init(_ text: Binding<String>, font: Font = .body, nsFont: NSFont.TextStyle = .body, textColor: Color = .primary, backgroundColor: Color = .clear, minDuration: Double = 3.0, frameWidth: CGFloat = 200) {
+        _text = text
         self.font = font
         self.nsFont = nsFont
         self.textColor = textColor

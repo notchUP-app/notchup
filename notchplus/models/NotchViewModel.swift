@@ -24,7 +24,6 @@ class NotchViewModel: NSObject, ObservableObject {
     
     let animation: Animation?
     let animationLibrary: NotchAnimation = .init()
-    let musicPlayerSizes: MusicPlayerElementSizes = .init()
     
     @Published var sizes: Sizes = .init()
     @Published var notchSize: CGSize = .init(width: Sizes().size.closed.width!, height: Sizes().size.closed.height!)

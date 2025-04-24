@@ -8,25 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		3422AD9E2CF5005400A2034C /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3422AD9D2CF5005400A2034C /* MediaRemote.framework */; };
-		3422AD9F2CF5005400A2034C /* MediaRemote.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3422AD9D2CF5005400A2034C /* MediaRemote.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3428130A2CC1B641006195BB /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 342813092CC1B641006195BB /* Sparkle */; };
 		342813222CC206E1006195BB /* TheBoringWorkerNotifier in Frameworks */ = {isa = PBXBuildFile; productRef = 342813212CC206E1006195BB /* TheBoringWorkerNotifier */; };
 		342813252CC20DA5006195BB /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = 342813242CC20DA5006195BB /* Defaults */; };
 		3445455E2CF83098009722AC /* appcast.xml in Resources */ = {isa = PBXBuildFile; fileRef = 3445455D2CF83090009722AC /* appcast.xml */; };
+		34686ECA2DB9D52C00746327 /* MacroVisionKit in Frameworks */ = {isa = PBXBuildFile; productRef = 34686EC92DB9D52C00746327 /* MacroVisionKit */; };
 		3477D5052CD99616008A4E5E /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 3477D5042CD99616008A4E5E /* Collections */; };
 		34E478D22CE5AA1E00D53CA9 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 34E478D12CE5AA1E00D53CA9 /* LaunchAtLogin */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		3422ADA02CF5005400A2034C /* Embed Frameworks */ = {
+		34686ED12DBAA8F500746327 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3422AD9F2CF5005400A2034C /* MediaRemote.framework in Embed Frameworks */,
 			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -35,6 +33,7 @@
 		3422AD9D2CF5005400A2034C /* MediaRemote.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaRemote.framework; path = ../../../../../../System/Library/PrivateFrameworks/MediaRemote.framework; sourceTree = "<group>"; };
 		342812D72CC192CA006195BB /* notchplus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = notchplus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3445455D2CF83090009722AC /* appcast.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = appcast.xml; sourceTree = "<group>"; };
+		34686ECD2DBAA77F00746327 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -63,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34686ECA2DB9D52C00746327 /* MacroVisionKit in Frameworks */,
 				34E478D22CE5AA1E00D53CA9 /* LaunchAtLogin in Frameworks */,
 				342813252CC20DA5006195BB /* Defaults in Frameworks */,
 				3477D5052CD99616008A4E5E /* Collections in Frameworks */,
@@ -97,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				3422AD9D2CF5005400A2034C /* MediaRemote.framework */,
+				34686ECD2DBAA77F00746327 /* IOKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -111,7 +112,7 @@
 				342812D32CC192CA006195BB /* Sources */,
 				342812D42CC192CA006195BB /* Frameworks */,
 				342812D52CC192CA006195BB /* Resources */,
-				3422ADA02CF5005400A2034C /* Embed Frameworks */,
+				34686ED12DBAA8F500746327 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -127,6 +128,7 @@
 				342813242CC20DA5006195BB /* Defaults */,
 				3477D5042CD99616008A4E5E /* Collections */,
 				34E478D12CE5AA1E00D53CA9 /* LaunchAtLogin */,
+				34686EC92DB9D52C00746327 /* MacroVisionKit */,
 			);
 			productName = notchplus;
 			productReference = 342812D72CC192CA006195BB /* notchplus.app */;
@@ -154,6 +156,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"pt-BR",
 			);
 			mainGroup = 342812CE2CC192CA006195BB;
 			minimizedProjectReferenceProxies = 1;
@@ -163,6 +166,7 @@
 				342813232CC20DA5006195BB /* XCRemoteSwiftPackageReference "Defaults" */,
 				3477D5032CD99616008A4E5E /* XCRemoteSwiftPackageReference "swift-collections" */,
 				34E478D02CE5AA1E00D53CA9 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
+				34686EC82DB9D52C00746327 /* XCRemoteSwiftPackageReference "MacroVisionKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 342812D82CC192CA006195BB /* Products */;
@@ -254,8 +258,9 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx15.0;
+				SDKROOT = macosx15.4;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -312,8 +317,9 @@
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				SDKROOT = macosx15.0;
+				SDKROOT = macosx15.4;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
@@ -322,32 +328,34 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = notchplus/notchplus.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0.4.2;
+				CURRENT_PROJECT_VERSION = 0.5;
 				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Preview Content\"";
 				DEVELOPMENT_TEAM = SQ2JHD7BTB;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = notchplus/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = notchUP;
+				INFOPLIST_KEY_CFBundleDisplayName = notchplus;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "$(PRODUCT_NAME) uses AppleScript to control Apple Music and Spotify.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 0.4.2;
+				MARKETING_VERSION = 0.5;
 				OTHER_LDFLAGS = "$(inherited)";
 				"OTHER_LDFLAGS[arch=*]" = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.notchplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "notchplus/objc/notchplus-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -365,31 +373,33 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = notchplus/notchplus.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0.4.2;
+				CURRENT_PROJECT_VERSION = 0.5;
 				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Preview Content\"";
 				DEVELOPMENT_TEAM = SQ2JHD7BTB;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = notchplus/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = notchUP;
+				INFOPLIST_KEY_CFBundleDisplayName = notchplus;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "$(PRODUCT_NAME) uses AppleScript to control Apple Music and Spotify.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 0.4.2;
+				MARKETING_VERSION = 0.5;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.notchplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "notchplus/objc/notchplus-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -437,16 +447,24 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/TheBoredTeam/TheBoringWorkerNotifier.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 		342813232CC20DA5006195BB /* XCRemoteSwiftPackageReference "Defaults" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/Defaults";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.2;
+			};
+		};
+		34686EC82DB9D52C00746327 /* XCRemoteSwiftPackageReference "MacroVisionKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TheBoredTeam/MacroVisionKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.0;
 			};
 		};
 		3477D5032CD99616008A4E5E /* XCRemoteSwiftPackageReference "swift-collections" */ = {
@@ -482,6 +500,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 342813232CC20DA5006195BB /* XCRemoteSwiftPackageReference "Defaults" */;
 			productName = Defaults;
+		};
+		34686EC92DB9D52C00746327 /* MacroVisionKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 34686EC82DB9D52C00746327 /* XCRemoteSwiftPackageReference "MacroVisionKit" */;
+			productName = MacroVisionKit;
 		};
 		3477D5042CD99616008A4E5E /* Collections */ = {
 			isa = XCSwiftPackageProductDependency;
