@@ -1,0 +1,125 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%d%%" : {
+
+    },
+    "About" : {
+
+    },
+    "Accent color" : {
+
+    },
+    "Appearance" : {
+
+    },
+    "Beta internal build" : {
+
+    },
+    "Charging" : {
+
+    },
+    "Check for updates" : {
+
+    },
+    "Close notch" : {
+
+    },
+    "Developer" : {
+
+    },
+    "Display" : {
+
+    },
+    "Drop files here" : {
+
+    },
+    "Error" : {
+
+    },
+    "Exit" : {
+
+    },
+    "General" : {
+
+    },
+    "Gestures" : {
+
+    },
+    "Header" : {
+
+    },
+    "Hello" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Olá"
+          }
+        }
+      }
+    },
+    "Later" : {
+
+    },
+    "License" : {
+
+    },
+    "Live" : {
+
+    },
+    "Main display" : {
+
+    },
+    "Media" : {
+
+    },
+    "Mic %@" : {
+
+    },
+    "Need Restart" : {
+
+    },
+    "notchplus" : {
+
+    },
+    "OK" : {
+
+    },
+    "One or more files failed to load" : {
+
+    },
+    "Open notch" : {
+
+    },
+    "Quit" : {
+
+    },
+    "Release" : {
+
+    },
+    "Restart hello" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Settings button opens" : {
+
+    },
+    "System features" : {
+
+    },
+    "Version" : {
+
+    },
+    "Version %@" : {
+
+    },
+    "Version info" : {
+
+    }
+  },
+  "version" : "1.0"
+}

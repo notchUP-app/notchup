@@ -15,7 +15,22 @@ struct MusicSliderView: View {
     @Binding var lastDragged: Date
     
     var color: NSColor
+    let currentDate: Date
+    let lastUpdated: Date
+    let ignoreLastUpdated: Bool
+    let timestampDate: Date
+    let elapsedTime: Double
+    let playbackRate: Double
+    let isPlaying: Bool
     var onValueChange: ((Double) -> Void)
+    
+    var currentElapsedTime: Double {
+        guard !dragging, timestampDate.timeIntervalSince(lastDragged) > -0.0001, (timestampDate > lastUpdated || ignoreLastUpdated) else { return sliderValue }
+        
+        let timeDiff = isPlaying ? currentDate.timeIntervalSince(timestampDate) : 0
+        let elapsed = elapsedTime + (timeDiff * playbackRate)
+        return min(elapsed, duration)
+    }
     
     var body: some View {
         VStack {
@@ -23,7 +38,7 @@ struct MusicSliderView: View {
                 value: $sliderValue,
                 range: 0...duration,
                 color: Defaults[.sliderColor] == SliderColorEnum.albumArt
-                ? Color(nsColor: color)
+                ? Color(nsColor: color).ensureMinimumBrightness(factor: 0.8)
                 : Defaults[.sliderColor] == SliderColorEnum.accent
                 ? Defaults[.accentColor] : .white,
                 dragging: $dragging,
@@ -39,6 +54,9 @@ struct MusicSliderView: View {
             .fontWeight(.medium)
             .foregroundColor(.gray)
             .font(.caption)
+        }
+        .onChange(of: currentDate) {
+            sliderValue = currentElapsedTime
         }
     }
     

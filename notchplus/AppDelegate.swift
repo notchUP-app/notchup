@@ -10,14 +10,14 @@ import Defaults
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     @ObservedObject var coordinator = NotchViewCoordinator.shared
-    
+
     var viewModel: NotchViewModel = NotchViewModel.shared
     var viewModels: [NSScreen: NotchViewModel] = [:]
-    
+
     var window: NSWindow!
     var windows: [NSScreen: NSWindow] = [:]
     private var previousScreen: [NSScreen]?
-    
+
     var animationWindow: NSWindow?
     let sizing: Sizes = .init()
     private var previousScreens: [NSScreen]?
@@ -25,35 +25,35 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return false
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApplication.shared.setActivationPolicy(.accessory)
-        
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(screenConfigurationDidChange),
             name: NSApplication.didChangeScreenParametersNotification,
             object: nil
         )
-    
+
         DistributedNotificationCenter.default().addObserver(
             self,
             selector: #selector(onScreenLocked(_:)),
             name: NSNotification.Name(rawValue: "com.apple.screenIsLocked"),
             object: nil
         )
-        
+
         DistributedNotificationCenter.default().addObserver(
             self,
             selector: #selector(onScreenUnlocked(_:)),
             name: NSNotification.Name(rawValue: "com.apple.screenIsUnlocked"),
             object: nil
         )
-        
+
         if coordinator.firstLaunch {
             DispatchQueue.main.async {
                 self.showAnimationOverlay()
@@ -61,8 +61,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             createAndShowMainWindow()
         }
-        
-        
+
+
     }
 
     @objc func adjustWindowPosition(changeAlpha: Bool = false) {
@@ -78,27 +78,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         backing: .buffered,
                         defer: false
                     )
-                    
+
                     window.contentView = NSHostingView(
                         rootView: ContentView(
                             onHover: adjustWindowPosition,
                             coordinator: NotchViewCoordinator.shared,
-                            viewModel: viewModel,
-                            batteryModel: .init(viewModel: viewModel)
+                            viewModel: viewModel
                         )
                         .environmentObject(viewModel)
-                        .environmentObject(MusicManager(viewModel: viewModel)!)
                     )
-                    
+
                     windows[screen] = window
                     viewModels[screen] = viewModel
                     window.orderFrontRegardless()
-                    
+
                 }
-                
+
                 if let window = windows[screen] {
                     window.alphaValue = changeAlpha ? 0 : 1
-                    
+
                     DispatchQueue.main.async {
                         let screenFrame = screen.frame
                         window.setFrameOrigin(
@@ -107,11 +105,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                 y: screenFrame.origin.y + screenFrame.height - window.frame.height
                             )
                         )
-                        
+
                         window.alphaValue = 1
                     }
                 }
-                
+
                 if let viewModel = viewModels[screen] {
                     if viewModel.notchState == .closed {
                         viewModel.close()
@@ -132,10 +130,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if let screenFrame = selectedScreen {
                 window.alphaValue = changeAlpha ? 0 : 1
                 window.makeKeyAndOrderFront(nil)
-                
+
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    
+
                     let origin = screenFrame.frame.origin.applying(
                         CGAffineTransform(
                             translationX: (screenFrame.frame.width / 2) - window.frame.width / 2,
@@ -147,7 +145,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     window.alphaValue = 1
                 }
             }
-            
+
             if viewModel.notchState == .closed {
                 viewModel.close()
             }
@@ -179,14 +177,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         animationWindow?.makeKeyAndOrderFront(nil)
     }
-    
+
     private func cleanupWindows() {
         if Defaults[.showOnAllDisplays] {
             for window in windows.values {
                 window.close()
                 SpaceManager.shared.space.windows.remove(window)
             }
-            
+
             windows.removeAll()
             viewModels.removeAll()
         }
@@ -195,36 +193,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             SpaceManager.shared.space.windows.remove(window)
         }
     }
-    
+
     @objc func onScreenLocked(_ : Notification) {
         Logger.log("Screen locked", type: .debug)
         cleanupWindows()
     }
-    
+
     @objc func onScreenUnlocked(_ : Notification) {
         Logger.log("Screen unlocked", type: .debug)
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             self?.cleanupWindows()
 //            self?.showAnimationOverlay()
             self?.adjustWindowPosition()
         }
     }
-    
+
     @objc func screenConfigurationDidChange() {
         let currentScreens = NSScreen.screens
         let screensChanged = currentScreens.count != previousScreens?.count ||
         Set(currentScreens.map { $0.localizedName }) != Set(previousScreens?.map { $0.localizedName } ?? [])
-        
+
         if screensChanged {
             Logger.log("Screens changed", type: .debug)
-            
+
             previousScreens = currentScreens
             cleanupWindows()
             adjustWindowPosition()
         }
     }
-    
+
     private func createAndShowMainWindow() {
         NotificationCenter.default.addObserver(
             forName: Notification.Name.selectedScreenChanged,
@@ -233,7 +231,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         ) { [weak self] _ in
             self?.adjustWindowPosition(changeAlpha: true)
         }
-        
+
         NotificationCenter.default.addObserver(
             forName: Notification.Name.notchHeightChanged,
             object: nil,
@@ -241,7 +239,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         ) { [weak self] _ in
             self?.adjustWindowPosition()
         }
-        
+
         NotificationCenter.default.addObserver(
             forName: Notification.Name.showOnAllDisplaysChanged,
             object: nil,
@@ -254,28 +252,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     backing: .buffered,
                     defer: false
                 )
-                
+
                 if let windowValues = self?.windows.values {
                     for window in windowValues {
                         window.close()
                     }
                 }
-                
+
                 self?.window.contentView = NSHostingView(
                     rootView: ContentView(
                         onHover: self!.adjustWindowPosition,
                         coordinator: NotchViewCoordinator.shared,
-                        viewModel: self!.viewModel,
-                        batteryModel: .init(viewModel: self!.viewModel)
+                        viewModel: self!.viewModel
                     )
                     .environmentObject(self!.viewModel)
-                    .environmentObject(MusicManager(viewModel: self!.viewModel)!)
                 )
-                
+
                 self?.adjustWindowPosition(changeAlpha: true)
-                
+
                 self?.window.orderFrontRegardless()
-                
+
                 SpaceManager.shared.space.windows.insert(self!.window)
             }
             else {
@@ -284,7 +280,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self?.adjustWindowPosition()
             }
         }
-        
+
         if !Defaults[.showOnAllDisplays] {
             window = NotchUpWindow(
                 contentRect: NSRect(x: 0, y: 0, width: Sizes.shared.size.opened.width!, height: Sizes.shared.size.opened.height!),
@@ -292,22 +288,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 backing: .buffered,
                 defer: false
             )
-            
+
             window.contentView = NSHostingView(
                 rootView: ContentView(
                     onHover: adjustWindowPosition,
                     coordinator: NotchViewCoordinator.shared,
-                    viewModel: viewModel,
-                    batteryModel: .init(viewModel: viewModel)
+                    viewModel: viewModel
                 )
                 .environmentObject(viewModel)
-                .environmentObject(MusicManager(viewModel: viewModel)!)
             )
-            
+
             adjustWindowPosition(changeAlpha: true)
-            
+
             window.orderFrontRegardless()
-            
+
             SpaceManager.shared.space.windows.insert(window)
         } else {
             adjustWindowPosition()

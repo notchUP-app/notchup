@@ -20,7 +20,7 @@ struct CustomSlider: View {
     var body: some View {
         GeometryReader { geo in
             let width = geo.size.width
-            let height = geo.size.height
+            let height = CGFloat(dragging ? 7 : 5)
             let rangeSpan = range.upperBound - range.lowerBound
             
             let filledTrackWidth = rangeSpan == .zero ? 0 : ((value - range.lowerBound) / rangeSpan) * width
@@ -62,6 +62,20 @@ struct CustomSlider: View {
                 }
             }
         }
-        .frame(height: dragging || hovered ? 8 : 5)
+        .frame(height: 5)
+        .animation(.bouncy.speed(1.4), value: dragging)
     }
+}
+
+
+#Preview {
+    CustomSlider(
+        value: .constant(50),
+        range: 0...100,
+        color: .white,
+        dragging: .constant(true),
+        lastDragged: .constant(Date()),
+        onValueChange: nil,
+        thumbSize: 12
+    )
 }
