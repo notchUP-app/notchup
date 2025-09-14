@@ -24,7 +24,6 @@ class NotchViewModel: NSObject, ObservableObject {
     
     let animation: Animation?
     let animationLibrary: NotchAnimation = .init()
-    let musicPlayerSizes: MusicPlayerElementSizes = .init()
     
     @Published var sizes: Sizes = .init()
     @Published var notchSize: CGSize = .init(width: Sizes().size.closed.width!, height: Sizes().size.closed.height!)
@@ -111,6 +110,8 @@ class NotchViewModel: NSObject, ObservableObject {
             self.notchMetastability = true
             self.notchState = .open
         }
+        
+        MusicManager.shared.forceUpdate()
     }
     
     func close() {

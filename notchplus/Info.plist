@@ -10,5 +10,13 @@
 	<string>https://notchup-app.github.io/notchup/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>UceJ5P1wYteEFzZG3i8cr64MU01Cvk88WWRFd+Eqx5M=</string>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>en</string>
+    </array>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2024 notchplus. All rights reserved.</string>
 </dict>
 </plist>

@@ -12,6 +12,8 @@ extension Defaults.Keys {
     // MARK: GENERAL
     static let menuBarIcon = Key<Bool>("menuBarIcon", default: true)
     static let dropBoxByDefault = Key<Bool>("dropBoxByDefault", default: true)
+    static let showOnAllDisplays = Key<Bool>("showOnAllDisplays", default: true)
+    static let hideOnFullscreen = Key<Bool>("hideOnFullscreen", default: true)
     
     // MARK: APPEARENCE
     static let matchSystemAccent = Key<Bool>("matchSystemAccent", default: true)
@@ -31,7 +33,7 @@ extension Defaults.Keys {
     static let settingsButtonAction = Key<NotchSettingsAction>("settingsIconAction", default: .app)
     
     // MARK: LIVE ACTIVITIES
-    static let enableLiveActivities = Key<Bool>("enableLiveActivities", default: false)
+    static let enableLiveActivities = Key<Bool>("enableLiveActivities", default: true)
     
     static let showChargingInfoOnPlug = Key<Bool>("showChargingInfoOnPlug", default: true)
     
@@ -39,6 +41,15 @@ extension Defaults.Keys {
     static let enableFullScreenMediaDetection = Key<Bool>("enableFullScreenMediaDetection", default: true)
     static let enableSneekPeek = Key<Bool>("enableSneekPeek", default: false)
     static let musicPlayerWaitInterval = Key<Double>("musicPlayerWaitInterval", default: 3)
+    static let preferredMediaController = Key<MediaControllerType>("preferredMediaController", default: defaultMediaController)
+    static var defaultMediaController: MediaControllerType {
+        if #available(macOS 15.4, *) {
+            return .appleMusic
+        } else {
+            return .nowPlaying
+        }
+    }
+    
     
     
     // MARK: HUD

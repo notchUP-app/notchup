@@ -3,10 +3,10 @@
     <channel>
         <title>notchplus</title>
         <item>
-            <title>0.4.2</title>
+            <title>0.5</title>
             <pubDate>Wed, 11 Dec 2024 16:11:12 -0300</pubDate>
-            <sparkle:version>0.4.2</sparkle:version>
-            <sparkle:shortVersionString>0.4.2</sparkle:shortVersionString>
+            <sparkle:version>0.5</sparkle:version>
+            <sparkle:shortVersionString>0.5</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/notchUP-app/notchup/releases/download/fix-file-drop/notchplus.dmg" length="6584349" type="application/octet-stream" sparkle:edSignature="mvCxFNBOeHQ/gm/5R9qV7VUh1TiY3KcOwZjjbVdP3WyEJnEQg21xhcnjCCunDHuqF+hNZroACwa0j7NT3Db8DA=="/>
         </item>

@@ -10,8 +10,9 @@ import Defaults
 
 struct NotchLayout: View {
     @EnvironmentObject var viewModel: NotchViewModel
-    @EnvironmentObject var musicManager: MusicManager
     @EnvironmentObject var batteryModel: BatteryStatusViewModel
+    @ObservedObject var coordinator = NotchViewCoordinator.shared
+    @ObservedObject var musicManager = MusicManager.shared
     
     @Binding var hoverAnimation: Bool
     @Binding var gestureProgress: CGFloat
@@ -35,13 +36,16 @@ struct NotchLayout: View {
     private func Layout() -> some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
-                if viewModel.firstLaunch {
+                if coordinator.firstLaunch {
                     Spacer()
                     HelloAnimation()
                         .frame(width: 200, height: 80)
                         .onAppear(perform: {
                             viewModel.closeHello()
                         })
+                        .onDisappear {
+                            coordinator.firstLaunch = false
+                        }
                         .padding(.top, 40)
                     Spacer()
                 }
@@ -59,9 +63,10 @@ struct NotchLayout: View {
                             
                             HStack {
                                 BatteryView(
+                                    batteryWidth: 30,
                                     batteryLevel: batteryModel.batteryLevel,
-                                    isPluggedIn: batteryModel.isPluggedIn,
-                                    batteryWidth: 30
+                                    isCharging: batteryModel.isCharging,
+                                    isPluggedIn: batteryModel.isPluggedIn
                                 )
                             }
                             .frame(width: 76, alignment: .trailing)

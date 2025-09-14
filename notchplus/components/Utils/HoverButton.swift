@@ -10,17 +10,20 @@ import SwiftUI
 struct HoverButton: View {
     var icon: String
     var iconColor: Color = .white
+    var scale: Image.Scale = .medium
     var action: () -> Void
     var contentTransition: ContentTransition = .symbolEffect
     
     @State private var isHovering: Bool = false
     
     var body: some View {
+        let size = CGFloat(scale == .large ? 40 : 30)
+        
         Button(action: action) {
             Rectangle()
                 .fill(.clear)
                 .contentShape(Rectangle())
-                .frame(width: 30, height: 30)
+                .frame(width: size, height: size)
                 .overlay {
                     Capsule()
                         .fill(isHovering ? Color.gray.opacity(0.3) : .clear)
@@ -29,7 +32,7 @@ struct HoverButton: View {
                             Image(systemName: icon)
                                 .foregroundColor(iconColor)
                                 .contentTransition(contentTransition)
-                                .imageScale(.medium)
+                                .font(scale == .large ? .largeTitle : .body)
                         }
                 }
         }
@@ -39,11 +42,5 @@ struct HoverButton: View {
                 isHovering = hovering
             }
         }
-    }
-}
-
-#Preview {
-    HoverButton(icon: "play.fill") {
-        print("OK")
     }
 }

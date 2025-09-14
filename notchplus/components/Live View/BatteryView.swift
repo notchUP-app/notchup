@@ -8,19 +8,37 @@
 import SwiftUI
 
 struct BatteryViewModel: View {
-    @State var batteryLevel: Float
-    @State var isCharging: Bool
-    var batteryWidth: CGFloat = 30
+    
+    var batteryLevel: Float
+    var isPluggedIn: Bool
+    var isCharging: Bool
+    var isInLowPowerMode: Bool
+    var batteryWidth: CGFloat = 26
+    var isForNotification: Bool
+    
     var animationStyle: NotchAnimation = NotchAnimation()
     
-    var icon: String {
-        return "battery.0"
+    var icon: String = "battery.0"
+    
+    var iconStatus: String {
+        if isCharging {
+            return "bolt.fill"
+        }
+        else if isPluggedIn {
+            return "powerplug.portrait.fill"
+        }
+        else {
+            return ""
+        }
     }
     
     var batteryColor: Color {
-        if batteryLevel.isLessThanOrEqualTo(20) {
+        if isInLowPowerMode {
+            return .yellow
+        }
+        else if batteryLevel.isLessThanOrEqualTo(20) && !isPluggedIn && !isCharging {
             return .red
-        } else if isCharging {
+        } else if isCharging || isPluggedIn || batteryLevel.isEqual(to: 100) {
             return .green
         } else {
             return .white
@@ -44,15 +62,31 @@ struct BatteryViewModel: View {
                 )
                 .padding(.leading, 2)
                 .padding(.top, -0.5)
+            
+            if iconStatus != "" {
+                ZStack {
+                    Image(systemName: iconStatus)
+                        .resizable()
+                        .fontWeight(.light)
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.white)
+                        .frame(width: 15, height: 15)
+                }
+                .frame(width: batteryWidth, height: batteryWidth)
+            }
         }
     }
 }
 
 
 struct BatteryView: View {
-    @State var batteryLevel: Float = 0
-    @State var isPluggedIn: Bool = false
     @State var batteryWidth: CGFloat = 30
+    
+    var batteryLevel: Float = 0
+    var isCharging: Bool = false
+    var isPluggedIn: Bool = false
+    var isInLowPowerMode: Bool = false
+    @State var isForNotification: Bool = true
     
     var body: some View {
         HStack {
@@ -62,8 +96,11 @@ struct BatteryView: View {
             
             BatteryViewModel(
                 batteryLevel: batteryLevel,
-                isCharging: isPluggedIn,
-                batteryWidth: batteryWidth
+                isPluggedIn: isPluggedIn,
+                isCharging: isCharging,
+                isInLowPowerMode: isInLowPowerMode,
+                batteryWidth: batteryWidth,
+                isForNotification: isForNotification
             )
         }
     }
@@ -71,9 +108,10 @@ struct BatteryView: View {
 
 #Preview {
     BatteryView(
-        batteryLevel: 100,
+        batteryLevel: 70,
+        isCharging: true,
         isPluggedIn: true,
-        batteryWidth: 30
+        isInLowPowerMode: false
     )
         .frame(width: 200, height: 200)
 }

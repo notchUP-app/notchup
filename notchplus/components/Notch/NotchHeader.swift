@@ -10,7 +10,7 @@ import Defaults
 
 struct NotchHeader: View {
     @EnvironmentObject var viewModel: NotchViewModel
-    @EnvironmentObject var batteryModel: BatteryStatusViewModel
+    @ObservedObject var batteryModel = BatteryStatusViewModel.shared
     @ObservedObject var coordinator = NotchViewCoordinator.shared
     
     @State private var settingsIconHover: Bool = false
@@ -76,9 +76,10 @@ struct NotchHeader: View {
 
                     if Defaults[.showBattery] {
                         BatteryView(
+                            batteryWidth: 30,
                             batteryLevel: batteryModel.batteryLevel,
-                            isPluggedIn: batteryModel.isPluggedIn,
-                            batteryWidth: 30
+                            isCharging: batteryModel.isCharging,
+                            isPluggedIn: batteryModel.isPluggedIn
                         )
                     }
                 }
