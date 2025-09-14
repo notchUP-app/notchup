@@ -62,7 +62,7 @@ public enum CoverSize {
 enum MediaControllerType: String, CaseIterable, Identifiable, Defaults.Serializable {
     case nowPlaying = "Now Playing"
     case appleMusic = "Apple Music"
-//    case spotify = "Spotify"
+    case spotify = "Spotify"
     
     var id: String { self.rawValue }
 }

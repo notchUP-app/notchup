@@ -110,6 +110,8 @@ class NotchViewModel: NSObject, ObservableObject {
             self.notchMetastability = true
             self.notchState = .open
         }
+        
+        MusicManager.shared.forceUpdate()
     }
     
     func close() {

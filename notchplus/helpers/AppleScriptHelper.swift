@@ -8,20 +8,26 @@
 import Foundation
 
 class AppleScriptHelper {
-    class func execute(_ scriptText: String) -> NSAppleEventDescriptor? {
-        let script = NSAppleScript(source: scriptText)
-        var error: NSDictionary?
-        
-        guard let result = script?.executeAndReturnError(&error) else {
-            Logger.log("AppleScript error: \(String(describing: error))", type: .error)
-            return nil
+    @discardableResult
+    class func execute(_ scriptText: String) async throws -> NSAppleEventDescriptor? {
+        try await withCheckedThrowingContinuation { continuation in
+            Task.detached(priority: .userInitiated) {
+                let script = NSAppleScript(source: scriptText)
+                var error: NSDictionary?
+                if let descriptor = script?.executeAndReturnError(&error) {
+                    continuation.resume(returning: descriptor)
+                } else if let error = error {
+                    continuation.resume(throwing: NSError(domain: "AppleScriptError", code: 1, userInfo: error as? [String: Any]))
+                } else {
+                    continuation.resume(throwing: NSError(domain: "AppleScriptError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unknown error occurred."]))
+                }
+
+            }
         }
-        
-        return result
     }
     
-    class func executeVoid(_ scriptText: String) {
-        _ = execute(scriptText)
+    class func executeVoid(_ scriptText: String) async throws {
+        _ = try await execute(scriptText)
     }
         
 }

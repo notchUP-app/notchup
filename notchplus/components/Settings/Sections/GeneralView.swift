@@ -22,6 +22,7 @@ struct GeneralView: View {
                 Section {
                     Defaults.Toggle("Show menubar icon", key: .menuBarIcon)
                         .toggleStyle(SwitchToggleStyle(tint: Defaults[.accentColor]))
+                        .disabled(true)
                     LaunchAtLogin.Toggle("Launch at login")
                         .toggleStyle(SwitchToggleStyle(tint: Defaults[.accentColor]))
                 } header: {

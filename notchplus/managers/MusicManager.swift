@@ -116,6 +116,9 @@ class MusicManager: ObservableObject {
         case .appleMusic:
             ignoreLastUpdated = true
             newController = AppleMusicController()
+        case .spotify:
+            ignoreLastUpdated = true
+            newController = SpotifyMediaController()
         }
 
         if let controller = newController {
@@ -314,7 +317,9 @@ class MusicManager: ObservableObject {
 
     func forceUpdate() {
         DispatchQueue.main.async { [weak self] in
-            self?.activeController?.updatePlaybackInfo()
+            if self?.activeController?.isActive() == true {
+                self?.activeController?.updatePlaybackInfo()
+            }
         }
     }
 

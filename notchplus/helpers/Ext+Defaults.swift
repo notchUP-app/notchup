@@ -33,7 +33,7 @@ extension Defaults.Keys {
     static let settingsButtonAction = Key<NotchSettingsAction>("settingsIconAction", default: .app)
     
     // MARK: LIVE ACTIVITIES
-    static let enableLiveActivities = Key<Bool>("enableLiveActivities", default: false)
+    static let enableLiveActivities = Key<Bool>("enableLiveActivities", default: true)
     
     static let showChargingInfoOnPlug = Key<Bool>("showChargingInfoOnPlug", default: true)
     
