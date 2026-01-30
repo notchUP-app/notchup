@@ -4,30 +4,15 @@ notchUP is a macOS application designed to enhance the functionality and aesthet
 
 ## Features
 
-### 📁 Drag and Drop
+### Drag and Drop
 - **File Drag**: Drag and drop files directly onto the notch area and copy or move them to a specific location.
 
-### 🎵 Music Integration
+### Music Integration
 - **Music Live Activity**: Displays live music information and controls in the notch area when music is playing.
 - **Audio Spectrum Visualization**: Shows a visual representation of the audio spectrum in the notch area.
 
-### 🔍 System Event Indicators
+### System Event Indicators
 - **Battery Status**: Shows battery level and charging status in the notch area.
-
-You can customize the appearance and behavior of the notch area through the NotchPlus app settings.
-
-## Future Features
-
-### Additional System Integrations
-- **More System Indicators**: Add support for additional system indicators such as network status and notifications.
-- **Third-Party App Integration**: Allow third-party apps to integrate with NotchPlus for custom actions and notifications.
-
-### Advanced Customizations
-- **User-Defined Actions**: Allow users to define custom actions for different gestures and interactions.
-
-### Performance Improvements
-- **Optimized Animations**: Improve the performance and smoothness of animations.
-- **Resource Management**: Optimize resource usage to ensure minimal impact on system performance.
 
 ## Getting Started
 
