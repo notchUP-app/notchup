@@ -1,0 +1,182 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%.1fs" : {
+
+    },
+    "%d%%" : {
+
+    },
+    "%lld" : {
+
+    },
+    "About" : {
+
+    },
+    "Accent color" : {
+
+    },
+    "Adjust gesture sensitivity. Lower values require more precise movements." : {
+
+    },
+    "App Theme" : {
+
+    },
+    "Appearance" : {
+
+    },
+    "Available Gestures" : {
+
+    },
+    "Beta internal build" : {
+
+    },
+    "Charging" : {
+
+    },
+    "Check for updates" : {
+
+    },
+    "Close notch" : {
+
+    },
+    "Colors" : {
+
+    },
+    "Developer" : {
+
+    },
+    "Disabled" : {
+
+    },
+    "Display" : {
+
+    },
+    "Drop files here" : {
+
+    },
+    "Enable gesture controls for the notch interface" : {
+
+    },
+    "Enable lock screen notifications" : {
+
+    },
+    "Error" : {
+
+    },
+    "Exit" : {
+
+    },
+    "General" : {
+
+    },
+    "Gesture Control" : {
+
+    },
+    "Gesture sensitivity" : {
+
+    },
+    "Gesture Settings" : {
+
+    },
+    "Gestures" : {
+
+    },
+    "Header" : {
+
+    },
+    "Hello" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Olá"
+          }
+        }
+      }
+    },
+    "Hover duration" : {
+
+    },
+    "Interaction" : {
+
+    },
+    "Later" : {
+
+    },
+    "Liquid Glass theme requires macOS 26 or later" : {
+
+    },
+    "Live" : {
+
+    },
+    "Lock Screen" : {
+
+    },
+    "Main display" : {
+
+    },
+    "Media" : {
+
+    },
+    "Mic %@" : {
+
+    },
+    "Music Source" : {
+
+    },
+    "Need Restart" : {
+
+    },
+    "notchplus" : {
+
+    },
+    "OK" : {
+
+    },
+    "One or more files failed to load" : {
+
+    },
+    "Open notch" : {
+
+    },
+    "Quit" : {
+
+    },
+    "Release" : {
+
+    },
+    "Request Lock Screen Permissions" : {
+
+    },
+    "Restart hello" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Settings button opens" : {
+
+    },
+    "Show music notifications when the screen is locked. Full app functionality on lock screen is not supported by macOS." : {
+
+    },
+    "System features" : {
+
+    },
+    "Theme" : {
+
+    },
+    "Version" : {
+
+    },
+    "Version %@" : {
+
+    },
+    "Version info" : {
+
+    }
+  },
+  "version" : "1.0"
+}
