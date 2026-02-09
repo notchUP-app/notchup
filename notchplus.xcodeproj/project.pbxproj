@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		3422AD9E2CF5005400A2034C /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3422AD9D2CF5005400A2034C /* MediaRemote.framework */; };
 		3428130A2CC1B641006195BB /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 342813092CC1B641006195BB /* Sparkle */; };
-		342813222CC206E1006195BB /* TheBoringWorkerNotifier in Frameworks */ = {isa = PBXBuildFile; productRef = 342813212CC206E1006195BB /* TheBoringWorkerNotifier */; };
 		342813252CC20DA5006195BB /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = 342813242CC20DA5006195BB /* Defaults */; };
 		3445455E2CF83098009722AC /* appcast.xml in Resources */ = {isa = PBXBuildFile; fileRef = 3445455D2CF83090009722AC /* appcast.xml */; };
 		34686ECA2DB9D52C00746327 /* MacroVisionKit in Frameworks */ = {isa = PBXBuildFile; productRef = 34686EC92DB9D52C00746327 /* MacroVisionKit */; };
@@ -36,22 +35,9 @@
 		34686ECD2DBAA77F00746327 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		34CC09802CC8178A0041A3AF /* Exceptions for "notchplus" folder in "notchplus" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 342812D62CC192CA006195BB /* notchplus */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		342812D92CC192CA006195BB /* notchplus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				34CC09802CC8178A0041A3AF /* Exceptions for "notchplus" folder in "notchplus" target */,
-			);
 			path = notchplus;
 			sourceTree = "<group>";
 		};
@@ -67,7 +53,6 @@
 				342813252CC20DA5006195BB /* Defaults in Frameworks */,
 				3477D5052CD99616008A4E5E /* Collections in Frameworks */,
 				3428130A2CC1B641006195BB /* Sparkle in Frameworks */,
-				342813222CC206E1006195BB /* TheBoringWorkerNotifier in Frameworks */,
 				3422AD9E2CF5005400A2034C /* MediaRemote.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -124,7 +109,6 @@
 			name = notchplus;
 			packageProductDependencies = (
 				342813092CC1B641006195BB /* Sparkle */,
-				342813212CC206E1006195BB /* TheBoringWorkerNotifier */,
 				342813242CC20DA5006195BB /* Defaults */,
 				3477D5042CD99616008A4E5E /* Collections */,
 				34E478D12CE5AA1E00D53CA9 /* LaunchAtLogin */,
@@ -162,7 +146,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				342813082CC1B458006195BB /* XCRemoteSwiftPackageReference "Sparkle" */,
-				342813202CC206E1006195BB /* XCRemoteSwiftPackageReference "TheBoringWorkerNotifier" */,
 				342813232CC20DA5006195BB /* XCRemoteSwiftPackageReference "Defaults" */,
 				3477D5032CD99616008A4E5E /* XCRemoteSwiftPackageReference "swift-collections" */,
 				34E478D02CE5AA1E00D53CA9 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
@@ -334,16 +317,16 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = notchplus/notchplus.entitlements;
+				CODE_SIGN_ENTITLEMENTS = notchplus/Resources/notchplus.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0.5;
-				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Resources/Preview Content\"";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = notchplus/Info.plist;
+				INFOPLIST_FILE = notchplus/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = notchplus;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "$(PRODUCT_NAME) uses AppleScript to control Apple Music and Spotify.";
@@ -360,7 +343,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "notchplus/objc/notchplus-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "notchplus/Core/ObjCBridge/notchplus-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
@@ -378,16 +361,16 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = notchplus/notchplus.entitlements;
+				CODE_SIGN_ENTITLEMENTS = notchplus/Resources/notchplus.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0.5;
-				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Resources/Preview Content\"";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = notchplus/Info.plist;
+				INFOPLIST_FILE = notchplus/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = notchplus;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "$(PRODUCT_NAME) uses AppleScript to control Apple Music and Spotify.";
@@ -403,7 +386,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "notchplus/objc/notchplus-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "notchplus/Core/ObjCBridge/notchplus-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
@@ -445,14 +428,6 @@
 				minimumVersion = 2.6.4;
 			};
 		};
-		342813202CC206E1006195BB /* XCRemoteSwiftPackageReference "TheBoringWorkerNotifier" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/TheBoredTeam/TheBoringWorkerNotifier.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		342813232CC20DA5006195BB /* XCRemoteSwiftPackageReference "Defaults" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/Defaults";
@@ -492,11 +467,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 342813082CC1B458006195BB /* XCRemoteSwiftPackageReference "Sparkle" */;
 			productName = Sparkle;
-		};
-		342813212CC206E1006195BB /* TheBoringWorkerNotifier */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 342813202CC206E1006195BB /* XCRemoteSwiftPackageReference "TheBoringWorkerNotifier" */;
-			productName = TheBoringWorkerNotifier;
 		};
 		342813242CC20DA5006195BB /* Defaults */ = {
 			isa = XCSwiftPackageProductDependency;
