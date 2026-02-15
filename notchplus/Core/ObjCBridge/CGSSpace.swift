@@ -5,6 +5,8 @@
 //  Created by Eduardo Monteiro on 01/04/25.
 //
 
+import SwiftUI
+
 public final class CGSSpace {
     private let identifier: CGSSpaceID
     private let createdByInit: Bool

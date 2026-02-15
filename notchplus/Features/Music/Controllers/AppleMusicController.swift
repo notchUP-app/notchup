@@ -5,71 +5,136 @@
 //  Created by Eduardo Monteiro on 09/04/25.
 //
 
+import Foundation
+import Combine
+import SwiftUI
+
 class AppleMusicController: MediaControllerProtocol {
-    @Published private var playbackState: PlaybackState = .init(bundleIdentifier: "com.apple.Music")
-    var playbackStatePublisher: Published<PlaybackState>.Publisher { $playbackState }
+    
+    @Published private var playbackState: PlaybackState = PlaybackState(
+        bundleIdentifier: "com.apple.Music",
+        playbackRate: 1
+    )
+    
+    var playbackStatePublisher: AnyPublisher<PlaybackState, Never> {
+        $playbackState.eraseToAnyPublisher()
+    }
+    
+    var supportsVolumeControls: Bool { return true }
+    var supportsFavorite: Bool { return true }
+    
+    private var notificationTasks: Task<Void, Never>?
     
     // MARK: - Init
     init() {
-        DistributedNotificationCenter.default().addObserver(
-            self,
-            selector: #selector(updatePlaybackInfo),
-            name: Notification.Name("com.apple.Music.playerInfo"),
-            object: nil
-        )
-        
-        updatePlaybackInfo()
+        setupPlaybackStateChangeObserver()
+        Task {
+            if isActive() {
+                await updatePlaybackInfo()
+            }
+        }
     }
     
     deinit {
-        DistributedNotificationCenter.default().removeObserver(
-        self,
-        name: Notification.Name("com.apple.Music.playerInfo"),
-        object: nil
-        )
+        notificationTasks?.cancel()
+    }
+    
+    private func setupPlaybackStateChangeObserver() {
+        notificationTasks = Task { @Sendable [weak self] in
+            let notification = DistributedNotificationCenter.default().notifications(
+                named: NSNotification.Name("com.apple.Music.playerInfo")
+            )
+            
+            for await _ in notification {
+                await self?.updatePlaybackInfo()
+            }
+        }
     }
     
     // MARK: - Protocol Implementation
-    func play() {
-        executeCommand("play")
+    func play() async {
+        await executeCommand("play")
     }
     
-    func pause() {
-        executeCommand("pause")
+    func pause() async {
+        await executeCommand("pause")
     }
     
-    func togglePlay() {
-        executeCommand("playpause")
+    func togglePlay() async {
+        await executeCommand("playpause")
     }
     
-    func next() {
-        executeCommand("next track")
+    func next() async {
+        await executeCommand("next track")
     }
     
-    func previous() {
-        executeCommand("previous track")
+    func previous() async {
+        await executeCommand("previous track")
     }
     
-    func seek(to time: Double) {
-        executeCommand("set player position to \(time)")
-        updatePlaybackInfo()
+    func seek(to time: Double) async {
+        await executeCommand("set player position to \(time)")
+        await updatePlaybackInfo()
+    }
+    
+    func toggleShuffle() async {
+        await executeCommand("set shuffle enabled to not not shuffle enabled")
+        try? await Task.sleep(for: .milliseconds(150))
+        await updatePlaybackInfo()
+    }
+    
+    func toggleRepeat() async {
+        await executeCommand("""
+            if song repeat is off then
+                set song repeat to all
+            else if song repeat is all then
+                set song repeat to one
+            else
+                set song repeat to off
+            end if
+            """)
+        try? await Task.sleep(for: .milliseconds(150))
+        await updatePlaybackInfo()
+    }
+    
+    func setVolume(to level: Double) async {
+        let clampedLevel = max(0.0, min(1.0, level))
+        let volumePercentage = Int(clampedLevel * 100)
+        
+        await executeCommand("set sound volume to \(volumePercentage)")
+        try? await Task.sleep(for: .milliseconds(150))
+        
+        await updatePlaybackInfo()
+    }
+    
+    func setFavorite(_ favorite: Bool) async {
+        let script = """
+        tell application "Music"
+            try
+                set favorited of current track to \(favorite)
+            end try
+        end tell
+        """
+        
+        try? await AppleScriptHelper.executeVoid(script)
+        try? await Task.sleep(for: .milliseconds(150))
+        
+        await updatePlaybackInfo()
     }
     
     func isActive() -> Bool {
         let runningApps = NSWorkspace.shared.runningApplications
-        return runningApps.contains { $0.bundleIdentifier == playbackState.bundleIdentifier }
-            
+        return runningApps.contains { $0.bundleIdentifier == "com.apple.Music" }
+        
     }
     
     // MARK: - Private Methods
-    private func executeCommand(_ command: String) {
+    private func executeCommand(_ command: String) async {
         let script = "tell application \"Music\" to \(command)"
-        Task {
-            try? await AppleScriptHelper.executeVoid(script)
-        }
+        try? await AppleScriptHelper.executeVoid(script)
     }
     
-    private func fetchPlaybackInfo() -> NSAppleEventDescriptor? {
+    private func fetchPlaybackInfoAsync() async throws -> NSAppleEventDescriptor? {
         let script = """
         tell application "Music"
             set isRuninng to true
@@ -80,73 +145,62 @@ class AppleMusicController: MediaControllerProtocol {
                 set currentTrackAlbum to album of current track
                 set trackPosition to player position
                 set trackDuration to duration of current track
-                set shuffleState to false
-                set repeatState to false
+                set shuffleState to shuffle enabled
+                set repeatState to song repeat
+                if repeatState is off then
+                    set repeatValue to 1
+                else if repeatState is one then
+                    set repeatValue to 2
+                else if repeatState is all then
+                    set repeatValue to 3
+                end if
+        
                 try
                     set artData to data of artwork 1 of current track
                 on error
                     set artData to ""
                 end try
-                return {playerState, currentTrackName, currentTrackArtist, currentTrackAlbum, trackPosition, trackDuration, shuffleState, repeatState, artData}
+        
+                set currentVolume to sound volume
+                set favoriteState to favorited of current track
+                return {playerState, currentTrackName, currentTrackArtist, currentTrackAlbum, trackPosition, trackDuration, shuffleState, repeatValue, currentVolume, artData, favoriteState}
             on error
-                return {false, "Not playing", "Unknown", "Unknown", 0, 0, false, false, ""}
+                return {false, "Not Playing", "Unknown", "Unknown", 0, 0, false, 0, 50, "", false}
             end try
         end tell
         """
         
-        var descriptor: NSAppleEventDescriptor? = nil
-        let sempaphore = DispatchSemaphore(value: 0)
-        
-        Task {
-            descriptor = try? await AppleScriptHelper.execute(script)
-            sempaphore.signal()
-        }
-        
-        sempaphore.wait()
-        return descriptor
+        return try await AppleScriptHelper.execute(script)
     }
     
-    @objc func updatePlaybackInfo() {
-        guard let descriptor = fetchPlaybackInfo() else { 
+    @objc func updatePlaybackInfo() async {
+        guard let descriptor = try? await fetchPlaybackInfoAsync() else {
             Logger.log("Failed to fetch Apple Music playback info", type: .warning)
-            return 
+            return
         }
-        guard descriptor.numberOfItems >= 8 else { 
+        
+        guard descriptor.numberOfItems >= 11 else {
             Logger.log("Insufficient Apple Music data items: \(descriptor.numberOfItems)", type: .warning)
-            return 
+            return
         }
         
-        Logger.log("Apple Music raw descriptor: \(descriptor)", type: .debug)
+        var updatedState = self.playbackState
         
-        let isPlaying = descriptor.atIndex(1)?.booleanValue ?? false
-        let currentTrack = descriptor.atIndex(2)?.stringValue ?? "Unknown"
-        let currentTrackArtist = descriptor.atIndex(3)?.stringValue ?? "Unknown"
-        let currentTrackAlbum = descriptor.atIndex(4)?.stringValue ?? "Unknown"
-        let currentTime = descriptor.atIndex(5)?.doubleValue ?? 0
-        let duration = descriptor.atIndex(6)?.doubleValue ?? 0
-        let shuffleState = descriptor.atIndex(7)?.booleanValue ?? false
-        let repeatState = descriptor.atIndex(8)?.booleanValue ?? false
-        let artworkData = descriptor.atIndex(9)?.data as Data?
-        
-        Logger.log("Apple Music update - Playing: \(isPlaying), Track: \(currentTrack)", type: .media)
-        
-        let updatedState = PlaybackState(
-            bundleIdentifier: "com.apple.Music",
-            isPlaying: isPlaying,
-            title: currentTrack,
-            artist: currentTrackArtist,
-            album: currentTrackAlbum,
-            artwork: artworkData,
-            duration: duration,
-            currentTime: currentTime,
-            playbackRate: 1,
-            isShuffled: shuffleState,
-            isRepeat: repeatState,
-            lastUpdate: Date()
-        )
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.playbackState = updatedState
-        }
+        updatedState.isPlaying = descriptor.atIndex(1)?.booleanValue ?? false
+        updatedState.title = descriptor.atIndex(2)?.stringValue ?? "Unknown"
+        updatedState.artist = descriptor.atIndex(3)?.stringValue ?? "Unknown"
+        updatedState.album = descriptor.atIndex(4)?.stringValue ?? "Unknown"
+        updatedState.currentTime = descriptor.atIndex(5)?.doubleValue ?? 0
+        updatedState.duration = descriptor.atIndex(6)?.doubleValue ?? 0
+        updatedState.isShuffled = descriptor.atIndex(7)?.booleanValue ?? false
+        let repeatModeValue = descriptor.atIndex(8)?.int32Value ?? 0
+        updatedState.repeatMode = RepeatMode(rawValue: Int(repeatModeValue)) ?? .off
+        let volumePercentage = descriptor.atIndex(9)?.int32Value ?? 50
+        updatedState.volume = Double(volumePercentage) / 100.0
+        updatedState.artwork = descriptor.atIndex(10)?.data as Data?
+        let lovedState = descriptor.atIndex(11)?.booleanValue ?? false
+        updatedState.isFavorite = lovedState
+        updatedState.lastUpdate = Date()
+        self.playbackState = updatedState
     }
 }

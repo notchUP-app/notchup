@@ -7,15 +7,23 @@
 
 import Foundation
 import AppKit
+import Combine
 
 protocol MediaControllerProtocol: ObservableObject {
-    var playbackStatePublisher: Published<PlaybackState>.Publisher { get }
-    func play()
-    func pause()
-    func seek(to time: Double)
-    func next()
-    func previous()
-    func togglePlay()
+    var playbackStatePublisher: AnyPublisher<PlaybackState, Never> { get }
+    var supportsVolumeControls: Bool { get }
+    var supportsFavorite: Bool { get }
+    
+    func play() async
+    func pause() async
+    func seek(to time: Double) async
+    func next() async
+    func previous() async
+    func togglePlay() async
+    func toggleShuffle() async
+    func toggleRepeat() async
+    func setVolume(to level: Double) async
+    func setFavorite(_ favorite: Bool) async
     func isActive() -> Bool
-    func updatePlaybackInfo()
+    func updatePlaybackInfo() async
 }

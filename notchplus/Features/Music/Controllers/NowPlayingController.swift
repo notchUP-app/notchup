@@ -10,89 +10,98 @@ import AppKit
 import Foundation
 
 class NowPlayingController: ObservableObject, MediaControllerProtocol {
-    @Published var playbackState: PlaybackState = .init( bundleIdentifier: "com.apple.Music" )
     
-    var playbackStatePublisher: Published<PlaybackState>.Publisher { $playbackState }
-    private var cancellables = Set<AnyCancellable>()
+    // MARK: - Properties
+    @Published private(set) var playbackState: PlaybackState = .init( bundleIdentifier: "com.apple.Music" )
+    var playbackStatePublisher: AnyPublisher<PlaybackState, Never> { $playbackState.eraseToAnyPublisher() }
+    
+    var supportsVolumeControls: Bool {
+        let bundleId = playbackState.bundleIdentifier
+        return bundleId == "com.apple.Music" || bundleId == "com.spotify.client"
+    }
+    
+    var supportsFavorite: Bool {
+        let bundleId = playbackState.bundleIdentifier
+        return bundleId == "com.apple.Music"
+    }
+    
     private var lastMusicItem: (title: String, artist: String, album: String, duration: TimeInterval, artworkData: Data?)?
     
     // MARK: - MediaRemote Functions
     private let mediaRemoteBundle: CFBundle
-    private let MRMediaRemoteGetNowPlayingInfo: @convention(c) (DispatchQueue, @escaping ([String: Any]) -> Void) -> Void
-    private let MRMediaRemoteRegisterForNowPlayingNotifications: @convention(c) (DispatchQueue) -> Void
-    private let MRMediaRemoteGetNowPlayingApplicationIsPlaying: @convention(c) (DispatchQueue, @escaping (Bool) -> Void) -> Void
-    private let MRMediaRemoteGetNowPlayingClient: @convention(c) (DispatchQueue, @escaping (AnyObject?) -> Void) -> Void
-    private let MRNowPlayingClientGetBundleIndentifier: @convention(c) (AnyObject?) -> String?
-    private let MRNowPlayingClientGetParentAppBundleIdentifier: @convention(c) (AnyObject?) -> String?
     private let MRMediaRemoteSendCommandFunction: @convention(c) (Int, AnyObject?) -> Void
     private let MRMediaRemoteSetElapsedTimeFunction: @convention(c) (Double) -> Void
+    private let MRMediaRemoteSetShuffleModeFunction: @convention(c) (Int) -> Void
+    private let MRMediaRemoteSetRepeatModeFunction: @convention(c) (Int) -> Void
+    
+    private var process: Process?
+    private var pipeHandler: JSONLinesPipeHandler?
+    private var streamTask: Task<Void, Never>?
     
     // MARK: - Init
     init?() {
         guard let bundle = CFBundleCreate(kCFAllocatorDefault, NSURL(fileURLWithPath: "/System/Library/PrivateFrameworks/MediaRemote.framework")),
-              let MRMediaRemoteGetNowPlayingInfoPointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteGetNowPlayingInfo" as CFString),
-              let MRMediaRemoteRegisterForNowPlayingNotificationsPointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteRegisterForNowPlayingNotifications" as CFString),
-              let MRMediaRemoteGetNowPlayingApplicationIsPlayingPointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteGetNowPlayingApplicationIsPlaying" as CFString),
-              let MRMediaRemoteGetNowPlayingClientPointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteGetNowPlayingClient" as CFString),
-              let MRNowPlayingClientGetBundleIndentifierPointer = CFBundleGetFunctionPointerForName(bundle, "MRNowPlayingClientGetBundleIdentifier" as CFString),
-              let MRNowPlayingClientGetParentAppBundleIdentifierPointer = CFBundleGetFunctionPointerForName(bundle, "MRNowPlayingClientGetParentAppBundleIdentifier" as CFString),
               let MRMediaRemoteSendCommandPointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteSendCommand" as CFString),
-              let MRMediaRemoteSetElapsedTimePointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteSetElapsedTime" as CFString)
+              let MRMediaRemoteSetElapsedTimePointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteSetElapsedTime" as CFString),
+              let MRMediaRemoteSetShuffleModePointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteSetShuffleMode" as CFString),
+              let MRMediaRemoteSetRepeatModePointer = CFBundleGetFunctionPointerForName(bundle, "MRMediaRemoteSetRepeatMode" as CFString)
         else { return nil }
         
         mediaRemoteBundle = bundle
-        MRMediaRemoteGetNowPlayingInfo = unsafeBitCast(MRMediaRemoteGetNowPlayingInfoPointer, to: (@convention(c) (DispatchQueue, @escaping ([String: Any]) -> Void) -> Void).self)
-        MRMediaRemoteRegisterForNowPlayingNotifications = unsafeBitCast(MRMediaRemoteRegisterForNowPlayingNotificationsPointer, to: (@convention(c) (DispatchQueue) -> Void).self)
-        MRMediaRemoteGetNowPlayingApplicationIsPlaying = unsafeBitCast(MRMediaRemoteGetNowPlayingApplicationIsPlayingPointer, to: (@convention(c) (DispatchQueue, @escaping (Bool) -> Void) -> Void).self)
-        MRMediaRemoteGetNowPlayingClient = unsafeBitCast(MRMediaRemoteGetNowPlayingClientPointer, to: (@convention(c) (DispatchQueue, @escaping (AnyObject?) -> Void) -> Void).self)
-        MRNowPlayingClientGetBundleIndentifier = unsafeBitCast(MRNowPlayingClientGetBundleIndentifierPointer, to: (@convention(c) (AnyObject?) -> String?).self)
-        MRNowPlayingClientGetParentAppBundleIdentifier = unsafeBitCast(MRNowPlayingClientGetParentAppBundleIdentifierPointer, to: (@convention(c) (AnyObject?) -> String?).self)
-        MRMediaRemoteSendCommandFunction = unsafeBitCast(MRMediaRemoteSendCommandPointer, to: (@convention(c) (Int, AnyObject?) -> Void).self)
-        MRMediaRemoteSetElapsedTimeFunction = unsafeBitCast(MRMediaRemoteSetElapsedTimePointer, to: (@convention(c) (Double) -> Void).self)
         
-        setupNowPlayingObserver()
-        updatePlaybackInfo()
+        MRMediaRemoteSendCommandFunction = unsafeBitCast(
+            MRMediaRemoteSendCommandPointer, to: (@convention(c) (Int, AnyObject?) -> Void).self)
+        MRMediaRemoteSetElapsedTimeFunction = unsafeBitCast(
+            MRMediaRemoteSetElapsedTimePointer, to: (@convention(c) (Double) -> Void).self)
+        MRMediaRemoteSetShuffleModeFunction = unsafeBitCast(
+            MRMediaRemoteSetShuffleModePointer, to: (@convention(c) (Int) -> Void).self)
+        MRMediaRemoteSetRepeatModeFunction = unsafeBitCast(
+            MRMediaRemoteSetRepeatModePointer, to: (@convention(c) (Int) -> Void).self)
+        
+        Task { await setupNowPlayingObserver() }
     }
     
     deinit {
-        cancellables.removeAll()
+        streamTask?.cancel()
         
-        DistributedNotificationCenter.default().removeObserver(
-            self,
-            name: NSNotification.Name("com.spotify.client.PlaybackStateChanged"),
-            object: nil
-        )
+        if let pipeHandler = self.pipeHandler {
+            Task { await pipeHandler.close() }
+        }
         
-        DistributedNotificationCenter.default().removeObserver(
-            self,
-            name: NSNotification.Name("com.apple.Music.playerInfo"),
-            object: nil
-        )
+        if let process = self.process {
+            if process.isRunning {
+                process.terminate()
+                process.waitUntilExit()
+            }
+        }
+        
+        self.process = nil
+        self.pipeHandler = nil
     }
     
     // MARK: - Protocol Implementation
     
-    func play() {
+    func play() async {
         MRMediaRemoteSendCommandFunction(0, nil)
     }
     
-    func pause() {
+    func pause() async {
         MRMediaRemoteSendCommandFunction(1, nil)
     }
     
-    func togglePlay() {
+    func togglePlay() async {
         MRMediaRemoteSendCommandFunction(2, nil)
     }
     
-    func next() {
+    func next() async {
         MRMediaRemoteSendCommandFunction(4, nil)
     }
     
-    func previous() {
+    func previous() async {
         MRMediaRemoteSendCommandFunction(5, nil)
     }
     
-    func seek(to time: TimeInterval) {
+    func seek(to time: TimeInterval) async {
         MRMediaRemoteSetElapsedTimeFunction(time)
     }
     
@@ -100,91 +109,221 @@ class NowPlayingController: ObservableObject, MediaControllerProtocol {
         return true
     }
     
+    func toggleShuffle() async {
+        MRMediaRemoteSetShuffleModeFunction(playbackState.isShuffled ? 1 : 3)
+        playbackState.isShuffled.toggle()
+    }
+    
+    func toggleRepeat() async {
+        let newRepeatMode = (playbackState.repeatMode == .off) ? 3 : (playbackState.repeatMode.rawValue - 1)
+        playbackState.repeatMode = RepeatMode(rawValue: newRepeatMode) ?? .off
+        MRMediaRemoteSetRepeatModeFunction(newRepeatMode)
+    }
+    
+    func setVolume(to level: Double) async {
+        let clampedLevel = max(0, min(1, level))
+        let volumePercentage = Int(clampedLevel * 100)
+        
+        let bundleId = playbackState.bundleIdentifier
+        if !bundleId.isEmpty {
+            if bundleId == "com.apple.Music" {
+                let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: bundleId)
+                if !runningApps.isEmpty {
+                    let script = "tell application \"Music\" to set sound volume to \(volumePercentage)"
+                    try? await AppleScriptHelper.executeVoid(script)
+                }
+            } else if bundleId == "com.spotify.client" {
+                let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: bundleId)
+                if !runningApps.isEmpty {
+                    let script = "tell application \"Spotify\" to set sound volume to \(volumePercentage)"
+                    try? await AppleScriptHelper.executeVoid(script)
+                }
+            }
+        }
+        
+        playbackState.volume = clampedLevel
+    }
+    
+    func setFavorite(_ favorite: Bool) async {
+        let bundleId = playbackState.bundleIdentifier
+        
+        if bundleId == "com.apple.Music" {
+            let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.Music")
+            if !runningApps.isEmpty {
+                let script = """
+                        tell application "Music"
+                            try
+                                set favorited of current track to \(favorite ? "true" : "false")
+                            end try
+                        end tell
+                        """
+                try? await AppleScriptHelper.executeVoid(script)
+            }
+        }
+        
+        try? await Task.sleep(for: .milliseconds(150))
+        await updatePlaybackInfo()
+    }
+    
+    func updatePlaybackInfo() async {
+        await fetchFavoriteStateIfSupported()
+    }
+    
     // MARK: - Setup Methods
-    private func setupNowPlayingObserver() {
-        MRMediaRemoteRegisterForNowPlayingNotifications(DispatchQueue.main)
-        Logger.log("Listening for media remote notifications", type: .info)
+    private func setupNowPlayingObserver() async {
+        let process = Process()
+        guard
+            let scriptURL = Bundle.main.url(forResource: "mediaremote-adapter", withExtension: "pl"),
+            let frameworkPath = Bundle.main.privateFrameworksPath?.appending("/MediaRemoteAdapter.framework")
+        else {
+            assertionFailure("Could not find mediaremote-adapter.pl script or MediaRemoteAdapter.framework in the app bundle.")
+            return
+        }
         
-        NotificationCenter.default.publisher(for: NSNotification.Name("kMRMediaRemoteNowPlayingInfoDidChangeNotification"))
-            .sink { [weak self] _ in self?.updatePlaybackInfo() }
-            .store(in: &cancellables)
+        Logger.log("Launching mediaremote-adapter.pl script at path: \(scriptURL.path) - \(frameworkPath)", type: .media)
         
-        NotificationCenter.default.publisher(for: NSNotification.Name("kMRMediaRemoteNowPlayingApplicationDidChangeNotification"))
-            .sink { [weak self] _ in self?.updateApp() }
-            .store(in: &cancellables)
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/perl")
+        process.arguments = [scriptURL.path, frameworkPath, "stream"]
         
-        DistributedNotificationCenter.default().addObserver(
-            self,
-            selector: #selector(updatePlaybackInfo),
-            name: NSNotification.Name("com.apple.Music.playerInfo"),
-            object: nil
-        )
+        let pipeHandler = JSONLinesPipeHandler()
+        process.standardOutput = await pipeHandler.getPipe()
         
-        DistributedNotificationCenter.default().addObserver(
-            self,
-            selector: #selector(updatePlaybackInfo),
-            name: NSNotification.Name("com.spotify.client.PlaybackStateChanged"),
-            object: nil
-        )
+        self.process = process
+        self.pipeHandler = pipeHandler
+        
+        do {
+            try process.run()
+            streamTask = Task { [weak self] in
+                await self?.processJSONStream()
+            }
+        } catch {
+            assertionFailure("Failed to launch mediaremote-adapter.pl script: \(error)")
+        }
+    }
+    
+    private func processJSONStream() async {
+        guard let pipeHandler = self.pipeHandler else { return }
+        
+        await pipeHandler.readJSONLines(as: NowPlayingUpdate.self) { [weak self] update in
+            await self?.handleAdapterUpdate(update)
+        }
+        
     }
     
     // MARK: - Update Methods
-    @objc func updateApp() {
-        MRMediaRemoteGetNowPlayingClient(DispatchQueue.main) { [weak self] client in
-            guard let client = client else {
-                DispatchQueue.main.async {
-                    self?.playbackState.bundleIdentifier = "com.apple.Music"
-                }
-                return
-            }
-            
-            // Try getting the parent bundle ID first, then fallback directly to the client bundle ID
-            var appBundleID = self?.MRNowPlayingClientGetParentAppBundleIdentifier(client)
-            if appBundleID == nil {
-                appBundleID = self?.MRNowPlayingClientGetBundleIndentifier(client)
-            }
-            
-            // Special case for WebKit GPU (safari-based)
-            if appBundleID == "com.apple.WebKit.GPU" {
-                appBundleID = "com.apple.Safari"
-            }
-            
-            DispatchQueue.main.async {
-                self?.playbackState.bundleIdentifier = appBundleID ?? "com.apple.Music"
-            }
-        }
-    }
-    
-    @objc func updatePlaybackInfo() {
-        updateApp()
+    private func handleAdapterUpdate(_ update: NowPlayingUpdate) async {
+        let payload = update.payload
+        let diff = update.diff ?? false
         
-        MRMediaRemoteGetNowPlayingInfo(DispatchQueue.main) { [weak self] info in
-            guard let self = self else { return }
+        var newPlaybackState = PlaybackState(bundleIdentifier: playbackState.bundleIdentifier)
+        
+        newPlaybackState.title = payload.title ?? (diff ? self.playbackState.title : "")
+        newPlaybackState.artist = payload.artist ?? (diff ? self.playbackState.artist : "")
+        newPlaybackState.album = payload.album ?? (diff ? self.playbackState.album : "")
+        newPlaybackState.duration = payload.duration ?? (diff ? self.playbackState.duration : 0)
+        
+        if let elapsedTime = payload.elapsedTime {
+            newPlaybackState.currentTime = elapsedTime
+        } else if diff {
+            if payload.playing == false {
+                let timeSinceLastUpdate = Date().timeIntervalSince(self.playbackState.lastUpdate)
+                newPlaybackState.currentTime = self.playbackState.currentTime + (timeSinceLastUpdate * self.playbackState.playbackRate)
+            } else {
+                newPlaybackState.currentTime = self.playbackState.currentTime
+            }
+        } else {
+            newPlaybackState.currentTime = 0
+        }
+        
+        if let shuffleMode = payload.shuffleMode {
+            newPlaybackState.isShuffled = shuffleMode != 1
+        } else if !diff {
+            newPlaybackState.isShuffled = false
+        } else {
+            newPlaybackState.isShuffled = self.playbackState.isShuffled
+        }
+        
+        if let repeatModeValue = payload.repeatMode {
+            newPlaybackState.repeatMode = RepeatMode(rawValue: repeatModeValue) ?? .off
+        } else if !diff {
+            newPlaybackState.repeatMode = .off
+        } else {
+            newPlaybackState.repeatMode = self.playbackState.repeatMode
+        }
+        
+        if let artworkDataString = payload.artworkData {
+            newPlaybackState.artwork = Data(base64Encoded: artworkDataString.trimmingCharacters(in: .whitespacesAndNewlines))
+        } else if !diff {
+            newPlaybackState.artwork = nil
+        }
+        
+        if let dateString = payload.timestamp,
+           let date = ISO8601DateFormatter().date(from: dateString) {
+            newPlaybackState.lastUpdate = date
+        } else if !diff {
+            newPlaybackState.lastUpdate = Date()
+        } else {
+            newPlaybackState.lastUpdate = self.playbackState.lastUpdate
+        }
+        
+        newPlaybackState.playbackRate = payload.playbackRate ?? (diff ? self.playbackState.playbackRate : 1.0)
+        newPlaybackState.isPlaying = payload.playing ?? (diff ? self.playbackState.isPlaying : false)
+        newPlaybackState.bundleIdentifier = (
+            payload.parentApplicationBundleIdentifier ??
+            payload.bundleIdentifier ??
+            (diff ? self.playbackState.bundleIdentifier : "")
+        )
+        
+        newPlaybackState.volume = payload.volume ?? (diff ? self.playbackState.volume : 0.5)
+        
+        self.playbackState = newPlaybackState
+    }
+    
+    private func fetchFavoriteStateIfSupported() async {
+        let bundleId = playbackState.bundleIdentifier
+        
+        if bundleId == "com.apple.Music" {
+            let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: bundleId)
+            guard !runningApps.isEmpty else { return }
             
-            let title = info["kMRMediaRemoteNowPlayingInfoTitle"] as? String ?? ""
-            let artist = info["kMRMediaRemoteNowPlayingInfoArtist"] as? String ?? ""
-            let album = info["kMRMediaRemoteNowPlayingInfoAlbum"] as? String ?? ""
-            let duration = info["kMRMediaRemoteNowPlayingInfoDuration"] as? TimeInterval ?? 0
-            let artworkData = info["kMRMediaRemoteNowPlayingInfoArtworkData"] as? Data
-            let timestamp = info["kMRMediaRemoteNowPlayingInfoTimestamp"] as? Date ?? Date()
-            let playbackRate = info["kMRMediaRemoteNowPlayingInfoPlaybackRate"] as? Double ?? 1
+            let script = """
+            tell application "Music"
+                if it is running then
+                    try
+                        return favorited of current track
+                    on error
+                        return false
+                    end try
+            end tell    
+            """
             
-            DispatchQueue.main.async {
-                self.playbackState.title = title
-                self.playbackState.artist = artist
-                self.playbackState.album = album
-                self.playbackState.duration = duration
-                self.playbackState.artwork = artworkData
-                self.playbackState.lastUpdate = timestamp
-                self.playbackState.playbackRate = playbackRate
-                
-                self.MRMediaRemoteGetNowPlayingApplicationIsPlaying(DispatchQueue.main) { [weak self] isPlaying in
-                    DispatchQueue.main.async {
-                        self?.playbackState.isPlaying = isPlaying
-                    }
-                }
+            if let result = try? await AppleScriptHelper.execute(script) {
+                var updated = self.playbackState
+                updated.isFavorite = result.booleanValue
+                self.playbackState = updated
             }
         }
     }
-    
+}
+
+struct NowPlayingUpdate: Codable {
+    let payload: NowPlayingPlayload
+    let diff: Bool?
+}
+
+struct NowPlayingPlayload: Codable {
+    let title: String?
+    let artist: String?
+    let album: String?
+    let duration: Double?
+    let elapsedTime: Double?
+    let shuffleMode: Int?
+    let repeatMode: Int?
+    let artworkData: String?
+    let timestamp: String?
+    let playbackRate: Double?
+    let playing: Bool?
+    let parentApplicationBundleIdentifier: String?
+    let bundleIdentifier: String?
+    let volume: Double?
 }

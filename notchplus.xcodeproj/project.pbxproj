@@ -13,6 +13,8 @@
 		3445455E2CF83098009722AC /* appcast.xml in Resources */ = {isa = PBXBuildFile; fileRef = 3445455D2CF83090009722AC /* appcast.xml */; };
 		34686ECA2DB9D52C00746327 /* MacroVisionKit in Frameworks */ = {isa = PBXBuildFile; productRef = 34686EC92DB9D52C00746327 /* MacroVisionKit */; };
 		3477D5052CD99616008A4E5E /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 3477D5042CD99616008A4E5E /* Collections */; };
+		34B7398D2F4275F400435A00 /* MediaRemoteAdapter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B739842F4189B000435A00 /* MediaRemoteAdapter.framework */; };
+		34B7398E2F4275F400435A00 /* MediaRemoteAdapter.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34B739842F4189B000435A00 /* MediaRemoteAdapter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		34E478D22CE5AA1E00D53CA9 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 34E478D12CE5AA1E00D53CA9 /* LaunchAtLogin */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +25,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				34B7398E2F4275F400435A00 /* MediaRemoteAdapter.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,11 +36,25 @@
 		342812D72CC192CA006195BB /* notchplus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = notchplus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3445455D2CF83090009722AC /* appcast.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = appcast.xml; sourceTree = "<group>"; };
 		34686ECD2DBAA77F00746327 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
+		34B739842F4189B000435A00 /* MediaRemoteAdapter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MediaRemoteAdapter.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		34B7398C2F42759A00435A00 /* Exceptions for "notchplus" folder in "notchplus" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Resources/mediaremote-adapter/MediaRemoteAdapter.framework",
+			);
+			target = 342812D62CC192CA006195BB /* notchplus */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		342812D92CC192CA006195BB /* notchplus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				34B7398C2F42759A00435A00 /* Exceptions for "notchplus" folder in "notchplus" target */,
+			);
 			path = notchplus;
 			sourceTree = "<group>";
 		};
@@ -52,6 +69,7 @@
 				34E478D22CE5AA1E00D53CA9 /* LaunchAtLogin in Frameworks */,
 				342813252CC20DA5006195BB /* Defaults in Frameworks */,
 				3477D5052CD99616008A4E5E /* Collections in Frameworks */,
+				34B7398D2F4275F400435A00 /* MediaRemoteAdapter.framework in Frameworks */,
 				3428130A2CC1B641006195BB /* Sparkle in Frameworks */,
 				3422AD9E2CF5005400A2034C /* MediaRemote.framework in Frameworks */,
 			);
@@ -83,6 +101,7 @@
 			children = (
 				3422AD9D2CF5005400A2034C /* MediaRemote.framework */,
 				34686ECD2DBAA77F00746327 /* IOKit.framework */,
+				34B739842F4189B000435A00 /* MediaRemoteAdapter.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -325,6 +344,11 @@
 				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Resources/Preview Content\"";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/notchplus/Resources/mediaremote-adapter",
+					"$(PROJECT_DIR)",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = notchplus/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = notchplus;
@@ -369,6 +393,11 @@
 				DEVELOPMENT_ASSET_PATHS = "\"notchplus/Resources/Preview Content\"";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/notchplus/Resources/mediaremote-adapter",
+					"$(PROJECT_DIR)",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = notchplus/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = notchplus;
