@@ -1,5 +1,5 @@
 {
-  "originHash" : "f2bb89317e211881bf84ed085e34ff63e8be0eead24171f9c7efa4a15623a44c",
+  "originHash" : "f6fd6ab1f7041873253ee47ea32ff8f90f41b7fa7fabbc142e2ef4e763ad8e91",
   "pins" : [
     {
       "identity" : "defaults",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/TheBoredTeam/MacroVisionKit",
       "state" : {
-        "revision" : "b1b036d1b71438c2cf9dd5a32831d49b65a75202",
-        "version" : "0.0.0"
+        "revision" : "da481a6be8d8b1bf7fcb218507a72428bbcae7b0",
+        "version" : "0.2.0"
       }
     },
     {
@@ -53,15 +53,6 @@
       "state" : {
         "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
         "version" : "601.0.1"
-      }
-    },
-    {
-      "identity" : "theboringworkernotifier",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/TheBoredTeam/TheBoringWorkerNotifier.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "bc2b292c88035dcfc41fc7e3d8021689e624d137"
       }
     }
   ],
